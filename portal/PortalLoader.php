@@ -1,15 +1,16 @@
 <?php namespace psm;
-use \psm\portal as psmportal;
 //defines:
-//PORTAL_CWD
 //PORTAL
+//PORTAL_CWD
 
 
+// class loader
 include('ClassLoader.php');
 
 
 // debug mode
-if(file_exists(__DIR__.'/php_error.php')) {
+if(file_exists(__DIR__.'/php_error.php') &&
+!(defined('PORTAL_DONT_USE_ERROR_HANDLER') && PORTAL_DONT_USE_ERROR_HANDLER===TRUE) ) {
 	error_reporting(E_ALL | E_STRICT);
 	// log display
 	//ini_set('display_errors', 'On');
@@ -45,7 +46,7 @@ function newPortal($portalName='') {
 		define('PORTAL', $portalName);
 	// load portal
 	global $portal;
-	$portal = new psmportal\portal();
+	$portal = new \psm\portal();
 }
 
 

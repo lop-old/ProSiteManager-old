@@ -1,9 +1,7 @@
-<?php namespace psm;
+<?php
 
-define('DEFINE_INDEX_FILE',TRUE);
-include('portal/index.php');
-
-$psm = new portal();
-$psm->addPortal('testportal');
+// load the portal
+include('portal/PortalLoader.php');
+\psm\newPortal('testportal');
 
 ?>

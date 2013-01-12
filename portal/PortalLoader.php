@@ -5,7 +5,7 @@ use \psm\portal as psmportal;
 //PORTAL
 
 
-include('class_loader.php');
+include('ClassLoader.php');
 
 
 // debug mode

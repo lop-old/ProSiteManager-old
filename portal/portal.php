@@ -5,6 +5,7 @@
 
 // class loader
 include('ClassLoader.php');
+ClassLoader::registerClassPath('psm', __DIR__.DIRECTORY_SEPARATOR.'classes');
 
 // debug mode
 if(file_exists(__DIR__.'/php_error.php') &&

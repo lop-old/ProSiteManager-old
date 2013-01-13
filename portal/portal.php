@@ -29,6 +29,9 @@ if(file_exists(__DIR__.'/php_error.php') &&
 	));
 }
 
+// no page caching
+\psm\Utils::NoPageCache();
+
 
 class portal {
 

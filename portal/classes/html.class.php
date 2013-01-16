@@ -16,29 +16,29 @@ class html {
 	}
 
 
-	// page builder
-	private static $pageBuilder = null;
-	public static function getPageBuilder() {
-		if(self::$pageBuilder == null)
-			self::$pageBuilder = new html_PageBuilder();
-		return self::$pageBuilder;
-	}
-	// add to header
-	public function addToHeader($data, $top=FALSE) {
-		self::getPageBuilder()->addToHeader($data, $top);
-	}
-	// add to css
-	public function addToCss($data, $top=FALSE) {
-		self::getPageBuilder()->addToCss($data, $top);
-	}
-	// add to page
-	public function addToPage($data, $top=FALSE) {
-		self::getPageBuilder()->addToPage($data, $top);
-	}
-	// add to footer
-	public function addToFooter($data, $top=FALSE) {
-		self::getPageBuilder()->addToFooter($data, $top);
-	}
+//	// page builder
+//	private static $pageBuilder = null;
+//	public static function getPageBuilder() {
+//		if(self::$pageBuilder == null)
+//			self::$pageBuilder = new html_PageBuilder();
+//		return self::$pageBuilder;
+//	}
+//	// add to header
+//	public function addToHeader($data, $top=FALSE) {
+//		self::getPageBuilder()->addToHeader($data, $top);
+//	}
+//	// add to css
+//	public function addToCss($data, $top=FALSE) {
+//		self::getPageBuilder()->addToCss($data, $top);
+//	}
+//	// add to page
+//	public function addToPage($data, $top=FALSE) {
+//		self::getPageBuilder()->addToPage($data, $top);
+//	}
+//	// add to footer
+//	public function addToFooter($data, $top=FALSE) {
+//		self::getPageBuilder()->addToFooter($data, $top);
+//	}
 
 
 }

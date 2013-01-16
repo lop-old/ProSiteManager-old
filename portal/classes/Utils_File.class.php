@@ -16,7 +16,7 @@ class Utils_File {
 		// trim separator
 		$args = self::trimPath($args);
 		// build path
-		return implode(DIRECTORY_SEPARATOR, $args);
+		return implode(DIR_SEP, $args);
 	}
 
 
@@ -30,37 +30,43 @@ class Utils_File {
 		if(is_array($path))
 			return array_map(__METHOD__, $path);
 		$path = str_replace(
-			(DIRECTORY_SEPARATOR=='/' ? '\\' : '/' ),
-			DIRECTORY_SEPARATOR,
+			(DIR_SEP=='/' ? '\\' : '/' ),
+			DIR_SEP,
 			$path
 		);
-		while(substr($path, 0, 1) == DIRECTORY_SEPARATOR)
+		while(substr($path, 0, 1) == DIR_SEP)
 			$path = substr($path, 1);
-		while(substr($path, -1, 1) == DIRECTORY_SEPARATOR)
+		while(substr($path, -1, 1) == DIR_SEP)
 			$path = substr($path, 0, -1);
 		return $path;
 	}
 
 
-//	/**
-//	 *
-//	 *
-//	 */
-//	// sanitize file names
-//	public static function SanFilename($filename) {
-//		if(is_array($filename))
-//			return array_map(__METHOD__, $filename);
-//		$filename=trim($filename);
-//		if(empty($filename)){return('');}
-//		// shouldn't contain /
-//		if(strpos($filename,'/')!==FALSE){die('stop SanFilename() '.$filename);}
-//		// remove dots from front and end
-//		while(substr($filename,0,1)=='.'){$filename=substr($filename,1);}
-//		while(substr($filename,-1)=='.'){$filename=substr($filename,0,-1);}
-//		// clean string
-//		$filename=str_replace(str_split(preg_replace("/([[:alnum:]\(\)_\.'& +?=-]*)/","_",$filename)),"_",$filename);
-//		return(trim($filename));
-//	}
+	/**
+	 * Sanitize file names.
+	 *
+	 * @param string $filename File name to be sanitized.
+	 * @return string Returns the sanitized file name.
+	 */
+	public static function SanFilename($filename) {
+		if(is_array($filename))
+			return array_map(__METHOD__, $filename);
+		$filename = trim($filename);
+		if(empty($filename))
+			return '';
+		// shouldn't contain /
+		if(strpos($filename, '/') !== FALSE) {
+echo '<p>stop SanFilename() '.$filename.'</p>'; exit();
+		}
+		// remove dots from front and end
+		while(substr($filename, 0, 1) == '.')
+			$filename = substr($filename, 1);
+		while(substr($filename,-1, 1) == '.')
+			$filename = substr($filename, 0, -1);
+		// clean string
+		$filename = str_replace(str_split(preg_replace("/([[:alnum:]_\.-]*)/", '_', $filename)), '_', $filename);
+		return trim($filename);
+	}
 
 
 //	/**

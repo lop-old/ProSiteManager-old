@@ -41,12 +41,11 @@ class portal {
 	// portal core
 	private static $portal = NULL;
 	private $portalName;
+	// template engine
+	private $engine = NULL;
 
 	// paths
 	private $root;
-
-	// template engine
-	private $engine = NULL;
 
 	// page
 	private $page = NULL;
@@ -82,9 +81,6 @@ class portal {
 		$portalIndex = $this->root.'/'.$this->portalName.'/index.php';
 		include($portalIndex);
 	}
-	public static function getPortal() {
-		return self::$portal;
-	}
 
 
 	/**
@@ -110,6 +106,18 @@ echo '<p>ENGINE IS NULL</p>';
 	}
 
 
+	// get portal instance
+	public static function getPortal() {
+		return self::$portal;
+	}
+
+
+	// get portal name
+	public function getPortalName() {
+		return $this->portalName;
+	}
+
+
 	/**
 	 * Gets the main template engine instance, creating a new one if needed.
 	 *
@@ -119,6 +127,12 @@ echo '<p>ENGINE IS NULL</p>';
 		if($this->engine == NULL)
 			$this->engine = new html_engine();
 		return $this->engine;
+	}
+
+
+	// get root path
+	public function getRoot() {
+		return $this->root;
 	}
 
 

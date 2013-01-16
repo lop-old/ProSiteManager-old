@@ -30,6 +30,16 @@ abstract class Page {
 	 */
 	public static function LoadPage($page) {
 		$page = Utils_File::SanFilename($page);
+		// default path - portalname/pages/
+		if(count(self::$paths) == 0) {
+			self::$paths = array(
+				Utils_File::mergePaths(
+					portal::getPortal()->getRoot(),
+					portal::getPortal()->getPortalName(),
+					'pages'
+				)
+			);
+		}
 		// look for page
 		foreach(self::$paths as $v) {
 			$file = DIR_SEP.Utils_File::mergePaths($v, $page.'.php');
@@ -41,8 +51,10 @@ abstract class Page {
 			// file failed to load
 			if($result === FALSE)
 				continue;
+			// portal name
+			$portalName = portal::getPortal()->getPortalName();
 			// page class name
-			$clss = '\wa\page_'.$page;
+			$clss = '\\'.$portalName.'\\page_'.$page;
 			// load page class
 			if(class_exists($clss))
 				return new $clss();

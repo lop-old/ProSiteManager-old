@@ -36,7 +36,7 @@ if(file_exists(__DIR__.'/php_error.php')) {
 }
 
 
-class portal {
+class Portal {
 
 	// portal core
 	private static $portal = NULL;

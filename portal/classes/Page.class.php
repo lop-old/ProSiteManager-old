@@ -34,8 +34,8 @@ abstract class Page {
 		if(count(self::$paths) == 0) {
 			self::$paths = array(
 				Utils_File::mergePaths(
-					portal::getPortal()->getRoot(),
-					portal::getPortal()->getPortalName(),
+					Portal::getPortal()->getRoot(),
+					Portal::getPortal()->getPortalName(),
 					'pages'
 				)
 			);
@@ -52,7 +52,7 @@ abstract class Page {
 			if($result === FALSE)
 				continue;
 			// portal name
-			$portalName = portal::getPortal()->getPortalName();
+			$portalName = Portal::getPortal()->getPortalName();
 			// page class name
 			$clss = '\\'.$portalName.'\\page_'.$page;
 			// load page class

@@ -52,6 +52,21 @@ class Utils {
 	}
 
 
+	/**
+	 *
+	 *
+	 * @param string[] $array
+	 * @param string $data
+	 * @param boolean $top
+	 */
+	public static function appendArray(&$array, &$data, $top=FALSE) {
+		// top of array
+		if($top) array_unshift($array, $data);
+		// bottom of array
+		else     array_push($array, $data);
+	}
+
+
 //	/**
 //	 *
 //	 *

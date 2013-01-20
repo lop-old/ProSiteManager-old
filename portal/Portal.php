@@ -90,9 +90,9 @@ class Portal {
 	 */
 	public function genericRender() {
 		// load page
-		$page = Page::LoadPage($this->getPage());
+		$pageObj = Page::LoadPage($this->getPage());
 		// failed to load
-		if($page == NULL) {
+		if($pageObj == NULL) {
 echo '<p>PAGE IS NULL</p>';
 			return;
 		}
@@ -102,7 +102,7 @@ echo '<p>PAGE IS NULL</p>';
 echo '<p>ENGINE IS NULL</p>';
 			return;
 		}
-		$engine->addToPage($page);
+		$engine->addPage($pageObj);
 		$engine->Build();
 	}
 

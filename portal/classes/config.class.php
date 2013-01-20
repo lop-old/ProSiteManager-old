@@ -8,7 +8,7 @@ class config {
 
 
 	public static function loadConfig($configFile) {
-echo '<p>LOAD CONFIG: '.$configFile.'</p>';
+//echo '<p>LOAD CONFIG: '.$configFile.'</p>';
 	}
 
 

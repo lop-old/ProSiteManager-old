@@ -47,7 +47,7 @@ class ClassLoader {
 		// namespace path
 		if(array_key_exists($namespace, self::$paths)) {
 			// class file
-			$file = self::$paths[$namespace].DIRECTORY_SEPARATOR.$classname.'.class.php';
+			$file = self::$paths[$namespace].DIR_SEP.$classname.'.class.php';
 			if(file_exists($file)) {
 				try {
 					include($file);

@@ -2,11 +2,40 @@
 if(!defined('PORTAL_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class html_engine {
 
-	// buffers
-	private $header = array();
-	private $css    = array();
-	private $page   = array();
-	private $footer = array();
+	// main html file
+	private $htmlMain;
+
+	// main block arrays
+	private $blocksHeader;
+	private $blocksCss;
+	private $blocksJs;
+	private $blocksPage;
+	private $blocksFooter;
+
+	// global tag parsers
+	private static $globalTags = NULL;
+
+
+	public function __construct(html $htmlMain=NULL) {
+		if($htmlMain == NULL)
+$this->htmlMain = html_file::LoadFile('default', 'main');
+		else
+			$this->htmlMain = $htmlMain;
+		// tag parsers
+		self::$globalTags = new listenerGroup();
+		// global tags
+		self::$globalTags->registerListener(new listenerGlobalTags());
+		// block arrays
+		$this->blocksHeader = new html_BlockArray('portal - appended header');
+		$this->blocksCss    = new html_BlockArray('portal - appended css');
+			$this->blocksCss->setPrepend ('<style type="text/css">');
+			$this->blocksCss->setPostpend('</style>');
+		$this->blocksJs    = new html_BlockArray('portal - appended javascript');
+			$this->blocksJs->setPrepend ('<script type="text/javascript" language="javascript">');
+			$this->blocksJs->setPostpend('</script>');
+		$this->blocksPage   = new html_BlockArray('portal - page contents');
+		$this->blocksFooter = new html_BlockArray('portal - footer contents');
+	}
 
 
 	// build page
@@ -15,75 +44,68 @@ class html_engine {
 		// run only once
 		if($this->buildHasRun) return;
 		$this->buildHasRun = TRUE;
-		$this->displayHeader();
-		$this->displayPage();
-		$this->displayFooter();
-	}
-	// build header
-	private function displayHeader() {
-//		$css = $this->buildCss();
-		foreach($this->header as &$v)
-			echo $v;
-		unset($v, $this->header);
-	}
-	// build css
-	private function buildCss() {
-		$css = LN.LN;
-		foreach($this->css as &$v)
-			$css .= $v.LN.LN;
-		unset($v, $this->css);
-		return $css;
-	}
-	// build page
-	private function displayPage() {
-		foreach($this->page as &$v)
-			echo $v;
-		unset($v, $this->page);
-	}
-	// build footer
-	private function displayFooter() {
-		foreach($this->footer as &$v)
-			echo $v;
-		unset($v, $this->footer);
+
+		// build header
+		// split by {add to header} tag
+		$split = new html_SplitBlock('{add to header}', $this->htmlMain->getBlock('head'));
+		// open header block
+		echo $split->getPart(0);
+		// build header
+		$this->blocksHeader->Display(TRUE);
+		// build inline css
+		$this->blocksCss->Display(TRUE);
+		// build inline javascript
+		$this->blocksJs->Display(TRUE);
+		// close header block
+		echo $split->getPart(1);
+		unset($split, $this->blocksHeader,
+			$this->blocksCss, $this->blocksJs);
+
+		// build page
+		// split by {page content} tag
+		$split = new html_SplitBlock('{page content}', $this->htmlMain->getBlock('body'));
+		// open body block
+		echo $split->getPart(0);
+		// build page content
+		$this->blocksPage->Display(TRUE);
+		// close body block
+		echo $split->getPart(1);
+		unset($split, $this->blocksPage);
+
+		// build footer
+		// split by {footer content} tag
+		$split = new html_SplitBlock('{footer content}', $this->htmlMain->getBlock('footer'));
+		// open footer block
+		echo $split->getPart(0);
+		$this->blocksFooter->Display(TRUE);
+		// close footer block
+		echo $split->getPart(1);
+		unset($split, $this->blocksFooter);
+
 	}
 
 
+	/* add to block arrays */
 	// add to header
-	public function addToHeader($data, $top=FALSE) {
-		self::appendArray(
-			$this->header,
-			self::renderObject($data),
-			$top
-		);
+	public function addHeader($data, $top=FALSE) {
+		$this->blocksHeader->add(self::renderObject($data), $top);
 	}
 	// add to css
-	public function addToCss($data, $top=FALSE) {
-		self::appendArray(
-			$this->css,
-			self::renderObject($data),
-			$top
-		);
+	public function addCss($data, $top=FALSE) {
+		$this->blocksCss->add(self::renderObject($data), $top);
 	}
 	// add to page
-	public function addToPage($data, $top=FALSE) {
-		self::appendArray(
-			$this->page,
-			self::renderObject($data),
-			$top
-		);
+	public function addPage($data, $top=FALSE) {
+		$this->blocksPage->add(self::renderObject($data), $top);
 	}
 	// add to footer
-	public function addToFooter($data, $top=FALSE) {
-		self::appendArray(
-			$this->footer,
-			self::renderObject($data),
-			$top
-		);
+	public function addFooter($data, $top=FALSE) {
+		$this->blocksFooter->add(self::renderObject($data), $top);
 	}
 
 
 	// render class objects to html
-	protected static function renderObject($data) {
+	protected static function renderObject(&$data) {
 		if($data == NULL)
 			return NULL;
 		// page class
@@ -93,15 +115,9 @@ class html_engine {
 	}
 
 
-	// add data to array
-	protected static function appendArray(&$array, $data, $top=FALSE) {
-		if($data == NULL) return;
-		// top of array
-		if($top)
-			array_unshift($array, $data);
-		// bottom of array
-		else
-			$array[] = $data;
+	// call global tag parsers
+	public static function renderGlobalTags(&$data) {
+		$data = self::$globalTags->trigger($data);
 	}
 
 

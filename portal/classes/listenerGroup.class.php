@@ -10,8 +10,11 @@ class listenerGroup {
 	}
 
 
-	public function trigger() {
-		$args = func_get_args();
+	public function trigger(&$args=array()) {
+		if(!is_array($args)) {
+			unset($args);
+			$args = func_get_args();
+		}
 		foreach($this->listeners as $listener)
 			$listener->trigger($args);
 	}

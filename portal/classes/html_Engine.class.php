@@ -1,6 +1,6 @@
 <?php namespace psm;
 if(!defined('PORTAL_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class html_engine {
+class html_Engine {
 
 	// main html file
 	private $htmlMain;
@@ -16,9 +16,9 @@ class html_engine {
 	private static $globalTags = NULL;
 
 
-	public function __construct(html $htmlMain=NULL) {
+	public function __construct(html_File $htmlMain=NULL) {
 		if($htmlMain == NULL)
-$this->htmlMain = html_file::LoadFile('default', 'main');
+$this->htmlMain = html_File::LoadFile('default', 'main');
 		else
 			$this->htmlMain = $htmlMain;
 		// tag parsers
@@ -109,7 +109,7 @@ $this->htmlMain = html_file::LoadFile('default', 'main');
 		if($data == NULL)
 			return NULL;
 		// page class
-		if($data instanceof Page)
+		if($data instanceof \psm\Page)
 			return $data->Render();
 		return (string) $data;
 	}
@@ -117,7 +117,9 @@ $this->htmlMain = html_file::LoadFile('default', 'main');
 
 	// call global tag parsers
 	public static function renderGlobalTags(&$data) {
-		$data = self::$globalTags->trigger($data);
+		$args = array();
+		$args[0] = &$data;
+		self::$globalTags->trigger($args);
 	}
 
 

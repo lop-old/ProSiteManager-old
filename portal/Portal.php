@@ -126,7 +126,7 @@ echo '<p>ENGINE IS NULL</p>';
 	 */
 	public function getEngine() {
 		if($this->engine == NULL)
-			$this->engine = new html_engine();
+			$this->engine = new html_Engine();
 		return $this->engine;
 	}
 

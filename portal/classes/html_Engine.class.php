@@ -16,7 +16,7 @@ class html_Engine {
 	private static $globalTags = NULL;
 
 
-	public function __construct(html_File $htmlMain=NULL) {
+	public function __construct(html_File &$htmlMain=NULL) {
 		if($htmlMain == NULL)
 $this->htmlMain = html_File::LoadFile('default', 'main');
 		else
@@ -46,8 +46,8 @@ $this->htmlMain = html_File::LoadFile('default', 'main');
 		$this->buildHasRun = TRUE;
 
 		// build header
-		// split by {add to header} tag
-		$split = new html_SplitBlock('{add to header}', $this->htmlMain->getBlock('head'));
+		// split by {header content} tag
+		$split = new html_SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
 		// open header block
 		echo $split->getPart(0);
 		// build header

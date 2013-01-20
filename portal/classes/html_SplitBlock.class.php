@@ -12,8 +12,11 @@ class html_SplitBlock {
 
 	public function &getPart($part) {
 		$part = (int)$part;
-		if(!isset($this->parts[$part]))
-			return null;
+		if(!isset($this->parts[$part])) {
+			$null = NULL;
+			return $null;
+		}
+		html_engine::renderGlobalTags($this->parts[$part]);
 		return $this->parts[$part];
 	}
 

@@ -1,11 +1,11 @@
 <?php namespace psm;
 //defines:
-//define('PORTAL_DONT_USE_ERROR_HANDLER', TRUE);
+define('PORTAL_DEBUG', TRUE);
 
 
 // constants
 define('DIR_SEP', DIRECTORY_SEPARATOR);
-define('LN', "\n"); // new line
+define('NEWLINE', "\n"); // new line
 
 // class loader
 include('ClassLoader.php');
@@ -13,16 +13,12 @@ ClassLoader::registerClassPath('psm', __DIR__.DIR_SEP.'classes');
 define('PORTAL_INDEX_FILE', TRUE);
 
 // debug mode
-if(file_exists(__DIR__.'/php_error.php')) {
-	// log display
-	error_reporting(E_ALL | E_STRICT);
-	//ini_set('display_errors', 'On');
-	//ini_set('html_errors', 'On');
-	if(!(defined('PORTAL_DONT_USE_ERROR_HANDLER') && PORTAL_DONT_USE_ERROR_HANDLER===TRUE)) {
-		// log file
-		ini_set('log_errors', 'On');
-		ini_set('error_log', 'php_errors.log');
-		// error handler
+if(defined('PORTAL_DEBUG')) {
+	// log to file
+	ini_set('log_errors', 'On');
+	ini_set('error_log', 'php_errors.log');
+	if(file_exists(__DIR__.'/php_error.php')) {
+		// php_error library
 		require('php_error.php');
 		\php_error\reportErrors(array(
 			'catch_ajax_errors'      => TRUE,
@@ -32,6 +28,11 @@ if(file_exists(__DIR__.'/php_error.php')) {
 			'application_root'       => __DIR__,
 			'background_text'        => 'PSM',
 		));
+	} else {
+		// log to display
+		ini_set('display_errors', 'On');
+		ini_set('html_errors',    'On');
+		error_reporting(E_ALL | E_STRICT);
 	}
 }
 
@@ -78,7 +79,7 @@ class Portal {
 				@date_default_timezone_set('America/New_York');
 		} catch(\Exception $ignore) {}
 		// load portal index
-		$portalIndex = $this->root.'/'.$this->portalName.'/index.php';
+		$portalIndex = $this->root.'/'.$this->portalName.'/'.$this->portalName.'.php';
 		include($portalIndex);
 	}
 
@@ -162,7 +163,7 @@ echo '<p>ENGINE IS NULL</p>';
 			return $this->action;
 		// get action
 		$this->action = variables::getVar('action', 'str');
-		$this->action = SanFilename($this->action);
+		$this->action = Utils_File::SanFilename($this->action);
 		return $this->action;
 	}
 

@@ -64,7 +64,7 @@ echo '<p>stop SanFilename() '.$filename.'</p>'; exit();
 		while(substr($filename,-1, 1) == '.')
 			$filename = substr($filename, 0, -1);
 		// clean string
-		$filename = str_replace(str_split(preg_replace("/([[:alnum:]_\.-]*)/", '_', $filename)), '_', $filename);
+		$filename = str_replace(str_split(preg_replace('/([[:alnum:]_\\.-]*)/', '_', $filename)), '_', $filename);
 		return trim($filename);
 	}
 

@@ -49,7 +49,7 @@ class html_BlockArray {
 				$this->_display(
 					($i==1 ? '' :
 						NEWLINE.
-						'//~~~~~~~~~~'.
+						'<!-- ~~~~~~~~~~ -->'.
 						NEWLINE).
 					NEWLINE.
 					$data.
@@ -78,7 +78,7 @@ class html_BlockArray {
 		return '<!-- '.$this->title.' -->';
 	}
 	private function _display_TitleLine() {
-		return '<!-- '.str_repeat( '-', strlen($this->title) ).' -->';
+		return '<!-- '.str_repeat( '=', strlen($this->title) ).' -->';
 	}
 	private function _display($data) {
 		if($this->useEcho == NULL)

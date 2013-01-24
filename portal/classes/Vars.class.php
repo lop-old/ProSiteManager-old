@@ -1,6 +1,6 @@
 <?php namespace psm;
 if(!defined('PORTAL_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class variables {
+class Vars {
 
 
 	// get,post,cookie (highest priority last)
@@ -12,16 +12,15 @@ class variables {
 			$d = null;
 			// get
 			if($v === 'g' || $v === 'get')
-				$d = variables::get($name, $type);
+				$d = self::get($name, $type);
 			else
 			// post
 			if($v === 'p' || $v === 'post')
-				$d = variables::post($name, $type);
+				$d = self::post($name, $type);
 			else
 			// cookie
 			if($v === 'c' || $v === 'cookie')
-				$d = variables::cookie($name, $type);
-			else
+				$d = self::cookie($name, $type);
 			// var found
 			if($d !== null)
 				$data = $d;
@@ -31,19 +30,19 @@ class variables {
 	// get var only
 	public static function get($name, $type) {
 		if(isset($_GET[$name]))
-			return variables::castType($_GET[$name], $type);
+			return self::castType($_GET[$name], $type);
 		return null;
 	}
 	// post var only
 	public static function post($name, $type) {
 		if(isset($_POST[$name]))
-			return variables::castType($_POST[$name], $type);
+			return self::castType($_POST[$name], $type);
 		return null;
 	}
 	// cookie var only
 	public static function cookie($name, $type) {
 		if(isset($_COOKIE[$name]))
-			return variables::castType($_COOKIE[$name], $type);
+			return self::castType($_COOKIE[$name], $type);
 		return null;
 	}
 
@@ -62,7 +61,7 @@ class variables {
 			return (float) $data;
 		// boolean
 		if($temp === 'b')
-			return variables::toBoolean($data);
+			return self::toBoolean($data);
 		return $data;
 	}
 	// convert to boolean

@@ -1,26 +1,35 @@
 <?php namespace psm;
 //defines:
-define('PORTAL_DEBUG', TRUE);
+
+//define('psm\DEBUG',			TRUE);
+//define('psm\DEMO',			TRUE);
+//define('psm\DEFAULT_MODULE',	'mysite');
+//define('psm\DEFAULT_PAGE',	'home');
 
 
-// constants
+//**************************************************
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
+
+
+// static constants
+define('PORTAL_INDEX_FILE', TRUE);
 define('DIR_SEP', DIRECTORY_SEPARATOR);
 define('NEWLINE', "\n"); // new line
 
 // class loader
 include('ClassLoader.php');
 ClassLoader::registerClassPath('psm', __DIR__.DIR_SEP.'classes');
-define('PORTAL_INDEX_FILE', TRUE);
 
 // debug mode
-if(defined('PORTAL_DEBUG')) {
+if(defined('psm\DEBUG')) {
 	// log to file
 	ini_set('log_errors', 'On');
 	ini_set('error_log', 'php_errors.log');
 	if(file_exists(__DIR__.'/php_error.php')) {
 		// php_error library
 		require('php_error.php');
-		\php_error\reportErrors(array(
+		$reportErrors = '\php_error\reportErrors';
+		$reportErrors(array(
 			'catch_ajax_errors'      => TRUE,
 			'catch_supressed_errors' => FALSE,
 			'catch_class_not_found'  => FALSE,
@@ -28,6 +37,7 @@ if(defined('PORTAL_DEBUG')) {
 			'application_root'       => __DIR__,
 			'background_text'        => 'PSM',
 		));
+		unset($reportErrors);
 	} else {
 		// log to display
 		ini_set('display_errors', 'On');
@@ -119,6 +129,11 @@ echo '<p>ENGINE IS NULL</p>';
 	}
 
 
+	public function setTitle($title) {
+//TODO:
+	}
+
+
 	/**
 	 * Gets the main template engine instance, creating a new one if needed.
 	 *
@@ -143,7 +158,7 @@ echo '<p>ENGINE IS NULL</p>';
 		if($this->page !== NULL)
 			return $this->page;
 		// get page
-		$this->page = variables::getVar('page', 'str');
+		$this->page = Vars::getVar('page', 'str');
 		// default page
 		if(empty($this->page))
 			$this->page = $this->defaultPage;
@@ -162,7 +177,7 @@ echo '<p>ENGINE IS NULL</p>';
 		if($this->action !== NULL)
 			return $this->action;
 		// get action
-		$this->action = variables::getVar('action', 'str');
+		$this->action = Vars::getVar('action', 'str');
 		$this->action = Utils_File::SanFilename($this->action);
 		return $this->action;
 	}

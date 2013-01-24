@@ -1,11 +1,27 @@
 <?php namespace psm;
-if(!defined('PORTAL_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class users {
 
+	private $tableName = NULL;
 
-	public static function loadUsers() {
+
+	public static function loadUsers($tableName='') {
+		if(!empty($tableName))
+			$this->tableName = $tableName;
 		return new users();
 	}
+
+
+	public function setDbTable($tableName) {
+		if(empty($tableName)) {
+			$this->tableName = NULL;
+			return;
+		}
+//TODO: san here
+		$this->tableName = $tableName;
+	}
+
+
 
 
 //	protected $UserId      = 0;

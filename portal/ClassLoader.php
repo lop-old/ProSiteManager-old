@@ -4,11 +4,42 @@
 
 // global namespace
 namespace {
+if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 	// class loader
 	function __autoload($classname) {
 		\psm\ClassLoader::autoload($classname);
 	}
 }
+
+
+
+
+
+
+
+
+//function hybrid_classes_autoload ($class) {
+//
+//    $classPath = explode('\\',$class);
+//
+//    if ($classPath[0] == 'Hybrid') {
+//        $file = dirname(__FILE__) . "/" . strtolower(implode('/',$classPath)) .".php";
+//
+//        if (file_exists($file)) {
+//            require_once($file);
+//        }
+//    }
+//};
+//
+//spl_autoload_register('hybrid_classes_autoload');
+
+
+
+
+
+
+
+
 
 
 // portal namespace

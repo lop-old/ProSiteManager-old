@@ -5,9 +5,21 @@
  */
 
 
+div.dataTables_length label,
+div.dataTables_filter label {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: larger;
+}
+table.dataTable {
+	margin-top: 5px;
+}
+
+
 div.dataTables_length label {
 	float: left;
 	text-align: left;
+	padding-left: 5px;
+	padding-top: 8px;
 }
 
 div.dataTables_length select {
@@ -15,11 +27,15 @@ div.dataTables_length select {
 }
 
 div.dataTables_filter label {
-	float: right;
+//	float: right;
+	text-align: right;
+	margin-top: 6px;
+	padding-right: 5px;
 }
 
 div.dataTables_info {
-	padding-top: 8px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }
 
 div.dataTables_paginate {
@@ -29,7 +45,7 @@ div.dataTables_paginate {
 
 table.table {
 	clear: both;
-	margin-bottom: 6px !important;
+	margin-bottom: 4px !important;
 	max-width: none !important;
 }
 
@@ -81,8 +97,6 @@ div.dataTables_scrollFoot table {
 }
 
 
-
-
 /*
  * TableTools styles
  */
@@ -116,7 +130,6 @@ div.DTTT .btn:hover {
 	text-decoration: none !important;
 }
 
-
 ul.DTTT_dropdown.dropdown-menu a {
 	color: #333 !important; /* needed only when demo_page.css is included */
 }
@@ -144,7 +157,6 @@ div.DTTT_print_info p {
 	font-size: 14px;
 	line-height: 20px;
 }
-
 
 
 /*

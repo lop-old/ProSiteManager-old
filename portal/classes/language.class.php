@@ -9,6 +9,13 @@ abstract class language {
 	abstract protected function load();
 
 
+	public static function Validate($clss) {
+		if(!($clss instanceof self))
+			die('<p>Not instance of '.__CLASS__.'!</p>');
+//TODO: throw exception
+	}
+
+
 	// add message
 	public function addMsg($name, $msg) {
 		$this->messages[$name] = $msg;

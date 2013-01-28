@@ -16,6 +16,13 @@ class html_BlockArray {
 	}
 
 
+	public static function Validate($clss) {
+		if(!($clss instanceof self))
+			die('<p>Not instance of '.__CLASS__.'!</p>');
+//TODO: throw exception
+	}
+
+
 	public function &Display($useEcho=TRUE) {
 		$this->useEcho = $useEcho;
 		if(!$useEcho)

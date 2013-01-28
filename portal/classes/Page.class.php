@@ -6,6 +6,13 @@ abstract class Page {
 	private static $paths = array();
 
 
+	public static function Validate($clss) {
+		if(!($clss instanceof self))
+			die('<p>Not instance of '.__CLASS__.'!</p>');
+		//TODO: throw exception
+	}
+
+
 	/**
 	 *	Render page.
 	 *

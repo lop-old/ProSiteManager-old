@@ -4,6 +4,30 @@ class Utils {
 
 
 	/**
+	 * Validates the type of class for an object.
+	 *
+	 * @return boolean Returns true if object is the type $className.
+	 */
+	public static function isClass($className, $clss) {
+		//echo '<p>$className - '.$className.'</p>';
+		//echo '<p>get_class($clss) - '.get_class($clss).'</p>';
+		//echo '<p>get_parent_class($clss) - '.get_parent_class($clss).'</p>';
+		return
+			get_class($clss) == $className ||
+			is_subclass_of($clss, $className
+		);
+	}
+	/**
+	 * Validates the type of class for an object, throwing an exception
+	 * if invalid.
+	 */
+	public static function Validate($className, $clss) {
+		if(!self::isClass($className, $clss))
+			throw new \InvalidArgumentException('Class object isn\'t of type '.$className);
+	}
+
+
+	/**
 	 * Sends http headers to disable page caching.
 	 *
 	 * @return boolean True if successful; False if headers already sent.

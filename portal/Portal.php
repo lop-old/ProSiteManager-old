@@ -19,6 +19,7 @@
 define('PORTAL_INDEX_FILE', TRUE);
 define('DIR_SEP', DIRECTORY_SEPARATOR);
 define('NEWLINE', "\n"); // new line
+define('TAB', "\t"); // tab
 
 // class loader
 include('ClassLoader.php');

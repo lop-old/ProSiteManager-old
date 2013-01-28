@@ -33,46 +33,46 @@ class bootstrap_NavBar {
 			// sub menu
 			$output .=
 				'<div class="container" id="sub-menu">'.NEWLINE.
-				'	<div class="navbar navbar-inverse">'.NEWLINE.
-				'		<div class="navbar-inner">'.NEWLINE.
-				'			<div class="container">'.NEWLINE;
+				TAB.'<div class="navbar navbar-inverse">'.NEWLINE.
+				TAB.TAB.'<div class="navbar-inner">'.NEWLINE.
+				TAB.TAB.TAB.'<div class="container">'.NEWLINE;
 		else
 			// main menu
 			$output .=
 			'<div class="navbar navbar-fixed-top">'.NEWLINE.
-			'	<div class="navbar-inner">'.NEWLINE.
-			'		<div class="container">'.NEWLINE;
+			TAB.'<div class="navbar-inner">'.NEWLINE.
+			TAB.TAB.'<div class="container">'.NEWLINE;
 		if($this->brand != NULL)
 			$output .= $this->brand->Render();
 		// menu items
 		$output .=
-			'		<ul class="nav">'.NEWLINE;
+			TAB.TAB.'<ul class="nav">'.NEWLINE;
 		foreach($this->items as $item)
 			$output .= $item->Render();
 		$output .=
-			'		</ul>'.NEWLINE;
+			TAB.TAB.'</ul>'.NEWLINE;
 		// menu items - right side
 		if(count($this->itemsRight) > 0) {
 			$output .=
-				'		<ul class="nav pull-right">'.NEWLINE;
+				TAB.TAB.'<ul class="nav pull-right">'.NEWLINE;
 			foreach($this->itemsRight as $item)
 				$output .= $item->Render();
 			$output .=
-				'		</ul>'.NEWLINE;
+				TAB.TAB.'</ul>'.NEWLINE;
 		}
 		// close tags
 		if($isSubMenu === TRUE)
 			// sub menu
 			$output .= NEWLINE.
-				'			</div>'.NEWLINE.
-				'		</div>'.NEWLINE.
-				'	</div>'.NEWLINE.
+				TAB.TAB.TAB.'</div>'.NEWLINE.
+				TAB.TAB.'</div>'.NEWLINE.
+				TAB.'</div>'.NEWLINE.
 				'</div>'.NEWLINE;
 		else
 			// main menu
 			$output .=
-				'		</div>'.NEWLINE.
-				'	</div>'.NEWLINE.
+				TAB.TAB.'</div>'.NEWLINE.
+				TAB.'</div>'.NEWLINE.
 				'</div>'.NEWLINE;
 		$output .=
 			'<!-- '.($isSubMenu===TRUE ? 'Sub-Menu' : 'Main-Menu').' -->'.NEWLINE.

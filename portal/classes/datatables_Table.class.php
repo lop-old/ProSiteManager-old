@@ -2,8 +2,13 @@
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class datatables_Table {
 
+	private $headings = array();
+	private $rows = NULL;
 
-	public function __construct() {
+
+	public function __construct($headings=array()) {
+		if(count($headings) > 0)
+			$this->headings = $headings;
 		html_File_Main::addFileCSS(
 			'{path=static}jquery-ui/redmond/jquery.ui.theme.css',
 			'{path=static}jquery/datatables_bootstrap.css'
@@ -16,11 +21,13 @@ class datatables_Table {
 	}
 
 
-	public static function Validate($clss) {
-		html_File::Validate($clss);
-		if(!($clss instanceof self))
-			die('<p>Not instance of html_File_Main!</p>');
-		//TODO: throw exception
+	public function addRow($row=array()) {
+		if(!is_array($row) || count($row)==0)
+			return;
+//TODO: should this throw an exception? this means it's in 
+//		if(!is_array($this->rows))
+//			$this->rows = array();
+		$this->rows[] = $row;
 	}
 
 
@@ -28,32 +35,14 @@ class datatables_Table {
 		$this->Render_JS();
 		return '
 <table border="0" cellpadding="0" cellspacing="0" class="table table-striped table-bordered" id="mainTable" style="width: 100%;">
-	<thead>
-		<tr>
-			<th>Item</th>
-			<th>Seller</th>
-			<th>Expires</th>
-			<th>Price (Each)</th>
-			<th>Price (Total)</th>
-			<th>Market Value</th>
-			<th>Qty</th>
-			<th>Buy</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr class="odd gradeU">
-			<td>i</td>
-			<td>s</td>
-			<td>e</td>
-			<td>p</td>
-			<td>p</td>
-			<td>m</td>
-			<td>q</td>
-			<td>
-				<a href="">More Options</a>
-			</td>
-		</tr>
-	</tbody>
+<thead>
+	<tr>
+'.$this->Render_Headings().'
+	</tr>
+</thead>
+<tbody>
+'.$this->Render_Rows().'
+</tbody>
 </table>
 ';
 	}
@@ -77,6 +66,33 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 </script>
 ');
 	}
+
+
+	private function Render_Headings() {
+		$data = '';
+		foreach($this->headings as $heading) {
+			$data .= TAB.TAB.'<th>'.$heading.'</th>'.NEWLINE;
+		}
+		return $data;
+	}
+
+
+	private function Render_Rows() {
+		$data = '';
+		foreach($this->rows as $row)
+			$data .= $this->Render_Row($row);
+		return $data;
+	}
+
+
+	private function Render_Row($row) {
+		$data = TAB.'<tr class="odd gradeU">'.NEWLINE;
+		foreach($row as $r)
+			$data .= TAB.TAB.'<td>'.$r.'</td>'.NEWLINE;
+		$data .= TAB.'</tr>'.NEWLINE;
+		return $data;
+	}
+
 
 }
 ?>

@@ -33,7 +33,7 @@ class html_Engine {
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
-		html_File_Main::Validate($this->htmlMain);
+		Utils::Validate('psm\html_File_Main', $this->htmlMain);
 		// tag parsers
 		$this->tagString = new html_Tag_String();
 $paths = array(
@@ -57,13 +57,6 @@ $paths
 //			$this->blocksJs->setPostpend('</script>');
 //		$this->blocksPage   = new html_BlockArray('portal - page contents');
 //		$this->blocksFooter = new html_BlockArray('portal - footer contents');
-	}
-
-
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-//TODO: throw exception
 	}
 
 

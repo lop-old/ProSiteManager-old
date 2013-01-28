@@ -10,13 +10,6 @@ class html_SplitBlock {
 	}
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-		//TODO: throw exception
-	}
-
-
 	public function &getPart($part) {
 		$part = (int)$part;
 		if(!isset($this->parts[$part])) {

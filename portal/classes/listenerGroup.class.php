@@ -5,13 +5,6 @@ class listenerGroup {
 	private $listeners = array();
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-		//TODO: throw exception
-	}
-
-
 	public function registerListener(listener $listener) {
 		Utils::appendArray($this->listeners, $listener);
 	}

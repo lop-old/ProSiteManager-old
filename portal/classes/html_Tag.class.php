@@ -7,13 +7,6 @@ abstract class html_Tag  implements listener {
 	protected abstract function RenderTags(&$args);
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-		//TODO: throw exception
-	}
-
-
 	/* (non-PHPdoc)
 	 * @see \psm\listener::trigger()
 	 */

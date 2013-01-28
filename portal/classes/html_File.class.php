@@ -25,13 +25,6 @@ class html_File {
 	}
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-//TODO: throw exception
-	}
-
-
 	public function addBlock($blockName, &$data, $top=FALSE) {
 		if($data == NULL) return;
 		$rendered = html_Engine::renderObject($data);

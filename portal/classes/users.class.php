@@ -5,13 +5,6 @@ class users {
 	private $tableName = NULL;
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-		//TODO: throw exception
-	}
-
-
 	public static function loadUsers($tableName='') {
 		if(!empty($tableName))
 			$this->tableName = $tableName;

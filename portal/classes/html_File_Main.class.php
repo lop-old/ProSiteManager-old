@@ -18,13 +18,6 @@ class html_File_Main extends html_File {
 	}
 
 
-	public static function Validate($clss) {
-		if(!($clss instanceof self))
-			die('<p>Not instance of '.__CLASS__.'!</p>');
-//TODO: throw exception
-	}
-
-
 	// add css file
 	public static function addFileCSS() {
 		// loop arguments

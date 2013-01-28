@@ -1,6 +1,10 @@
 <?php namespace psm;
-//defines:
+// PSM - Content Management Framework
+// (c) (t) 2004-2013
+// Mattsoft.net PoiXson.com
 
+
+//defines for use in index.php
 //define('psm\DEBUG',			TRUE);
 //define('psm\DEMO',			TRUE);
 //define('psm\DEFAULT_MODULE',	'mysite');
@@ -112,8 +116,8 @@ echo '<p>PAGE IS NULL</p>';
 echo '<p>ENGINE IS NULL</p>';
 			return;
 		}
-		$engine->addPage($pageObj);
-		$engine->Build();
+		$engine->addToPage($pageObj);
+		$engine->Display();
 	}
 
 
@@ -129,7 +133,20 @@ echo '<p>ENGINE IS NULL</p>';
 	}
 
 
+	/**
+	 * Sets the website title.
+	 *
+	 *
+	 */
 	public function setTitle($title) {
+//TODO:
+	}
+	/**
+	 * Gets the website title.
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
 //TODO:
 	}
 
@@ -137,13 +154,30 @@ echo '<p>ENGINE IS NULL</p>';
 	/**
 	 * Gets the main template engine instance, creating a new one if needed.
 	 *
-	 * @return html_engine
+	 * @return html_Engine
 	 */
-	public function getEngine() {
-		if($this->engine == NULL)
-			$this->engine = new html_Engine();
-		return $this->engine;
+	public static function getEngine() {
+		return html_Engine::getEngine();
 	}
+//		// new instance if needed
+//		if($this->engine == NULL)
+//			$this->engine = new html_Engine();
+//		return $this->engine;
+//	}
+//	/**
+//	 * Gets the main template engine instance, creating a new one if needed.
+//	 *
+//	 * @return html_Engine
+//	 */
+//	public static function getEngine() {
+//		$portal = self::getPortal();
+//		if(!($portal instanceof Portal))
+//			die('<p>Unable to get Portal object!</p>');
+//		$engine = $portal->_getEngine();
+//		if(!($engine instanceof html_Engine))
+//			die('<p>Unable to get Engine object!</p>');
+//		return $engine;
+//	}
 
 
 	// get root path

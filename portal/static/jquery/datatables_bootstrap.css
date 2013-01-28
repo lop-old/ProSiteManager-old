@@ -11,7 +11,8 @@ div.dataTables_filter label {
 	font-size: larger;
 }
 table.dataTable {
-	margin-top: 5px;
+	/* space above table */
+	margin-top: 4px;
 }
 
 
@@ -45,6 +46,7 @@ div.dataTables_paginate {
 
 table.table {
 	clear: both;
+	/* space below table */
 	margin-bottom: 4px !important;
 	max-width: none !important;
 }

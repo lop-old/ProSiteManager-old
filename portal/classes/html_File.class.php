@@ -1,25 +1,71 @@
 <?php namespace psm;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-abstract class html_File {
+class html_File {
+
+//	protected $tags = array();
+	protected $blocks = array();
+
+	protected static $cachedFiles = array();
 
 
 	public static function LoadFile($theme, $filename) {
-		$filepath = 'wa/html/'.Utils_File::SanFilename($theme).'/'.Utils_File::SanFilename($filename).'.html.php';
-		if(!file_exists($filepath)) {
-			echo '<p>File not found! '.$filepath.'</p>';
-			exit();
-		}
+//TODO: add caching!!!
+		$filepath =
+			'wa/html/'.Utils_File::SanFilename($theme).
+			'/'.
+			str_replace('..', '', $filename).
+			'.html.php';
+		if(!file_exists($filepath))
+			die('<p>File not found! '.$filepath.'</p>');
 		include($filepath);
 		$clss = '\wa\html_'.$filename;
-		if(!class_exists($clss)) {
-			echo '<p>Class not found! '.$clss.'</p>';
-			exit();
-		}
+		if(!class_exists($clss))
+			die('<p>Class not found! '.$clss.'</p>');
 		return new $clss();
 	}
 
 
-	public function getBlock($blockName='') {
+	public static function Validate($clss) {
+		if(!($clss instanceof self))
+			die('<p>Not instance of '.__CLASS__.'!</p>');
+//TODO: throw exception
+	}
+
+
+	public function addBlock($blockName, &$data, $top=FALSE) {
+		if($data == NULL) return;
+		$rendered = html_Engine::renderObject($data);
+		// attempt loading block function
+		if(!isset($this->blocks[$blockName]))
+			$this->blocks[$blockName] = $this->getFunc($blockName);
+		if($this->blocks[$blockName] == NULL)
+			$this->blocks[$blockName] = '';
+		// add to block
+		if($top)
+			$this->blocks[$blockName] = $rendered . $this->blocks[$blockName];
+		else
+			$this->blocks[$blockName] .= $rendered;
+	}
+	public function getBlock($blockName='block') {
+//if($blockName == 'header'){
+//	var_dump($this->blocks);
+//exit();
+//}
+
+		// return cached block
+		if(isset($this->blocks[$blockName]))
+			return $this->blocks[$blockName];
+		// load block function
+		$this->blocks[$blockName] = $this->getFunc($blockName);
+		// block function not found
+		if($this->blocks[$blockName] == NULL) {
+			unset($this->blocks[$blockName]);
+			return NULL;
+		}
+		// return loaded block
+		return $this->blocks[$blockName];
+	}
+	protected function getFunc($blockName) {
 		$func = '_'.$blockName;
 		if(!method_exists($this, $func))
 			return null;
@@ -27,23 +73,21 @@ abstract class html_File {
 	}
 
 
-	protected static function addFileCSS() {
-		foreach(func_get_args() as $file) {
-			if(empty($file)) return '';
-			$engine = Portal::getPortal()->getEngine();
-			$engine->addHeader(
-				'<link rel="stylesheet" type="text/css" href="'.$file.'" />'
-			);
-		}
+	public function getFilePath() {
+		return __FILE__;
 	}
-	protected static function addFileJS() {
-		foreach(func_get_args() as $file) {
-			if(empty($file)) continue;
-			$engine = Portal::getPortal()->getEngine();
-			$engine->addHeader(
-				'<script type="text/javascript" language="javascript" src="'.$file.'"></script>'
-			);
-		}
+
+
+	public function &getTags() {
+		return $this->tags;
+	}
+	public function &getTag($tag) {
+		if(!isset($this->tags[$tag]))
+			return null;
+		return $this->tags[$tag];
+	}
+	public function addTag($tag, $value) {
+		$this->tags[$tag] = $value;
 	}
 
 

@@ -3,8 +3,7 @@ if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()
 class datatables_Table {
 
 	private $headings = array();
-	private $rows = array();
-	private $query = NULL;
+	private $queryClass = NULL;
 
 	private $tableName      = 'mainTable';
 	private $usingAjax      = FALSE;
@@ -13,9 +12,16 @@ class datatables_Table {
 	private $scrollInfinite = FALSE;
 
 
-	public function __construct($headings=array(), $usingAjax=FALSE) {
-		if(count($headings) > 0)
-			$this->headings = $headings;
+	/**
+	 * Wrapper to generate DataTables html.
+	 *
+	 * @param string[] $headings
+	 * @param datatables_Query $queryClass
+	 */
+	public function __construct($headings, $queryClass, $usingAjax=FALSE) {
+		$this->headings = $headings;
+		Utils::Validate('psm\datatables_Query', $queryClass);
+		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
 		html_File_Main::addFileCSS(
 			'{path=static}jquery-ui/redmond/jquery.ui.theme.css',
@@ -28,16 +34,21 @@ class datatables_Table {
 	}
 
 
-	public function addRow($row=array()) {
-		if(!is_array($row) || count($row)==0)
-			return;
-		if(!is_array($this->rows))
-			$this->rows = array();
-		$this->rows[] = $row;
-	}
+//	public function addRow($row=array()) {
+//		if(!is_array($row) || count($row)==0)
+//			return;
+//		if(!is_array($this->rows))
+//			$this->rows = array();
+//		$this->rows[] = $row;
+//	}
 
 
 	public function Render() {
+		if(!$this->usingAjax) {
+			if(!$this->queryClass->runQuery()) {
+die('Failed to query db.');
+			}
+		}
 		$this->Render_JS();
 		return '
 <a class="button" href="javascript:(function()%20{var%20url%20=%20\'http://debug.datatables.net/bookmarklet/DT_Debug.js\';if(%20typeof%20DT_Debug!=\'undefined\'%20)%20{if%20(%20DT_Debug.instance%20!==%20null%20)%20{DT_Debug.close();}else%20{new%20DT_Debug();}}else%20{var%20n=document.createElement(\'script\');n.setAttribute(\'language\',\'JavaScript\');n.setAttribute(\'src\',url+\'?rand=\'+new%20Date().getTime());document.body.appendChild(n);}})();">Debug</a>
@@ -112,8 +123,12 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 		if($this->usingAjax)
 			return;
 		$data = '';
-		foreach($this->rows as $row)
+		while(TRUE) {
+			$row = $this->queryClass->getRow();
+			if($row == FALSE) break;
+//echo '<pre>';print_r($row);echo '</pre>';
 			$data .= $this->Render_Row($row);
+		}
 		return $data;
 	}
 

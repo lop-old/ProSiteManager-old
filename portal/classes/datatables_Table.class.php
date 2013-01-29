@@ -3,16 +3,23 @@ if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()
 class datatables_Table {
 
 	private $headings = array();
-	private $rows = NULL;
+	private $rows = array();
+	private $query = NULL;
+
+	private $tableName      = 'mainTable';
+	private $usingAjax      = FALSE;
+	private $saveState      = TRUE;
+	private $paginate       = TRUE;
+	private $scrollInfinite = FALSE;
 
 
-	public function __construct($headings=array()) {
+	public function __construct($headings=array(), $usingAjax=FALSE) {
 		if(count($headings) > 0)
 			$this->headings = $headings;
+		$this->usingAjax = $usingAjax;
 		html_File_Main::addFileCSS(
 			'{path=static}jquery-ui/redmond/jquery.ui.theme.css',
 			'{path=static}jquery/datatables_bootstrap.css'
-//			'{path=theme}table_jui.css'
 		);
 		html_File_Main::addFileJS(
 			'{path=static}jquery/jquery.dataTables-1.9.4.min.js',
@@ -24,9 +31,8 @@ class datatables_Table {
 	public function addRow($row=array()) {
 		if(!is_array($row) || count($row)==0)
 			return;
-//TODO: should this throw an exception? this means it's in 
-//		if(!is_array($this->rows))
-//			$this->rows = array();
+		if(!is_array($this->rows))
+			$this->rows = array();
 		$this->rows[] = $row;
 	}
 
@@ -34,6 +40,7 @@ class datatables_Table {
 	public function Render() {
 		$this->Render_JS();
 		return '
+<a class="button" href="javascript:(function()%20{var%20url%20=%20\'http://debug.datatables.net/bookmarklet/DT_Debug.js\';if(%20typeof%20DT_Debug!=\'undefined\'%20)%20{if%20(%20DT_Debug.instance%20!==%20null%20)%20{DT_Debug.close();}else%20{new%20DT_Debug();}}else%20{var%20n=document.createElement(\'script\');n.setAttribute(\'language\',\'JavaScript\');n.setAttribute(\'src\',url+\'?rand=\'+new%20Date().getTime());document.body.appendChild(n);}})();">Debug</a>
 <table border="0" cellpadding="0" cellspacing="0" class="table table-striped table-bordered" id="mainTable" style="width: 100%;">
 <thead>
 	<tr>
@@ -47,24 +54,48 @@ class datatables_Table {
 ';
 	}
 	private function Render_JS() {
-		html_Engine::addHeader('
+$data = '
 <script type="text/javascript" language="javascript" charset="utf-8">
 $(document).ready(function() {
-	oTable = $(\'#mainTable\').dataTable({
+	oTable = $(\'#'.$this->tableName.'\').dataTable({
 		"oLanguage": {
-			"sEmptyTable"     : "&nbsp;<br />Nothing to display<br />&nbsp;",
-			"sZeroRecords"    : "&nbsp;<br />Nothing to display<br />&nbsp;",
+			"sEmptyTable"       : "&nbsp;<br />Nothing to display<br />&nbsp;",
+			"sZeroRecords"      : "&nbsp;<br />Nothing to display<br />&nbsp;",
 		},
 		"bJQueryUI"         : true,
-		"sPagePrevEnabled"  : true,
-		"sPageNextEnabled"  : true,
+		"bProcessing"       : false,
+';
+if($this->paginate)
+	$data .= '
+		"bPaginate"         : true,
+		"iDisplayLength"    : 10,
+		"aLengthMenu"       : [[5, 10, 30, 100, -1], [5, 10, 30, 100, "All"]],
+		"sPaginationType"   : "full_numbers",
+//		"bStateSave"        : '.($this->saveState ? 'true' : 'false').',
+';
+if(!empty($this->scrollInfinite))
+	$data .= '
+		"bScrollInfinite"   : true,
+		"bScrollCollapse"   : true,
+		"sScrollY"          : "450px",
+';
+$data .= '
+//		"bDeferRender" : true,
+';
+if($this->usingAjax)
+	$data .= '
+		"bServerSide"       : true,
+		"sAjaxSource"       : "./?page={page}&ajax=true",
+';
+$data .= '
 	});
 } );
 $.extend( $.fn.dataTableExt.oStdClasses, {
 	"sWrapper": "dataTables_wrapper form-inline"
 } );
 </script>
-');
+';
+		html_Engine::addHeader($data);
 	}
 
 
@@ -78,6 +109,8 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 
 
 	private function Render_Rows() {
+		if($this->usingAjax)
+			return;
 		$data = '';
 		foreach($this->rows as $row)
 			$data .= $this->Render_Row($row);
@@ -91,6 +124,38 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 			$data .= TAB.TAB.'<td>'.$r.'</td>'.NEWLINE;
 		$data .= TAB.'</tr>'.NEWLINE;
 		return $data;
+	}
+
+
+	public function setTableName($tableName='mainTable') {
+		if(empty($tableName))
+			return;
+		$this->tableName = $tableName;
+	}
+
+
+	public function setSaveState($saveState=TRUE) {
+		$this->saveState = $saveState;
+	}
+
+
+	// enables pagination
+	public function setPagination($paginate=TRUE) {
+		$this->paginate = Vars::toBoolean($paginate);
+		// disable infinite scroll
+		if($this->paginate)
+			$this->scrollInfinite = FALSE;
+	}
+	// enables infinite scroll
+	public function setScrollInfinite($tableHeight=TRUE) {
+		if($tableHeight === TRUE)
+			$this->scrollInfinite = '450px';
+		elseif($tableHeight === FALSE)
+			$this->scrollInfinite = FALSE;
+		$this->scrollInfinite = $tableHeight;
+		// disable pagination
+		if(!empty($this->scrollInfinite))
+			$this->paginate = FALSE;
 	}
 
 

@@ -5,6 +5,25 @@
  */
 
 
+.ui-button,
+input,
+.button {
+	padding-left:     8px;
+	padding-right:    8px;
+	border-width:     2px;
+	border-style:     solid;
+	border-color:     #444444;
+	border-radius:    6px;
+	-moz-border-radius: 6px;
+	font-size:        large;
+}
+.ui-button,
+.button {
+	cursor: hand;
+	cursor: pointer;
+}
+
+
 div.dataTables_length label,
 div.dataTables_filter label {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -195,4 +214,19 @@ div.DTFC_LeftBodyWrapper tbody tr:first-child td {
 
 div.DTFC_LeftFootWrapper table {
 	border-top: none;
+}
+
+
+div.ui-toolbar {
+	padding-left: 8px;
+	padding-right: 8px;
+	height: 40px;
+}
+div.dataTables_info {
+	width: 50%;
+	float: left;
+	padding-top: 8px;
+}
+div.dataTables_paginate {
+	margin-top: 10px;
 }

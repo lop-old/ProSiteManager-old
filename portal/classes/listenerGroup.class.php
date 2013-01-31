@@ -5,7 +5,7 @@ class listenerGroup {
 	private $listeners = array();
 
 
-	public function registerListener(listener $listener) {
+	public function registerListener(Listener $listener) {
 		Utils::appendArray($this->listeners, $listener);
 	}
 

@@ -2,7 +2,8 @@
 if(!defined('PORTAL_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 require(__DIR__.'/phppdo/phppdo.php');
 class DB {
-	private static $dbNameDefault = 'main';
+
+	const dbDefaultName = 'main';
 
 	private static $dbPool = array();
 
@@ -10,7 +11,7 @@ class DB {
 	public static function getDB($dbName=NULL) {
 		// set default
 		if($dbName == NULL)
-			$dbName = self::$dbNameDefault;
+			$dbName = self::dbDefaultName;
 		if(!self::dbIsSet($dbName))        return NULL;
 		if(!isset(self::$dbPool[$dbName])) return NULL;
 		if(!self::dbIsConnected($dbName))
@@ -32,29 +33,27 @@ class DB {
 
 
 	// connect to database
-	public static function _connect($dbName, $dsn, $user='', $pass='', $driver_options=array()) {
+	public static function Connect($dbName, $dsn, $user='', $pass='', $driver_options=array()) {
 		try {
 			$driver = strtolower(trim(substr($dsn, 0, strpos($dsn, ':'))));
-			if(	empty($driver) ||
-				!class_exists('PDO') ||
-				!extension_loaded('pdo_'.$driver)
-				)
+			if(	empty($driver) || !class_exists('PDO') || !extension_loaded('pdo_'.$driver) )
 				$class = 'PHPPDO';
 			else
 				$class = 'PDO';
-			return new $class($dsn, $user, $pass, $driver_options);
+			self::$dbPool[$dbName]['pdo'] =
+				new $class($dsn, $user, $pass, $driver_options);
 		} catch(\PDOException $e) {
 			die($e->getMessage());
 		}
 	}
 	// mysql
-	public static function _connect_MySQL($dbName, $host='localhost', $port=3306, $database='', $user='', $pass='', $driver_options=array()) {
-		self::_connect(
-				$dbName,
-				'mysql:host='.$host.';port='.((int)$port).';dbname='.$database,
-				$user,
-				$pass,
-				$driver_options
+	public static function Connect_MySQL($dbName, $host='localhost', $port=3306, $database='', $user='', $pass='', $driver_options=array()) {
+		return self::Connect(
+			$dbName,
+			'mysql:host='.$host.';port='.((int)$port).';dbname='.$database,
+			$user,
+			$pass,
+			$driver_options
 		);
 	}
 

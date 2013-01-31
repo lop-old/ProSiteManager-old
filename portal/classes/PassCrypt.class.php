@@ -18,7 +18,8 @@ class PassCrypt {
 	//     md5() x 1000, reverse last 10 chars, md5() x 500
 
 
-	private $hashSequence = 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5';
+	const defaultHashSequence = 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5';
+	private $hashSequence = NULL;
 
 
 	public function __construct($hashSequence='') {
@@ -27,9 +28,24 @@ class PassCrypt {
 	}
 
 
+	// single use hash
+	public static function hashNow($data, $hashSequence='') {
+		$crypt = new self($hashSequence);
+		$output = $crypt->hash($data);
+		unset($crypt);
+		return $output;
+	}
+
+
+	// hash a string
 	public function hash($data) {
+		// default hash sequence
+		if(empty($this->hashSequence))
+			$this->hashSequence = self::defaultHashSequence;
+		// split to array
 		$modes = explode(' ', $this->hashSequence);
 		foreach($modes as $hashMode) {
+			$hashMode = trim($hashMode);
 			if(empty($hashMode)) continue;
 			self::_hashThis($data, $hashMode);
 		}
@@ -37,6 +53,8 @@ class PassCrypt {
 	}
 	private static function _hashThis(&$data, $mode) {
 		@list($mode, $arg) = explode(':', $mode, 2);
+		$mode = trim($mode);
+		$arg  = trim($arg);
 		// md5
 		if($mode == 'md5') {
 			$data = md5($data);

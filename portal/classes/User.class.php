@@ -2,24 +2,60 @@
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class User {
 
-	private $tableName = NULL;
+	private static $user = NULL;
+	private $db = NULL;
+
+	// table name
+	const defaultTableName = 'Users';
+	private $tableName = '';
+
+	// demo mode
+	private $demoAllowed = TRUE;
+	private $isDemo      = FALSE;
 
 
-	public static function loadUsers($tableName='') {
-		if(!empty($tableName))
-			$this->tableName = $tableName;
-		return new users();
+	public static function getUserSession($db=NULL, $tableName='') {
+		// new user session
+		if(self::$user == NULL)
+			self::$user = new self($db, $tableName);
+		// check login
+		self::login();
+		return self::$user;
+	}
+	protected function __construct($db=NULL, $tableName='') {
+		if($db == NULL)
+			die('<p>db can\'t be null!</p>');
+		// default/custom table name
+		$this->tableName = (empty($tableName) ? self::defaultTableName : $tableName);
 	}
 
 
-	public function setDbTable($tableName) {
-		if(empty($tableName)) {
-			$this->tableName = NULL;
-			return;
-		}
+	// do login
+	private static function login() {
+		$username = trim(Vars::getVar('login_username', 'str', 'post'));
+		$password = trim(Vars::getVar('login_password', 'str', 'post'));
+		// no login to process
+		if(empty($username) && empty($password)) return;
+		// encrypt password
+		$password = PassCrypt::hashNow($password);
+	}
+
+
+
+
+
+
+
+
+
+//	public function setDbTable($tableName) {
+//		if(empty($tableName)) {
+//			$this->tableName = NULL;
+//			return;
+//		}
 //TODO: san here
-		$this->tableName = $tableName;
-	}
+//		$this->tableName = $tableName;
+//	}
 
 
 

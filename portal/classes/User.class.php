@@ -9,82 +9,92 @@ class User {
 	const defaultTableName = 'Users';
 	private $tableName = '';
 
+	// url vars
+	const DEFAULT_USERNAME_VAR = 'login_username';
+	const DEFAULT_PASSWORD_VAR = 'login_password';
+	private $usernameVar = self::DEFAULT_USERNAME_VAR;
+	private $passwordVar = self::DEFAULT_PASSWORD_VAR;
+
 	// demo mode
 	private $demoAllowed = TRUE;
 	private $isDemo      = FALSE;
 
+	// user details
+	private $userId = 0;
+	private $username = NULL;
+	private $meta = array();
 
-	public static function getUserSession($db=NULL, $tableName='') {
+
+	public static function getUserSession($db, $tableName='') {
+		$user = &self::$user;
 		// new user session
-		if(self::$user == NULL)
-			self::$user = new self($db, $tableName);
-		// check login
-		self::login();
-		return self::$user;
+		if($user == NULL)
+			$user = new self($db, $tableName);
+		// check login, if available
+		$user->_doLogin();
+		// check session
+		if(!$user->sessionOk())
+			$user->_checkSession();
+		return $user;
 	}
 	protected function __construct($db=NULL, $tableName='') {
+//		Session::factory();
+		// db to use
 		if($db == NULL)
 			die('<p>db can\'t be null!</p>');
+		$this->db = $db;
 		// default/custom table name
 		$this->tableName = (empty($tableName) ? self::defaultTableName : $tableName);
 	}
 
 
-	// do login
-	private static function login() {
-		$username = trim(Vars::getVar('login_username', 'str', 'post'));
-		$password = trim(Vars::getVar('login_password', 'str', 'post'));
-		// no login to process
-		if(empty($username) && empty($password)) return;
-		// encrypt password
-		$password = PassCrypt::hashNow($password);
+	// check session
+	private function _checkSession() {
 	}
 
 
+	// do login
+	private function _doLogin() {
+		$username = trim(Vars::getVar($this->usernameVar, 'str', 'post'));
+		$password = trim(Vars::getVar($this->passwordVar, 'str', 'post'));
+		// no login to process
+		if(empty($username) || empty($password)) return;
+		// encrypt password
+		$password = PassCrypt::hashNow($password);
+		$table = 'PSM_Users';
+		$query = "SELECT `user_id`, `username`, `email`, `date_join` FROM `".DB::san($table)."` WHERE `username` = :username AND `password` = :password LIMIT 1";
+		$params = array(
+			':username' => $username,
+			':password' => $password,
+		);
+		$st = $this->db->prepare($query);
+		$st->execute($params);
+		// not found
+		if($st->rowCount() != 1) {
+die('Invalid login');
+//$_SESSION[$config['session name']] = '';
+			return;
+		}
+		$row = $st->fetch(\PDO::FETCH_ASSOC);
+		// user details
+		$this->userId   = (int) $row['user_id'];
+		$this->username = $row['username'];
+		// meta details
+		$this->meta['email']     = $row['email'];
+		$this->meta['date_join'] = $row['date_join'];
 
+//		if( strtolower($row['playerName']) != strtolower($this->Name) ) return(FALSE);
 
+//		$this->Money       = ((double) $row['money']      );
+//		$this->ItemsSold   = ((int)    $row['itemsSold']  );
+//		$this->ItemsBought = ((int)    $row['itemsBought']);
+//		$this->Earnt       = ((double) $row['earnt']      );
+//		$this->Spent       = ((double) $row['spent']      );
+//		foreach(explode(',',$row['Permissions']) as $perm)
+//			$this->permissions[$perm] = TRUE;
+//		$this->invLocked   = ((boolean)$row['Locked']     );
+//		$_SESSION[$config['session name']] = $this->Name;
 
-
-
-
-
-//	public function setDbTable($tableName) {
-//		if(empty($tableName)) {
-//			$this->tableName = NULL;
-//			return;
-//		}
-//TODO: san here
-//		$this->tableName = $tableName;
-//	}
-
-
-
-
-//	protected $UserId      = 0;
-//	protected $Name        = '';
-//	protected $Money       = 0.0;
-//	protected $ItemsSold   = 0;
-//	protected $ItemsBought = 0;
-//	protected $Earnt       = 0.0;
-//	protected $Spent       = 0.0;
-//	protected $permissions = array();
-//	protected $invLocked   = NULL;
-//
-//
-//	function __construct(){global $config;
-//	session_init();
-//	$loginUrl = './?page=login';
-//	if(empty($config['session name'])) $config['session name'] = 'WebAuctionPlus User';
-//	// check logged in
-//	if(isset($_SESSION[$config['session name']]))
-//		$this->doValidate( $_SESSION[$config['session name']] );
-//	// not logged in (and is required)
-//	if(SettingsClass::getBoolean('Require Login'))
-//		if(!$this->isOk() && $config['page'] != 'login'){
-//		ForwardTo($loginUrl, 0); exit();}
-//	}
-//
-//
 //	// do login
 //	public function doLogin($username, $password){global $config;
 //	if($password===FALSE) $password = '';
@@ -96,11 +106,7 @@ class User {
 //	if(empty($this->Name)) return(FALSE);
 //	if($password!==FALSE && empty($password)) return(FALSE);
 //	// validate player
-//	$query = "SELECT `id`,`playerName`,`money`,`itemsSold`,`itemsBought`,`earnt`,`spent`,`Permissions`,`Locked` ".
-//			"FROM `".$config['table prefix']."Players` ".
-//			"WHERE LOWER(`playerName`)='".mysql_san(strtolower($this->Name))."' ".
-//			($password===FALSE?"":"AND `password`='".mysql_san($password)."' ").
-//			"LIMIT 1";
+
 //	$result = RunQuery($query, __file__, __line__);
 //	if($result){
 //		if(mysql_num_rows($result)==0){
@@ -108,24 +114,7 @@ class User {
 //			$_GET['error'] = 'bad login';
 //			return(FALSE);
 //		}
-//		$row = mysql_fetch_assoc($result);
-//		if( strtolower($row['playerName']) != strtolower($this->Name) ) return(FALSE);
-//		$this->UserId      = ((int)    $row['id']         );
-//		$this->Name        =           $row['playerName'];
-//		$this->Money       = ((double) $row['money']      );
-//		$this->ItemsSold   = ((int)    $row['itemsSold']  );
-//		$this->ItemsBought = ((int)    $row['itemsBought']);
-//		$this->Earnt       = ((double) $row['earnt']      );
-//		$this->Spent       = ((double) $row['spent']      );
-//		foreach(explode(',',$row['Permissions']) as $perm)
-//			$this->permissions[$perm] = TRUE;
-//		$this->invLocked   = ((boolean)$row['Locked']     );
-//		$_SESSION[$config['session name']] = $this->Name;
-//	}else{
-//		$_SESSION[$config['session name']] = '';
-//		echo 'Error: '.mysql_error();
-//		exit();
-//	}
+
 //	// use iconomy table
 //	if(toBoolean($config['iConomy']['use']) || $config['iConomy']['use']==='auto'){
 //		global $db;
@@ -143,36 +132,49 @@ class User {
 //		}
 //		unset($result, $row);
 //	}
-//	return($this->isOk());
+
+	}
+
+
+	// do logout
+	public function doLogout() {
+//session_init();
+//$_SESSION[$config['session name']] = '';
+//$_SESSION[CSRF::SESSION_KEY]       = '';
+	}
+
+
+	public function sessionOk() {
+		return ($this->getUserId() > 0);
+	}
+
+
+	// user id
+	public function getUserId(){
+		return($this->userId);
+	}
+	// player name
+	public function getUsername(){
+		return($this->username);
+	}
+//	public function usernameEquals($username){
+//		return(strtolower($username) == strtolower($this->getUsername()));
 //	}
-//	public function isOk(){
-//		return($this->UserId > 0);
+
+
+//	function __construct(){global $config;
+//	$loginUrl = './?page=login';
+//	if(empty($config['session name'])) $config['session name'] = 'WebAuctionPlus User';
+//	// check logged in
+//	if(isset($_SESSION[$config['session name']]))
+//		$this->doValidate( $_SESSION[$config['session name']] );
+//	// not logged in (and is required)
+//	if(SettingsClass::getBoolean('Require Login'))
+//		if(!$this->isOk() && $config['page'] != 'login'){
+//		ForwardTo($loginUrl, 0); exit();}
 //	}
-//
-//
-//	// do logout
-//	public function doLogout(){global $config;
-//	session_init();
-//	$_SESSION[$config['session name']] = '';
-//	$_SESSION[CSRF::SESSION_KEY]       = '';
-//	}
-//
-//
-//	// user id
-//	public function getUserId(){
-//		return($this->UserId);
-//	}
-//
-//
-//	// player name
-//	public function getName(){
-//		return($this->Name);
-//	}
-//	public function nameEquals($name){
-//		return(strtolower($name) == strtolower($this->getName()));
-//	}
-//
-//
+
+
 //	// permissions
 //	public function hasPerms($perms){
 //		if(empty($perms) || count($this->permissions)==0) return(FALSE);

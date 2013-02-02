@@ -19,7 +19,7 @@ class PassCrypt {
 
 
 	const defaultHashSequence = 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5';
-	private $hashSequence = NULL;
+	private $hashSequence = '';
 
 
 	public function __construct($hashSequence='') {
@@ -57,32 +57,43 @@ class PassCrypt {
 		$arg  = trim($arg);
 		// md5
 		if($mode == 'md5') {
-			$data = md5($data);
+			$data =
+				md5($data);
 			return;
 		}
 		// reverse string
 		if($mode == 'rev') {
-			$data = strrev($data);
+			$data =
+				strrev($data);
 			return;
 		}
-//		// split / reverse
-//		if($mode == 'splitrev') {
-//			return;
-//		}
-//		// reverse / split
-//		if($mode == 'splitrev') {
-//			return;
-//		}
+		// split / reverse
+		if($mode == 'splitrev') {
+			$data =
+				substr($data, 0, strlen($data)/2).
+				strrev(substr($data, strlen($data)/2));
+			return;
+		}
+		// reverse / split
+		if($mode == 'revsplit') {
+			$data =
+				strrev(substr($data, 0, strlen($data)/2)).
+				substr($data, strlen($data)/2);
+			return;
+		}
 		// salt
 		if($mode == 'salt') {
-			$data = substr($data, 0, ((int) $arg) ).':'.$data;
+			$data =
+				substr($data, 0, ((int) $arg) ).
+				':'.
+				$data;
 			return;
 		}
 		// loop
 		if($mode == 'loop') {
 			$parts = explode(':', $arg, 2);
 			for($i=0; $i< ((int) $parts[0]); $i++)
-				self::hashThis($data, $parts[1]);
+				self::_hashThis($data, $parts[1]);
 			return;
 		}
 		// ignored

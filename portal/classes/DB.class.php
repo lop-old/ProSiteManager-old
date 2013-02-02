@@ -42,6 +42,8 @@ class DB {
 				$class = 'PDO';
 			self::$dbPool[$dbName]['pdo'] =
 				new $class($dsn, $user, $pass, $driver_options);
+//self::$dbPool[$dbName]['pdo']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+//self::$dbPool[$dbName]['pdo']->setAttribute(\PDO::ATTR_EMULATE_PREPARES, FALSE);
 		} catch(\PDOException $e) {
 			die($e->getMessage());
 		}
@@ -70,6 +72,12 @@ class DB {
 		if(self::$dbPool[$dbName]['pdo'] == NULL) return FALSE;
 		return TRUE;
 	}
+
+
+	public static function san($data) {
+		return mysql_real_escape_string($data);
+	}
+
 
 
 

@@ -5,6 +5,9 @@ class DB {
 
 	const dbDefaultName = 'main';
 
+	// database connection pool
+	// [dbname]['config'] - config.php file name/path
+	// [dbname]['pdo']    - pdo object
 	private static $dbPool = array();
 
 
@@ -40,12 +43,18 @@ class DB {
 				$class = 'PHPPDO';
 			else
 				$class = 'PDO';
-			self::$dbPool[$dbName]['pdo'] =
-				new $class($dsn, $user, $pass, $driver_options);
-//self::$dbPool[$dbName]['pdo']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-//self::$dbPool[$dbName]['pdo']->setAttribute(\PDO::ATTR_EMULATE_PREPARES, FALSE);
+			$db = new $class($dsn, $user, $pass, $driver_options);
+			self::$dbPool[$dbName]['pdo'] = &$db;
+			// debug mode
+			if(defined('psm\DEBUG') && \psm\DEBUG)
+				$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+			// production mode
+			else
+				$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+			$db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, FALSE);
+			$db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 		} catch(\PDOException $e) {
-			die($e->getMessage());
+			die('<p>'.$e->getMessage().'</p>');
 		}
 	}
 	// mysql
@@ -57,6 +66,13 @@ class DB {
 			$pass,
 			$driver_options
 		);
+	}
+	// close all db connections
+	public static function CloseAll() {
+		foreach(self::$dbPool as $db) {
+			if($db['pdo'] != NULL)
+				$db['pdo'] = NULL;
+		}
 	}
 
 

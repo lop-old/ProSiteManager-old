@@ -6,7 +6,6 @@
 
 //defines for use in index.php
 //define('psm\DEBUG',			TRUE);
-//define('psm\DEMO',			TRUE);
 //define('psm\DEFAULT_MODULE',	'mysite');
 //define('psm\DEFAULT_PAGE',	'home');
 
@@ -26,7 +25,7 @@ include('ClassLoader.php');
 ClassLoader::registerClassPath('psm', __DIR__.DIR_SEP.'classes');
 
 // debug mode
-if(defined('psm\DEBUG')) {
+if(defined('psm\DEBUG') && \psm\DEBUG) {
 	// log to file
 	ini_set('log_errors', 'On');
 	ini_set('error_log', 'php_errors.log');
@@ -96,6 +95,10 @@ class Portal {
 		// load portal index
 		$portalIndex = $this->root.'/'.$this->portalName.'/'.$this->portalName.'.php';
 		include($portalIndex);
+	}
+	public function __destruct() {
+		DB::CloseAll();
+		$this->engine = NULL;
 	}
 
 

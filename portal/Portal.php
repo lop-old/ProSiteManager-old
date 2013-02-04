@@ -14,11 +14,22 @@
 // DO NOT CHANGE ANYTHING BELOW THIS LINE
 
 
-// static constants
+// static defines
+// ==============
 define('PORTAL_INDEX_FILE', TRUE);
 define('DIR_SEP', DIRECTORY_SEPARATOR);
 define('NEWLINE', "\n"); // new line
 define('TAB', "\t"); // tab
+// runtime defines - created after first portal instance is initialized.
+// ===============
+// PATH_ROOT     - The root path of the website.
+// PATH_PORTAL   - The portal framework path. This folder contains portal.php
+
+
+//TODO: add these
+// PORTAL_MODULE - The module name currently being displayed.
+// PORTAL_PAGE   - The page name currently being displayed.
+
 
 // class loader
 include('ClassLoader.php');
@@ -60,7 +71,10 @@ class Portal {
 	private $engine = NULL;
 
 	// paths
-	private $root;
+//TODO: will switch to an array
+//	private $paths = array();
+	private $pathRoot;
+	private $pathPortal;
 
 	// page
 	private $page = NULL;
@@ -69,6 +83,16 @@ class Portal {
 	private $action = NULL;
 
 
+	public static function AutoLoad() {
+//TODO: check ?mod= in url
+		// load default portal module
+		$portal = new self(\psm\DEFAULT_MODULE);
+//TODO: default to first portal loaded if no other options
+	}
+
+
+//TODO: this class construct will run multiple times to load multiple modules, but only one will render the page
+//TODO: this construct will need to be cleaned up
 	// new portal
 	public function __construct($portalName) {
 		// portal instance
@@ -84,7 +108,10 @@ class Portal {
 		}
 		$this->portalName = $portalName;
 		// paths
-		$this->root = realpath(__DIR__.'/../');
+		$this->pathRoot = realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
+		define('psm\PATH_ROOT', $this->pathRoot);
+		$this->pathPortal = __DIR__;
+		define('psm\PATH_PORTAL', $this->pathPortal);
 		// no page caching
 		Utils::NoPageCache();
 		// set timezone
@@ -93,7 +120,9 @@ class Portal {
 				@date_default_timezone_set('America/New_York');
 		} catch(\Exception $ignore) {}
 		// load portal index
-		$portalIndex = $this->root.'/'.$this->portalName.'/'.$this->portalName.'.php';
+		$portalIndex = '/'.Utils_File::mergePaths($this->pathRoot, $this->portalName, $this->portalName.'.php');
+		if(!file_exists($portalIndex))
+			die('<p>Portal "'.$this->portalName.'" not found!</p>'.$portalIndex);
 		include($portalIndex);
 	}
 	public function __destruct() {
@@ -155,6 +184,20 @@ echo '<p>ENGINE IS NULL</p>';
 	}
 
 
+//TODO:
+//	/**
+//	 * Sets a local or web path.
+//	 *
+//	 *
+//	 */
+//	protected function setPath($name, $path) {
+//		if(isset($this->paths[$name]))
+//			die('Path already set! '.$name.' - '.$path);
+//		$this->paths[$name] = $path;
+//		define('psm\PATH_'.strtoupper($name), $path);
+//	}
+
+
 	/**
 	 * Gets the main template engine instance, creating a new one if needed.
 	 *
@@ -182,12 +225,6 @@ echo '<p>ENGINE IS NULL</p>';
 //			die('<p>Unable to get Engine object!</p>');
 //		return $engine;
 //	}
-
-
-	// get root path
-	public function getRoot() {
-		return $this->root;
-	}
 
 
 	// page

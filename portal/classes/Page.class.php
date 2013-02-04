@@ -34,7 +34,7 @@ abstract class Page {
 		if(count(self::$paths) == 0) {
 			self::$paths = array(
 				Utils_File::mergePaths(
-					Portal::getPortal()->getRoot(),
+					\psm\PATH_ROOT,
 					Portal::getPortal()->getPortalName(),
 					'pages'
 				)

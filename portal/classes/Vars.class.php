@@ -68,10 +68,8 @@ class Vars {
 	public static function toBoolean($value) {
 		if(gettype($value) === 'boolean') return $value;
 		$temp = strtolower( substr( (string)$value, 0, 1) );
-		if($temp === 't') return TRUE;
-		if($temp === 'y') return TRUE;
-		if($temp === 'f') return FALSE;
-		if($temp === 'n') return FALSE;
+		if($temp === 't' || $temp === 'y' || $temp === 'a') return TRUE;
+		if($temp === 'f' || $temp === 'n' || $temp === 'd') return FALSE;
 		return (boolean) $value;
 	}
 

@@ -42,7 +42,7 @@ protected static function GenerateToken(){
 
 
 public static function isEnabled(){
-  return(SettingsClass::getBoolean('CSRF Protection'));
+  return(\psm\SettingsClass::getBoolean('CSRF Protection'));
 }
 
 // token for url

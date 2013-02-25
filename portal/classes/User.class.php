@@ -60,7 +60,7 @@ class User {
 		// no login to process
 		if(empty($username) || empty($password)) return;
 		// encrypt password
-		$password = PassCrypt::hashNow($password);
+		$password = \psm\Utils\PassCrypt::hashNow($password);
 		$table = 'PSM_Users';
 		$query = "SELECT `user_id`, `username`, `email`, `date_join` FROM `".DB::san($table)."` WHERE `username` = :username AND `password` = :password LIMIT 1";
 		$params = array(

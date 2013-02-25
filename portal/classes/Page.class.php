@@ -29,11 +29,11 @@ abstract class Page {
 	 * @return page Returns the page class instance, which can be rendered.
 	 */
 	public static function LoadPage($page) {
-		$page = Utils_File::SanFilename($page);
+		$page = \psm\Utils\Utils_Files::SanFilename($page);
 		// default path - portalname/pages/
 		if(count(self::$paths) == 0) {
 			self::$paths = array(
-				Utils_File::mergePaths(
+				\psm\Utils\Utils_Files::mergePaths(
 					\psm\PATH_ROOT,
 					Portal::getPortal()->getPortalName(),
 					'pages'
@@ -42,7 +42,7 @@ abstract class Page {
 		}
 		// look for page
 		foreach(self::$paths as $v) {
-			$file = DIR_SEP.Utils_File::mergePaths($v, $page.'.php');
+			$file = DIR_SEP.\psm\Utils\Utils_Files::mergePaths($v, $page.'.php');
 			// file not found
 			if(!file_exists($file))
 				continue;

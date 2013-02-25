@@ -55,8 +55,8 @@ class User {
 
 	// do login
 	private function _doLogin() {
-		$username = trim(Vars::getVar($this->usernameVar, 'str', 'post'));
-		$password = trim(Vars::getVar($this->passwordVar, 'str', 'post'));
+		$username = trim(\psm\Utils\Vars::getVar($this->usernameVar, 'str', 'post'));
+		$password = trim(\psm\Utils\Vars::getVar($this->passwordVar, 'str', 'post'));
 		// no login to process
 		if(empty($username) || empty($password)) return;
 		// encrypt password

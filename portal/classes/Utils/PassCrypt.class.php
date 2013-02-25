@@ -1,22 +1,23 @@
-<?php namespace psm;
+<?php namespace psm\Utils;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class PassCrypt {
-	//methods:
-	// md5
-	// rev
-	// splitrev
-	// revsplit
-	// salt:#
-	// loop:#:mode
-	//examples:
-	// 'md5'
-	//   - standard md5() only
-	// 'md5 salt:6 md5'
-	//   - md5(), salt using first 6 chars, md5() once more
-	// 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5'
-	//   - md5() x 1000, reverse first 10 chars, salt using first 6 chars,
-	//     md5() x 1000, reverse last 10 chars, md5() x 500
+//methods:
+// md5
+// rev
+// splitrev
+// revsplit
+// salt:#
+// loop:#:mode
+//examples:
+// 'md5'
+//   - standard md5() only
+// 'md5 salt:6 md5'
+//   - md5(), salt using first 6 chars, md5() once more
+// 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5'
+//   - md5() x 1000, reverse first 10 chars, salt using first 6 chars,
+//     md5() x 1000, reverse last 10 chars, md5() x 500
 
+
+class PassCrypt {
 
 	const defaultHashSequence = 'loop:1000:md5 revsplit:10 salt:6 loop:1000:md5 splitrev:22 loop:500:md5';
 	private $hashSequence = '';

@@ -33,7 +33,7 @@ class html_Engine {
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
-		Utils::Validate('psm\html_File_Main', $this->htmlMain);
+		\psm\Utils\Utils::Validate('psm\html_File_Main', $this->htmlMain);
 		// tag parsers
 		$this->tagString = new html_Tag_String();
 $paths = array(
@@ -201,7 +201,7 @@ $paths
 		// default to string
 		$data = (string) $data;
 		// file:
-		if(Utils::startsWith($data, 'file:', TRUE))
+		if(\psm\Utils\Utils_Strings::startsWith($data, 'file:', TRUE))
 			return substr(5, $data);
 		// string
 		return $data;

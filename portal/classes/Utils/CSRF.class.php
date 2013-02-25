@@ -1,4 +1,5 @@
-<?php if(!defined('DEFINE_INDEX_FILE')){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+<?php namespace psm\Utils;
+if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 // CSRF - cross-site request forgery
 //
 // modified and classified by lorenzop of PoiXson
@@ -11,7 +12,7 @@
 //   4. When validating GET and POST data, execute ValidateToken().
 
 
-class CSRF{
+class CSRF {
 
 const SESSION_KEY = 'csrf_token';
 

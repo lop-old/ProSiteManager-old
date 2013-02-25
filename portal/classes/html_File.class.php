@@ -11,7 +11,7 @@ class html_File {
 	public static function LoadFile($theme, $filename) {
 //TODO: add caching!!!
 		$filepath =
-			'wa/html/'.Utils_File::SanFilename($theme).
+			'wa/html/'.\psm\Utils\Utils_Files::SanFilename($theme).
 			'/'.
 			str_replace('..', '', $filename).
 			'.html.php';

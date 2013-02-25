@@ -5,9 +5,9 @@
 
 
 //defines for use in index.php
-//define('psm\DEBUG',			TRUE);
-//define('psm\DEFAULT_MODULE',	'mysite');
-//define('psm\DEFAULT_PAGE',	'home');
+//define('psm\DEBUG',          TRUE);
+//define('psm\DEFAULT_MODULE', 'mysite');
+//define('psm\DEFAULT_PAGE',   'home');
 
 
 //**************************************************
@@ -17,9 +17,9 @@
 // static defines
 // ==============
 define('PORTAL_INDEX_FILE', TRUE);
-define('DIR_SEP', DIRECTORY_SEPARATOR);
-define('NEWLINE', "\n"); // new line
-define('TAB', "\t"); // tab
+define('DIR_SEP',           DIRECTORY_SEPARATOR);
+define('NEWLINE',           "\n"); // new line
+define('TAB',               "\t"); // tab
 // runtime defines - created after first portal instance is initialized.
 // ===============
 // PATH_ROOT     - The root path of the website.
@@ -113,14 +113,14 @@ class Portal {
 		$this->pathPortal = __DIR__;
 		define('psm\PATH_PORTAL', $this->pathPortal);
 		// no page caching
-		Utils::NoPageCache();
+		\psm\Utils\Utils::NoPageCache();
 		// set timezone
 		try {
 			if(!@date_default_timezone_get())
 				@date_default_timezone_set('America/New_York');
 		} catch(\Exception $ignore) {}
 		// load portal index
-		$portalIndex = '/'.Utils_File::mergePaths($this->pathRoot, $this->portalName, $this->portalName.'.php');
+		$portalIndex = '/'.\psm\Utils\Utils_Files::mergePaths($this->pathRoot, $this->portalName, $this->portalName.'.php');
 		if(!file_exists($portalIndex))
 			die('<p>Portal "'.$this->portalName.'" not found!</p>'.$portalIndex);
 		include($portalIndex);
@@ -233,16 +233,16 @@ echo '<p>ENGINE IS NULL</p>';
 		if($this->page !== NULL)
 			return $this->page;
 		// get page
-		$this->page = Vars::getVar('page', 'str');
+		$this->page = \psm\Utils\Vars::getVar('page', 'str');
 		// default page
 		if(empty($this->page))
 			$this->page = $this->defaultPage;
-		$this->page = Utils_File::SanFilename($this->page);
+		$this->page = \psm\Utils\Utils_Files::SanFilename($this->page);
 		return $this->page;
 	}
 	// default page
 	public function setDefaultPage($defaultPage) {
-		$this->defaultPage = Utils_File::SanFilename($defaultPage);
+		$this->defaultPage = \psm\Utils\Utils_Files::SanFilename($defaultPage);
 	}
 
 
@@ -252,8 +252,8 @@ echo '<p>ENGINE IS NULL</p>';
 		if($this->action !== NULL)
 			return $this->action;
 		// get action
-		$this->action = Vars::getVar('action', 'str');
-		$this->action = Utils_File::SanFilename($this->action);
+		$this->action = \psm\Utils\Vars::getVar('action', 'str');
+		$this->action = \psm\Utils\Utils_Files::SanFilename($this->action);
 		return $this->action;
 	}
 

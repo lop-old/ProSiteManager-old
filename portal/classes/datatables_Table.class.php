@@ -20,7 +20,7 @@ class datatables_Table {
 	 */
 	public function __construct($headings, $queryClass, $usingAjax=FALSE) {
 		$this->headings = $headings;
-		Utils::Validate('psm\datatables_Query', $queryClass);
+		\psm\Utils\Utils::Validate('psm\datatables_Query', $queryClass);
 		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
 		html_File_Main::addFileCSS(
@@ -156,7 +156,7 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 
 	// enables pagination
 	public function setPagination($paginate=TRUE) {
-		$this->paginate = Vars::toBoolean($paginate);
+		$this->paginate = \psm\Utils\Vars::toBoolean($paginate);
 		// disable infinite scroll
 		if($this->paginate)
 			$this->scrollInfinite = FALSE;

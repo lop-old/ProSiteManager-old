@@ -1022,8 +1022,9 @@
             }
 
             private static function getRequestHeaders() {
-                if ( function_exists('getallheaders') ) {
-                    return getallheaders();
+                $getallheaders = 'getallheaders';
+                if ( function_exists($getallheaders) ) {
+                    return $getallheaders();
                 } else {
                     $headers = array();
                     
@@ -1039,8 +1040,9 @@
             }
 
             private static function getResponseHeaders() {
-                $headers = function_exists('apache_response_headers') ?
-                        apache_response_headers() :
+                $apache_response_headers = 'apache_response_headers';
+                $headers = function_exists($apache_response_headers) ?
+                        $apache_response_headers() :
                         array() ;
 
                 /*

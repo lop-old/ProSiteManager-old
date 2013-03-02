@@ -66,7 +66,7 @@ class phppdo_mssql extends phppdo_base
     
     public function exec(&$statement)
     {
-        if($result = @mssql_query($statement, $this->link))
+        if(($result = @mssql_query($statement, $this->link)) != FALSE)
         {
             if(is_resource($result))
             {
@@ -103,7 +103,7 @@ class phppdo_mssql extends phppdo_base
     public function lastInsertId($name = '')
     {
         $sql = $name ? 'SELECT IDENT_CURRENT('.$this->quote($name).')' : 'SELECT @@IDENTITY';
-        if($result = mssql_query($sql, $this->link))
+        if(($result = mssql_query($sql, $this->link)) != FALSE)
         {
             $row = mssql_fetch_row($result);
             if($row[0] === null) return -1;

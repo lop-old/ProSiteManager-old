@@ -61,7 +61,7 @@ class phppdo_mysqli extends phppdo_base
     
     public function exec(&$statement)
     {
-        if($result = mysqli_query($this->link, $statement, MYSQLI_USE_RESULT))
+        if(($result = mysqli_query($this->link, $statement, MYSQLI_USE_RESULT)) != FALSE)
         {
             if(is_object($result))
             {

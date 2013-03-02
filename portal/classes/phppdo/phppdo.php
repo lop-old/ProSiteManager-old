@@ -61,7 +61,7 @@ class PHPPDO extends PDO
         if(func_num_args() > 0) return false;
         
         $result = array();
-        if($handle = opendir(dirname(__FILE__) . '/drivers'))
+        if( ($handle = opendir( dirname(__FILE__ . '/drivers') )) != FALSE )
         {
             while (false !== ($file = readdir($handle)))
             {

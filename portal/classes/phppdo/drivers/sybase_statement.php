@@ -30,7 +30,8 @@ class phppdo_sybase_statement extends phppdo_base_statement
     {
         if($this->_result)
         {
-            sybase_free_result($this->_result);
+        	$func = 'sybase_free_result';
+            $func($this->_result);
             $this->_result = false;
         }
     }
@@ -39,7 +40,8 @@ class phppdo_sybase_statement extends phppdo_base_statement
     {
         if($this->_result)
         {
-            return sybase_num_fields($this->_result);
+        	$func = 'sybase_num_fields';
+            return $func($this->_result);
         }
         
         return 0;
@@ -47,14 +49,16 @@ class phppdo_sybase_statement extends phppdo_base_statement
     
     public function rowCount()
     {
-        return sybase_affected_rows($this->_link);
+    	$func = 'sybase_affected_rows';
+        return $func($this->_link);
     }
     
     public function getColumnMeta($column)
     {
         if($column >= $this->columnCount()) return false;
         
-        $info                   = sybase_fetch_field($this->_result, $column);
+        $func = 'sybase_fetch_field';
+        $info                   = $func($this->_result, $column);
         $result                 = array();
         
         $result['native_type']  = $info->type;
@@ -70,7 +74,8 @@ class phppdo_sybase_statement extends phppdo_base_statement
         $query = $this->_build_query();
         if(!$query) return false;
         
-        $this->_result = @sybase_query($query, $this->_link);
+        $func = 'sybase_query';
+        $this->_result = @$func($query, $this->_link);
         
         if(!$this->_result)
         {
@@ -83,23 +88,27 @@ class phppdo_sybase_statement extends phppdo_base_statement
     
     protected function _fetch_row()
     {
-        return sybase_fetch_row($this->_result);
+    	$func = 'sybase_fetch_row';
+        return $func($this->_result);
     }
     
     protected function _field_name($field)
     {
-        return sybase_fetch_field($this->_result, $field)->name;
+    	$func = 'sybase_fetch_field';
+        return $func($this->_result, $field)->name;
     }
     
     protected function _table_name($field)
     {
-        return sybase_fetch_field($this->_result, $field)->column_source;
+    	$func = 'sybase_fetch_field';
+        return $func($this->_result, $field)->column_source;
     }
     
     protected function _set_stmt_error($state = null, $mode = PDO::ERRMODE_SILENT, $func = '')
     {
         if($state === null) $state = 'HY000';
-        $this->_set_error(-1, sybase_get_last_message(), $state, $mode, $func);
+        $func = 'sybase_get_last_message';
+        $this->_set_error(-1, $func(), $state, $mode, $func);
     }
 }
 ?>

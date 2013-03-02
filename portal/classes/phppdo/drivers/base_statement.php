@@ -410,7 +410,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             case PDO::FETCH_INTO:
             case PDO::FETCH_BOUND:
             case PDO::FETCH_GROUP:
-                while($row = $this->fetch($fetch_style))
+                while(($row = $this->fetch($fetch_style)) != FALSE)
                 {
                     $result[] = $row;
                 }
@@ -429,7 +429,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                     {
                         if($style & PDO::FETCH_GROUP)
                         {
-                            while($row = $this->fetch(PDO::FETCH_NUM))
+                            while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                             {
                                 $key = array_shift($row);
                                 if(isset($result[$key]))
@@ -444,7 +444,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                         }
                         else
                         {
-                            while($row = $this->fetch(PDO::FETCH_NUM))
+                            while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                             {
                                 $result[] = call_user_func_array($column_index, $row);
                             }
@@ -473,7 +473,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                     $this->setFetchMode(PDO::FETCH_CLASS, $column_index, $ctor_args);
                 }
                 
-                while($row = $this->fetch($fetch_style))
+                while(($row = $this->fetch($fetch_style)) != FALSE)
                 {
                     $result[] = $row;
                 }
@@ -481,7 +481,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             
             case PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE:
                 $this->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE, $column_index, $ctor_args);
-                while($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE))
+                while(($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE)) != FALSE)
                 {
                     $result[] = $row;
                 }
@@ -491,7 +491,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                 $this->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE, $column_index, $ctor_args);
                 $first_property = null;
                 
-                while($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE))
+                while(($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE)) != FALSE)
                 {
                     if($first_property === null)
                     {
@@ -516,7 +516,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                 $this->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE, $column_index, $ctor_args);
                 $first_property = null;
                 
-                while($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE))
+                while(($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE)) != FALSE)
                 {
                     if($first_property === null)
                     {
@@ -532,14 +532,14 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             
             case PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE|PDO::FETCH_SERIALIZE:
                 $this->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE, $column_index, $ctor_args);
-                while($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE|PDO::FETCH_SERIALIZE))
+                while(($row = $this->fetch(PDO::FETCH_CLASS|PDO::FETCH_CLASSTYPE|PDO::FETCH_SERIALIZE)) != FALSE)
                 {
                     $result[] = $row;
                 }
             break;
             
             case PDO::FETCH_KEY_PAIR:
-                while($row = $this->fetch(PDO::FETCH_NUM))
+                while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                 {
                     $result[$row[0]] = $row[1];
                 }
@@ -556,7 +556,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             case PDO::FETCH_COLUMN|PDO::FETCH_UNIQUE:
                 if($column_index === null) $column_index = 1;
                 
-                while($row = $this->fetch(PDO::FETCH_NUM))
+                while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                 {
                     if(isset($result[$row[0]])) continue;
                     $result[$row[0]] = $row[$column_index];
@@ -566,7 +566,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             case PDO::FETCH_COLUMN|PDO::FETCH_GROUP:
                 if($column_index === null) $column_index = 1;
 
-                while($row = $this->fetch(PDO::FETCH_NUM))
+                while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                 {
                     $key = $row[0];
                     if(isset($result[$key]))
@@ -583,7 +583,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
             case PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC:
             case PDO::FETCH_UNIQUE|PDO::FETCH_NUM:
                 $s = $style & ~PDO::FETCH_UNIQUE;
-                while($row = $this->fetch($s))
+                while(($row = $this->fetch($s)) != FALSE)
                 {
                     $result[array_shift($row)] = $row;
                 }
@@ -596,9 +596,9 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                 
                 if($s == PDO::FETCH_COLUMN)
                 {
-                    if($column_index === null) $column_index = $fetch_mode[PDO::FETCH_COLUMN][0];
+                    if($column_index === null) $column_index = $this->fetch_mode[PDO::FETCH_COLUMN][0];
                     
-                    while($row = $this->fetch(PDO::FETCH_NUM))
+                    while(($row = $this->fetch(PDO::FETCH_NUM)) != FALSE)
                     {
                         $key = array_shift($row[$column_index]);
                         if(isset($result[$key]))
@@ -613,7 +613,7 @@ abstract class phppdo_base_statement extends PDOStatement implements IteratorAgg
                 }
                 else
                 {
-                    while($row = $this->fetch($s))
+                    while(($row = $this->fetch($s)) != FALSE)
                     {
                         $key = array_shift($row);
                         if(isset($result[$key]))

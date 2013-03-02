@@ -106,7 +106,7 @@ class phppdo_mysql extends phppdo_base
     
     public function exec(&$statement)
     {
-        if($result = mysql_unbuffered_query($statement, $this->link))
+        if(($result = mysql_unbuffered_query($statement, $this->link)) != FALSE)
         {
             if(is_resource($result))
             {

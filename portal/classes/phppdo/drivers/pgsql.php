@@ -70,7 +70,7 @@ class phppdo_pgsql extends phppdo_base
     
     public function exec(&$statement)
     {
-        if($result = @pg_query($this->link, $statement))
+        if(($result = @pg_query($this->link, $statement)) != FALSE)
         {
             if(is_resource($result))
             {
@@ -131,7 +131,7 @@ class phppdo_pgsql extends phppdo_base
     public function lastInsertId($name = '')
     {
         if(!$name) return false;
-        if($result = @pg_query($this->link, 'SELECT currval('.$this->quote($name).')'))
+        if(($result = @pg_query($this->link, 'SELECT currval('.$this->quote($name).')')) != FALSE)
         {
             $row = pg_fetch_row($result);
             return intval($row[0]);

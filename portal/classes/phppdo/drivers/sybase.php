@@ -43,7 +43,8 @@ class phppdo_sybase extends phppdo_base
     {
         parent::beginTransaction();
         
-        if(!sybase_query('BEGIN TRANSACTION', $this->link))
+        $func = 'sybase_query';
+        if(!$func('BEGIN TRANSACTION', $this->link))
         {
             $this->set_driver_error(null, PDO::ERRMODE_EXCEPTION, 'beginTransaction');
         }
@@ -55,7 +56,8 @@ class phppdo_sybase extends phppdo_base
     {
         parent::commit();
         
-        if(!sybase_query('COMMIT', $this->link))
+        $func = 'sybase_query';
+        if(!$func('COMMIT', $this->link))
         {
             $this->set_driver_error(null, PDO::ERRMODE_EXCEPTION, 'commit');
         }
@@ -66,15 +68,18 @@ class phppdo_sybase extends phppdo_base
     
     public function exec(&$statement)
     {
-        if($result = @sybase_query($statement, $this->link))
+    	$func = 'sybase_query';
+        if(($result = @$func($statement, $this->link)) != FALSE)
         {
             if(is_resource($result))
             {
-                sybase_free_result($result);
+                $func = 'sybase_free_result';
+                $func($result);
                 return 0;
             }
             
-            return sybase_affected_rows($this->link);
+            $func = 'sybase_affected_rows';
+            return $func($this->link);
         }
         
         return false;
@@ -98,9 +103,11 @@ class phppdo_sybase extends phppdo_base
     
     public function lastInsertId($name = '')
     {
-        if($result = sybase_query('SELECT @@IDENTITY', $this->link))
+    	$func = 'sybase_query';
+        if(($result = $func('SELECT @@IDENTITY', $this->link)) != FALSE)
         {
-            $row = sybase_fetch_row($result);
+        	$func = 'sybase_fetch_row';
+            $row = $func($result);
             if($row[0] === null) return -1;
             return $row[0];
         }
@@ -134,7 +141,8 @@ class phppdo_sybase extends phppdo_base
     {
         parent::rollback();
         
-        if(!sybase_query('ROLLBACK', $this->link))
+        $func = 'sybase_query';
+        if(!$func('ROLLBACK', $this->link))
         {
             $this->set_driver_error(null, PDO::ERRMODE_EXCEPTION, 'rollBack');
         }
@@ -165,7 +173,8 @@ class phppdo_sybase extends phppdo_base
     public function set_driver_error($state = null, $mode = PDO::ERRMODE_SILENT, $func = '')
     {
         if($state === null) $state = 'HY000';
-        $this->set_error(-1, sybase_get_last_message(), $state, $mode, $func);
+        $func = 'sybase_get_last_message';
+        $this->set_error(-1, $func(), $state, $mode, $func);
     }
     
     protected function connect(&$username, &$password, &$driver_options)
@@ -176,13 +185,15 @@ class phppdo_sybase extends phppdo_base
         
         if(isset($driver_options[PDO::ATTR_PERSISTENT]) && $driver_options[PDO::ATTR_PERSISTENT])
         {
-            $this->link = @sybase_pconnect($host, $username, $password, $charset);
+        	$func = 'sybase_pconnect';
+            $this->link = @$func($host, $username, $password, $charset);
         }
         else
         {
             // hope this opens a new connection every time
             $app_name = uniqid('phppdo_');
-            $this->link = @sybase_connect($host, $username, $password, $charset, $app_name);
+            $func = 'sybase_connect';
+            $this->link = @$func($host, $username, $password, $charset, $app_name);
         }
         
         if(!$this->link)
@@ -192,7 +203,8 @@ class phppdo_sybase extends phppdo_base
         
         if($dbname)
         {
-            if(!@sybase_select_db($dbname, $this->link))
+        	$func = 'sybase_select_db';
+            if(!@$func($dbname, $this->link))
             {
                 $this->set_driver_error(null, PDO::ERRMODE_EXCEPTION, '__construct');
             }
@@ -201,7 +213,8 @@ class phppdo_sybase extends phppdo_base
     
     protected function disconnect()
     {
-        sybase_close($this->link);
+    	$func = 'sybase_close';
+        $func($this->link);
     }
 }
 ?>

@@ -38,7 +38,8 @@ class phppdo_sqlite2_statement extends phppdo_base_statement
     {
         if($this->_result)
         {
-            return sqlite_num_fields($this->_result);
+        	$func = 'sqlite_num_fields';
+            return $func($this->_result);
         }
         
         return 0;
@@ -46,7 +47,8 @@ class phppdo_sqlite2_statement extends phppdo_base_statement
     
     public function rowCount()
     {
-        return sqlite_changes($this->_link);
+    	$func = 'sqlite_changes';
+        return $func($this->_link);
     }
     
     public function getColumnMeta($column)
@@ -63,8 +65,10 @@ class phppdo_sqlite2_statement extends phppdo_base_statement
     {
         $query = $this->_build_query();
         if(!$query) return false;
+        $errstr = '';
         
-        $this->_result = @sqlite_query($this->_link, $query, SQLITE_NUM, $errstr);
+        $func = 'sqlite_query';
+        $this->_result = @$func($this->_link, $query, SQLITE_NUM, $errstr);
         
         if(!$this->_result)
         {
@@ -77,12 +81,14 @@ class phppdo_sqlite2_statement extends phppdo_base_statement
     
     protected function _fetch_row()
     {
-        return sqlite_fetch_array($this->_result, SQLITE_NUM);
+    	$func = 'sqlite_fetch_array';
+        return $func($this->_result, SQLITE_NUM);
     }
     
     protected function _field_name($field)
     {
-        return sqlite_field_name($this->_result, $field);
+    	$func = 'sqlite_field_name';
+        return $func($this->_result, $field);
     }
     
     protected function _table_name($field)
@@ -92,10 +98,12 @@ class phppdo_sqlite2_statement extends phppdo_base_statement
     
     protected function _set_stmt_error($state = null, $mode = PDO::ERRMODE_SILENT, $func = '')
     {
-        $errno = sqlite_last_error($this->_link);
+    	$func = 'sqlite_last_error';
+        $errno = $func($this->_link);
         if($state === null) $state = 'HY000';
         
-        $this->_set_error($errno, sqlite_error_string($errno), $state, $mode, $func);
+        $func = 'sqlite_error_string';
+        $this->_set_error($errno, $func($errno), $state, $mode, $func);
     }
 }
 ?>

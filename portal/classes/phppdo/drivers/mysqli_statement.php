@@ -179,7 +179,7 @@ class phppdo_mysqli_statement extends phppdo_base_statement
         }
         
         // store the result
-        if($data = mysqli_stmt_result_metadata($this->_result))
+        if(($data = mysqli_stmt_result_metadata($this->_result)) != FALSE)
         {
             if(!$this->bind_result($data))
             {
@@ -307,7 +307,7 @@ class phppdo_mysqli_statement extends phppdo_base_statement
         $fetch_out  = array();
         $bound      = array($this->_result);
         
-        while($field = mysqli_fetch_field($data))
+        while(($field = mysqli_fetch_field($data)) != FALSE)
         {
             $fetch_fields[$cnt]     = $field;
             $bound[]                =& $fetch_out[$cnt];

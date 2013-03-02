@@ -1,14 +1,14 @@
-<?php namespace psm;
+<?php namespace psm\Bootstrap;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class bootstrap_NavBar {
+class NavBar {
 
 	private $brand = NULL;
 	private $items = array();
 	private $itemsRight = array();
 
 
-	public static function newNavBar() {
-		return new bootstrap_NavBar();
+	public static function factory() {
+		return new self();
 	}
 	public function __construct() {
 	}
@@ -17,8 +17,8 @@ class bootstrap_NavBar {
 	public function setBrand($brand) {
 		// convert from string
 		if($brand != NULL)
-			if(!($brand instanceof \psm\bootstrap_NavBar_Item))
-				$brand = new \psm\bootstrap_NavBar_Item('brand', (string)$brand);
+			if(!($brand instanceof NavBar_Item))
+				$brand = new NavBar_Item('brand', (string)$brand);
 		$this->brand = $brand;
 		return $this;
 	}
@@ -91,17 +91,17 @@ class bootstrap_NavBar {
 	}
 	// add menu button
 	public function addButton($name, $title, $url, $icon, $right=FALSE) {
-		$this->add( new bootstrap_NavBar_Item($name, $title, $url, $icon), $right );
+		$this->add( new NavBar_Item($name, $title, $url, $icon), $right );
 		return $this;
 	}
 	// add dropdown menu
 	public function addDropdown($name, $title, $url, $icon, $right=FALSE) {
-		$this->add( new bootstrap_NavBar_Item($name, $title, $url, $icon, TRUE), $right );
+		$this->add( new NavBar_Item($name, $title, $url, $icon, TRUE), $right );
 		return $this;
 	}
 	// add menu break
 	public function addBreak($right=FALSE) {
-		$this->add( new bootstrap_NavBar_Item('-'), $right );
+		$this->add( new NavBar_Item('-'), $right );
 		return $this;
 	}
 

@@ -1,6 +1,6 @@
-<?php namespace psm;
+<?php namespace psm\html;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class html_File {
+class File {
 
 //	protected $tags = array();
 	protected $blocks = array();
@@ -27,7 +27,7 @@ class html_File {
 
 	public function addBlock($blockName, &$data, $top=FALSE) {
 		if($data == NULL) return;
-		$rendered = html_Engine::renderObject($data);
+		$rendered = Engine::renderObject($data);
 		// attempt loading block function
 		if(!isset($this->blocks[$blockName]))
 			$this->blocks[$blockName] = $this->getFunc($blockName);

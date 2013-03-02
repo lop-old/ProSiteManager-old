@@ -1,6 +1,6 @@
-<?php namespace psm;
+<?php namespace psm\html;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class html_BlockArray {
+class BlockArray {
 
 	private $title;
 	private $blocks = array();
@@ -83,7 +83,7 @@ class html_BlockArray {
 	private function _display($data) {
 		if($this->useEcho == NULL)
 			return;
-		html_engine::renderGlobalTags($data);
+		\psm\html\engine::renderGlobalTags($data);
 		if($this->useEcho)
 			echo $data;
 		else
@@ -94,7 +94,7 @@ class html_BlockArray {
 	// add block
 	public function add($data, $top=FALSE) {
 		if(!empty($data))
-			Utils::appendArray($this->blocks, $data);
+			\psm\Utils\Utils::appendArray($this->blocks, $data);
 	}
 
 

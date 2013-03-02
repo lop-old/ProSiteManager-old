@@ -1,6 +1,6 @@
-<?php namespace psm;
+<?php namespace psm\html;
 if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()){echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}else{header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class html_Engine {
+class Engine {
 
 	// main engine instance
 	private static $engine = NULL;
@@ -29,18 +29,18 @@ class html_Engine {
 		// load main html file
 		if($htmlMain == NULL)
 //TODO: add theme
-			$this->htmlMain = html_File::LoadFile('default', 'main');
+			$this->htmlMain = \psm\html\File::LoadFile('default', 'main');
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
 		\psm\Utils\Utils::Validate('psm\html_File_Main', $this->htmlMain);
 		// tag parsers
-		$this->tagString = new html_Tag_String();
+		$this->tagString = new Tag_String();
 $paths = array(
 '{path=static}'=>'portal/static/',
 '{path=theme}'=>'wa/html/default/',
 );
-		$this->tagPaths = new html_Tag_String(
+		$this->tagPaths = new Tag_String(
 $paths
 //			Portal::getPortal()->getPathsArray()
 		);
@@ -70,7 +70,7 @@ $paths
 
 		/* build header */
 		// split by {header content} tag
-		$splitHeader = new html_SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
+		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
 		// open header block
 		$this->_Render(
 			$splitHeader->getPart(0)
@@ -103,7 +103,7 @@ $paths
 
 		/* build page */
 		// split by {page content} tag
-		$splitPage = new html_SplitBlock('{page content}', $this->htmlMain->getBlock('body'));
+		$splitPage = new SplitBlock('{page content}', $this->htmlMain->getBlock('body'));
 		// open body block
 		$this->_Render(
 			$splitPage->getPart(0)
@@ -121,7 +121,7 @@ $paths
 
 		/* build footer */
 		// split by {footer content} tag
-		$splitFooter = new html_SplitBlock('{footer content}', $this->htmlMain->getBlock('foot'));
+		$splitFooter = new SplitBlock('{footer content}', $this->htmlMain->getBlock('foot'));
 		// open footer block
 		$this->_Render(
 			$splitFooter->getPart(0)

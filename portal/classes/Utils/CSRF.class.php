@@ -14,64 +14,67 @@ if(!defined('PORTAL_INDEX_FILE') || \PORTAL_INDEX_FILE!==TRUE){if(headers_sent()
 
 class CSRF {
 
-const SESSION_KEY = 'csrf_token';
+	const SESSION_KEY = 'csrf_token';
 
 
-// get token
-public static function getToken(){
-  if(!self::isEnabled()) return('');
-  session_init();
-  if(!isset($_SESSION[self::SESSION_KEY]) || empty($_SESSION[self::SESSION_KEY]))
-    $_SESSION[self::SESSION_KEY] = self::GenerateToken();
-  return($_SESSION[self::SESSION_KEY]);
-}
-// generate new token
-protected static function GenerateToken(){
-  if(!self::isEnabled()) return('');
-  return(sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0x0fff) | 0x4000,
-    mt_rand(0, 0x3fff) | 0x8000,
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff)
-  ));
-}
+	// get token
+	public static function getToken() {
+		if(!self::isEnabled())
+			return '';
+		session_init();
+		if(!isset($_SESSION[self::SESSION_KEY]) || empty($_SESSION[self::SESSION_KEY]))
+			$_SESSION[self::SESSION_KEY] = self::GenerateToken();
+		return $_SESSION[self::SESSION_KEY];
+	}
+	// generate new token
+	protected static function GenerateToken() {
+		if(!self::isEnabled())
+			return '';
+		return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0x0fff) | 0x4000,
+			mt_rand(0, 0x3fff) | 0x8000,
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0xffff)
+		);
+	}
 
 
-public static function isEnabled(){
-  return(\psm\SettingsClass::getBoolean('CSRF Protection'));
-}
+	public static function isEnabled(){
+//		return \psm\SettingsClass::getBoolean('CSRF Protection');
+	}
 
-// token for url
-public static function getTokenURL(){
-  return('&amp;'.self::SESSION_KEY.'='.self::getToken());
-}
-// token for form
-public static function getTokenForm(){
-  return '<input type="hidden" name="'.self::SESSION_KEY.'" value="'.self::getToken().'" />';
-}
+	// token for url
+	public static function getTokenURL() {
+		return '&amp;'.self::SESSION_KEY.'='.self::getToken();
+	}
+	// token for form
+	public static function getTokenForm() {
+		return '<input type="hidden" name="'.self::SESSION_KEY.'" value="'.self::getToken().'" />';
+	}
 
 
-// validate token
-public static function ValidateToken(){
-  if(!self::isEnabled()) return;
-  if(!self::isValidToken()){
-    echo 'Invalid CSRF Token!<br /><a href="./">Back to WebAuctionPlus website</a>';
-    ForwardTo('./',2); exit();
-  }
-}
-protected static function isValidToken(){
-  if(!self::isEnabled()) return(TRUE);
-  $url_token = '';
-  if(isset($_POST[self::SESSION_KEY])) $url_token = $_POST[self::SESSION_KEY];
-  else
-  if(isset( $_GET[self::SESSION_KEY])) $url_token =  $_GET[self::SESSION_KEY];
-  if(empty($url_token)) return(FALSE);
-  return(self::getToken() === $url_token);
-}
+	// validate token
+	public static function ValidateToken() {
+		if(!self::isEnabled())
+			return;
+		if(!self::isValidToken()) {
+			echo 'Invalid CSRF Token!<br /><a href="./">Back to WebAuctionPlus website</a>';
+			ForwardTo('./',2); exit();
+		}
+	}
+	protected static function isValidToken() {
+		if(!self::isEnabled()) return(TRUE);
+		$url_token = '';
+		if(isset($_POST[self::SESSION_KEY])) $url_token = $_POST[self::SESSION_KEY];
+		else
+		if(isset( $_GET[self::SESSION_KEY])) $url_token =  $_GET[self::SESSION_KEY];
+		if(empty($url_token)) return(FALSE);
+		return (self::getToken() === $url_token);
+	}
 
 
 }

@@ -21,7 +21,7 @@ class CSRF {
 	public static function getToken() {
 		if(!self::isEnabled())
 			return '';
-		session_init();
+//		session_init();
 		if(!isset($_SESSION[self::SESSION_KEY]) || empty($_SESSION[self::SESSION_KEY]))
 			$_SESSION[self::SESSION_KEY] = self::GenerateToken();
 		return $_SESSION[self::SESSION_KEY];

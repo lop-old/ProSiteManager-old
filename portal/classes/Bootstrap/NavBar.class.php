@@ -82,7 +82,7 @@ class NavBar {
 
 
 	// add items
-	public function add(\psm\bootstrap_NavBar_Item $item, $right=FALSE) {
+	public function add(\psm\Bootstrap\NavBar_Item $item, $right=FALSE) {
 		if($right === TRUE)
 			\psm\Utils\Utils::appendArray($this->itemsRight, $item);
 		else

@@ -126,7 +126,7 @@ class Portal {
 		include($portalIndex);
 	}
 	public function __destruct() {
-		DB::CloseAll();
+		\psm\DB\DB::CloseAll();
 		$this->engine = NULL;
 	}
 
@@ -204,7 +204,7 @@ echo '<p>ENGINE IS NULL</p>';
 	 * @return html_Engine
 	 */
 	public static function getEngine() {
-		return html_Engine::getEngine();
+		return \psm\html\Engine::getEngine();
 	}
 //		// new instance if needed
 //		if($this->engine == NULL)

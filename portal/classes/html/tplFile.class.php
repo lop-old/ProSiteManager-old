@@ -18,7 +18,7 @@ class tplFile {
 		if(!file_exists($filepath))
 			die('<p>File not found! '.$filepath.'</p>');
 		include($filepath);
-		$clss = '\wa\html_'.$filename;
+		$clss = '\wa\html\html_'.$filename;
 		if(!class_exists($clss))
 			die('<p>Class not found! '.$clss.'</p>');
 		return new $clss();

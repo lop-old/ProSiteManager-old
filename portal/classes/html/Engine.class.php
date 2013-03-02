@@ -29,11 +29,11 @@ class Engine {
 		// load main html file
 		if($htmlMain == NULL)
 //TODO: add theme
-			$this->htmlMain = \psm\html\File::LoadFile('default', 'main');
+			$this->htmlMain = \psm\html\tplFile::LoadFile('default', 'main');
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
-		\psm\Utils\Utils::Validate('psm\html_File_Main', $this->htmlMain);
+		\psm\Utils\Utils::Validate('psm\html\tplFile_Main', $this->htmlMain);
 		// tag parsers
 		$this->tagString = new Tag_String();
 $paths = array(

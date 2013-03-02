@@ -23,11 +23,11 @@ class Table {
 		\psm\Utils\Utils::Validate('psm\DataTables\Query', $queryClass);
 		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
-		\psm\html\File_Main::addFileCSS(
+		\psm\html\tplFile_Main::addFileCSS(
 			'{path=static}jquery-ui/redmond/jquery.ui.theme.css',
 			'{path=static}jquery/datatables_bootstrap.css'
 		);
-		\psm\html\File_Main::addFileJS(
+		\psm\html\tplFile_Main::addFileJS(
 			'{path=static}jquery/jquery.dataTables-1.9.4.min.js',
 			'{path=static}jquery/datatables_bootstrap.js'
 		);

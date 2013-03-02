@@ -6,7 +6,7 @@ class listenerGroup {
 
 
 	public function registerListener(Listener $listener) {
-		Utils::appendArray($this->listeners, $listener);
+		\psm\Utils\Utils::appendArray($this->listeners, $listener);
 	}
 
 

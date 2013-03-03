@@ -11,10 +11,9 @@ class tplFile {
 	public static function LoadFile($theme, $filename) {
 //TODO: add caching!!!
 		$filepath =
-			'wa/html/'.\psm\Utils\Utils_Files::SanFilename($theme).
-			'/'.
-			str_replace('..', '', $filename).
-			'.html.php';
+			'wa'.DIR_SEP.'html'.DIR_SEP.\psm\Utils\Utils_Files::SanFilename($theme).
+//TODO: is there a safer way?
+			DIR_SEP.str_replace('..', '', $filename).'.html.php';
 		if(!file_exists($filepath))
 			die('<p>File not found! '.$filepath.'</p>');
 		include($filepath);

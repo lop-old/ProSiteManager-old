@@ -62,7 +62,7 @@ class User {
 		// encrypt password
 		$password = \psm\Utils\PassCrypt::hashNow($password);
 		$table = 'PSM_Users';
-		$query = "SELECT `user_id`, `username`, `email`, `date_join` FROM `".DB::san($table)."` WHERE `username` = :username AND `password` = :password LIMIT 1";
+		$query = "SELECT `user_id`, `username`, `email`, `date_join` FROM `".\psm\DB\DB::san($table)."` WHERE `username` = :username AND `password` = :password LIMIT 1";
 		$params = array(
 			':username' => $username,
 			':password' => $password,

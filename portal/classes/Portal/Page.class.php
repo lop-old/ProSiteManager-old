@@ -1,4 +1,4 @@
-<?php namespace psm;
+<?php namespace psm\Portal;
 if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';} else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 abstract class Page {
 
@@ -34,8 +34,8 @@ abstract class Page {
 		if(count(self::$paths) == 0) {
 			self::$paths = array(
 				\psm\Utils\Utils_Files::mergePaths(
-					\psm\PATH_ROOT,
-					Portal::getPortal()->getPortalName(),
+					\psm\Portal::getLocalPath('root'),
+					\psm\Portal::getPortal()->getPortalName(),
 					'pages'
 				)
 			);
@@ -52,7 +52,7 @@ abstract class Page {
 			if($result === FALSE)
 				continue;
 			// portal name
-			$portalName = Portal::getPortal()->getPortalName();
+			$portalName = \psm\Portal::getPortal()->getPortalName();
 			// page class name
 			$clss = '\\'.$portalName.'\\page_'.$page;
 			// load page class

@@ -8,6 +8,8 @@
 //define('psm\DEBUG',          TRUE);
 //define('psm\DEFAULT_MODULE', 'mysite');
 //define('psm\DEFAULT_PAGE',   'home');
+//define('psm\MODULE',         'mysite');
+//define('psm\PAGE',           'home');
 
 
 //**************************************************
@@ -16,10 +18,10 @@
 
 // static defines
 // ==============
-define('PORTAL_INDEX_FILE', TRUE);
-define('DIR_SEP',           DIRECTORY_SEPARATOR);
-define('NEWLINE',           "\n"); // new line
-define('TAB',               "\t"); // tab
+define('psm\INDEX_FILE', TRUE);
+define('DIR_SEP', DIRECTORY_SEPARATOR);
+define('NEWLINE', "\n"); // new line
+define('TAB',     "\t"); // tab
 // runtime defines - created after first portal instance is initialized.
 // ===============
 // PATH_ROOT     - The root path of the website.
@@ -32,11 +34,11 @@ define('TAB',               "\t"); // tab
 
 
 // class loader
-include('ClassLoader.php');
+include(__DIR__.DIR_SEP.'ClassLoader.php');
 ClassLoader::registerClassPath('psm', __DIR__.DIR_SEP.'classes');
 
 // debug mode
-if(defined('psm\DEBUG') && \psm\DEBUG) {
+if(defined('psm\DEBUG') && \psm\DEBUG == TRUE) {
 	// log to file
 	ini_set('log_errors', 'On');
 	ini_set('error_log', 'php_errors.log');
@@ -62,19 +64,21 @@ if(defined('psm\DEBUG') && \psm\DEBUG) {
 }
 
 
+// portal core
 class Portal {
 
-	// portal core
-	private static $portal = NULL;
-	private $portalName;
+	// portal instance
+	private static $portal = null;
+	// module instances
+	private static $modules = array();
+	// module name
+	private $module;
 	// template engine
 	private $engine = NULL;
 
 	// paths
-//TODO: will switch to an array
-//	private $paths = array();
-	private $pathRoot;
-	private $pathPortal;
+	private static $lPaths = array();
+	private static $wPaths = array();
 
 	// page
 	private $page = NULL;
@@ -83,35 +87,7 @@ class Portal {
 	private $action = NULL;
 
 
-	public static function AutoLoad() {
-//TODO: check ?mod= in url
-		// load default portal module
-		$portal = new self(\psm\DEFAULT_MODULE);
-//TODO: default to first portal loaded if no other options
-	}
-
-
-//TODO: this class construct will run multiple times to load multiple modules, but only one will render the page
-//TODO: this construct will need to be cleaned up
-	// new portal
-	public function __construct($portalName) {
-		// portal instance
-		if(self::$portal != NULL) {
-			echo '<p>Portal already loaded!</p>';
-			exit();
-		}
-		self::$portal = $this;
-		// portal name
-		if(empty($portalName)) {
-			echo '<p>portalName not set!</p>';
-			exit();
-		}
-		$this->portalName = $portalName;
-		// paths
-		$this->pathRoot = realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
-		define('psm\PATH_ROOT', $this->pathRoot);
-		$this->pathPortal = __DIR__;
-		define('psm\PATH_PORTAL', $this->pathPortal);
+	public static function factory($args=array()) {
 		// no page caching
 		\psm\Utils\Utils::NoPageCache();
 		// set timezone
@@ -119,16 +95,126 @@ class Portal {
 			if(!@date_default_timezone_get())
 				@date_default_timezone_set('America/New_York');
 		} catch(\Exception $ignore) {}
-		// load portal index
-		$portalIndex = '/'.\psm\Utils\Utils_Files::mergePaths($this->pathRoot, $this->portalName, $this->portalName.'.php');
-		if(!file_exists($portalIndex))
-			die('<p>Portal "'.$this->portalName.'" not found!</p>'.$portalIndex);
-		include($portalIndex);
+		// parse args
+		if(empty($args)) $args = array();
+		if(!is_array($args)) $args = array($args);
+		foreach($args as $key => $value) {
+			$key = str_replace('_', ' ', $key);
+			// default module
+			if($key == 'default module' && !defined('psm\DEFAULT_MODULE'))
+				define('psm\DEFAULT_MODULE', (string) $value);
+			else
+			// module to load
+			if($key == 'module' && !defined('psm\MODULE'))
+				define('psm\MODULE', (string) $value);
+			// unknown argument
+			else
+				echo '<p>Unknown argument! '.$key.' - '.$value.'</p>';
+		}
+
+//		// module from url
+//		if(!defined('psm\DEFAULT_MODULE')) {
+//			$mod = \psm\Utils\Vars::getVar('mod', 'str');
+//			if(!empty($mod))
+//				define('psm\DEFAULT_MODULE', \psm\Utils\Utils_Files::SanFilename( $mod ));
+//		}
+//TODO: default to first portal loaded if no other options
+		// default module not set
+		if(!defined('psm\DEFAULT_MODULE'))
+			die('<p>Default module not set!</p>');
+		// module to load
+		if(!defined('psm\MODULE'))
+			define('psm\MODULE', \psm\Utils\Utils_Files::SanFilename( \psm\DEFAULT_MODULE ));
+		// no module set
+		if(!defined('psm\MODULE'))
+			die('<p>Module not set!</p>');
+		// load portal
+		$portal = new self();
+	}
+
+
+	// new portal instance
+	public function __construct() {
+		// portal instance
+		if(self::$portal != NULL)
+			die('<p>Portal already loaded!</p>');
+		self::$portal = $this;
+
+		// load modules
+		self::$modules = \psm\Portal\Module_Loader::LoadModules($this->getLocalPath('root').DIR_SEP.'mods.txt');
+
+
+
+//		$module = \psm\Utils\Utils_Files::SanFilename($module);
+//		// portal name
+//		if(empty($module)) {
+//			echo '<p>portalName not set!</p>';
+//			exit();
+//		}
+//		$this->module = $module;
+//		// paths
+//		$this->pathRoot = realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
+//		define('psm\PATH_ROOT', $this->pathRoot);
+//		$this->pathPortal = __DIR__;
+//		define('psm\PATH_PORTAL', $this->pathPortal);
+
+//		// load portal index
+//		$portalIndex = '/'.\psm\Utils\Utils_Files::mergePaths($this->pathRoot, $this->module, $this->module.'.php');
+//		if(!file_exists($portalIndex))
+//			die('<p>Portal "'.$this->module.'" not found!</p>'.$portalIndex);
+//		include($portalIndex);
 	}
 	public function __destruct() {
-		\psm\DB\DB::CloseAll();
+		// unload modules
+		self::$modules = NULL;
+		self::$modules = array();
+//		$array = array_keys(self::$modules);
+//print_r($array);
+//exit();
+//		foreach($array as $key)
+//			unset($modules[$key]);
+		// unload engine
 		$this->engine = NULL;
+		// unload db
+		\psm\DB\DB::CloseAll();
 	}
+
+
+
+	// local file paths
+	public static function getLocalPath($name, $arg='') {
+		return self::getDefaultLocalPath($name, $arg);
+	}
+	private static function getDefaultLocalPath($name, $arg='') {
+		if(empty($name)) return NULL;
+		// website root path
+		if($name == 'root')
+			return \realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
+		// portal path
+		if($name == 'portal')
+			return __DIR__;
+		// module path
+		if($name == 'module' || $name == 'mod')
+			return self::getLocalPath('root').DIR_SEP.$arg;
+		return NULL;
+	}
+	// web url paths
+	public static function getWebPath($name, $arg='') {
+		return self::getDefaultWebPath($name, $arg);
+	}
+	private static function getDefaultWebPath($name, $arg='') {
+		if(empty($name)) return NULL;
+		// images
+		if($name == 'images' || $name == 'img')
+			return '/images/';
+		return NULL;
+	}
+
+
+
+
+
+
 
 
 	/**
@@ -137,7 +223,7 @@ class Portal {
 	 */
 	public function genericRender() {
 		// load page
-		$pageObj = Page::LoadPage($this->getPage());
+		$pageObj = \psm\Portal\Page::LoadPage($this->getPage());
 		// failed to load
 		if($pageObj == NULL) {
 echo '<p>PAGE IS NULL</p>';
@@ -162,7 +248,7 @@ echo '<p>ENGINE IS NULL</p>';
 
 	// get portal name
 	public function getPortalName() {
-		return $this->portalName;
+		return $this->module;
 	}
 
 

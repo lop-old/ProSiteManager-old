@@ -28,11 +28,11 @@ abstract class Page {
 	 * @param string $page Name of the page to load.
 	 * @return page Returns the page class instance, which can be rendered.
 	 */
-	public static function LoadPage($page) {
+	public static function LoadPage($modName, $page) {
 		$page = \psm\Utils\Utils_Files::SanFilename($page);
 		// default path - mod/pages/
 		if(count(self::$pagePaths) == 0)
-			self::addPath(\psm\Portal::getLocalPath('module', 'wa').DIR_SEP.'pages');
+			self::addPath(\psm\Portal::getLocalPath('module', $modName).DIR_SEP.'pages');
 		// look for page
 		foreach(self::$pagePaths as $v) {
 			$file = DIR_SEP.$v.DIR_SEP.$page.'.php';
@@ -45,7 +45,7 @@ abstract class Page {
 			if($result === FALSE)
 				continue;
 			// module name
-			$modName = \psm\Portal::getModuleName();
+			$modName = \psm\Portal::getModName();
 			// load page class
 			$clss = $modName.'\Pages\page_'.$page;
 			if(class_exists($clss))

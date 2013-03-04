@@ -86,6 +86,8 @@ class Portal {
 
 
 	public static function factory($args=array()) {
+		if(self::$portal != NULL)
+			return self::$portal;
 		// no page caching
 		\psm\Utils\Utils::NoPageCache();
 		// set timezone
@@ -110,23 +112,16 @@ class Portal {
 				echo '<p>Unknown argument! '.$key.' - '.$value.'</p>';
 		}
 
-//		// module from url
-//		if(!defined('psm\DEFAULT_MODULE')) {
-//			$mod = \psm\Utils\Vars::getVar('mod', 'str');
-//			if(!empty($mod))
-//				define('psm\DEFAULT_MODULE', \psm\Utils\Utils_Files::SanFilename( $mod ));
-//		}
-//TODO: default to first portal loaded if no other options
-		// default module not set
-		if(!defined('psm\DEFAULT_MODULE'))
-			die('<p>Default module not set!</p>');
-		// module to load
-		if(!defined('psm\MODULE'))
-			define('psm\MODULE', \psm\Utils\Utils_Files::SanFilename( \psm\DEFAULT_MODULE ));
-		// no module set
-		if(!defined('psm\MODULE'))
-			die('<p>Module not set!</p>');
-		// load portal
+		// load mods.txt
+		self::_LoadModules();
+		// no modules loaded
+		if(count(self::$modules) == 0)
+			die('<p>No modules/plugins loaded!</p>');
+
+		self::getModName();
+		self::getPage();
+
+		// load portal instance
 		$portal = new self();
 	}
 
@@ -137,33 +132,10 @@ class Portal {
 		if(self::$portal != NULL)
 			die('<p>Portal already loaded!</p>');
 		self::$portal = $this;
-
-		// load modules
-		self::$modules = \psm\Portal\Module_Loader::LoadModules(
-			$this->getLocalPath('root').DIR_SEP.'mods.txt'
-		);
-
-
-
-//		$module = \psm\Utils\Utils_Files::SanFilename($module);
-//		// portal name
-//		if(empty($module)) {
-//			echo '<p>portalName not set!</p>';
-//			exit();
-//		}
-//		$this->module = $module;
-//		// paths
-//		$this->pathRoot = realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
-//		define('psm\PATH_ROOT', $this->pathRoot);
-//		$this->pathPortal = __DIR__;
-//		define('psm\PATH_PORTAL', $this->pathPortal);
-
-//		// load portal index
-//		$portalIndex = '/'.\psm\Utils\Utils_Files::mergePaths($this->pathRoot, $this->module, $this->module.'.php');
-//		if(!file_exists($portalIndex))
-//			die('<p>Portal "'.$this->module.'" not found!</p>'.$portalIndex);
-//		include($portalIndex);
 	}
+
+
+	// destruct portal
 	public function __destruct() {
 		// render if not already done
 		if(!\psm\html\Engine::hasDisplayed())
@@ -172,8 +144,6 @@ class Portal {
 		self::$modules = NULL;
 		self::$modules = array();
 //		$array = array_keys(self::$modules);
-//print_r($array);
-//exit();
 //		foreach($array as $key)
 //			unset($modules[$key]);
 		// unload engine
@@ -181,6 +151,17 @@ class Portal {
 		// unload db
 		\psm\DB\DB::CloseAll();
 		\ob_end_flush();
+	}
+
+
+	// load modules
+	protected static function _LoadModules() {
+		if(count(self::$modules) == 0)
+			self::$modules = \psm\Portal\Module_Loader::LoadModulesTxt(
+				self::getLocalPath('root').DIR_SEP.'mods.txt'
+			);
+		if(count(self::$modules) == 0)
+			die('No modules/plugins loaded!');
 	}
 
 
@@ -203,6 +184,12 @@ class Portal {
 		// module path
 		if($name == 'module' || $name == 'mod')
 			return self::getLocalPath('root').DIR_SEP.$arg;
+		// module classes path
+		if($name == 'module classes' || $name == 'mod class')
+			return self::getLocalPath('module', $arg).DIR_SEP.'classes';
+		// module pages path
+		if($name == 'module pages' || $name == 'mod pages')
+			return self::getLocalPath('module', $arg).DIR_SEP.'pages';
 		return NULL;
 	}
 
@@ -221,15 +208,22 @@ class Portal {
 	}
 
 
-	// get portal instance
+	/**
+	 * Gets the main portal instance
+	 *
+	 * @return Portal
+	 */
+	
 	public static function getPortal() {
 		return self::$portal;
 	}
-
-
-	// get module name
-	public static function getModuleName() {
-		return \psm\MODULE;
+	/**
+	 * Gets the main template engine instance, creating a new one if needed.
+	 *
+	 * @return html_Engine
+	 */
+	public static function getEngine() {
+		return \psm\html\Engine::getEngine();
 	}
 
 
@@ -265,14 +259,6 @@ class Portal {
 //	}
 
 
-	/**
-	 * Gets the main template engine instance, creating a new one if needed.
-	 *
-	 * @return html_Engine
-	 */
-	public static function getEngine() {
-		return \psm\html\Engine::getEngine();
-	}
 //		// new instance if needed
 //		if($this->engine == NULL)
 //			$this->engine = new html_Engine();
@@ -294,11 +280,57 @@ class Portal {
 //	}
 
 
-	// page
+	// get module name
+	public static function getModName() {
+		// module already defined
+		if(defined('psm\MODULE')) return \psm\MODULE;
+		// get module from url
+		self::setModName(
+				\psm\Utils\Vars::getVar('mod', 'str')
+		);
+		if(defined('psm\MODULE')) return \psm\MODULE;
+		// default module define
+		if(defined('psm\DEFAULT_MODULE'))
+			self::setModName(\psm\DEFAULT_MODULE);
+		if(defined('psm\MODULE')) return \psm\MODULE;
+		// first listed mod
+		if(count(self::$modules) > 0) {
+			$mod = reset(self::$modules);
+			\psm\Utils\Utils::Validate('psm\Portal\Module', $mod);
+			self::setModName(
+				$mod->getModName()
+			);
+		}
+		// unknown module
+		return NULL;
+	}
+	private static function setModName($modName) {
+		if(empty($modName)) return;
+		if(defined('psm\MODULE')) return;
+		define(
+			'psm\MODULE',
+			\psm\Utils\Utils_Files::SanFilename(
+				$modName
+			)
+		);
+	}
+//	// default module
+//	public static function setDefaultModName($modName) {
+//		if(empty($modName)) return;
+//		if(defined('psm\DEFAULT_MODULE')) return;
+//		define(
+//			'psm\DEFAULT_MODULE',
+//			\psm\Utils\Utils_Files::SanFilename(
+//				$modName
+//			)
+//		);
+//	}
+
+
+	// get page
 	public static function getPage() {
 		// page already defined
-		if(defined('psm\PAGE'))
-			return \psm\PAGE;
+		if(defined('psm\PAGE')) return \psm\PAGE;
 		// get page from url
 		self::setPage(
 			\psm\Utils\Vars::getVar('page', 'str')
@@ -326,16 +358,17 @@ class Portal {
 	}
 	// default page
 	public static function setDefaultPage($defaultPage) {
-		self::$defaultPage = \psm\Utils\Utils_Files::SanFilename(
-			$defaultPage
-		);
+		self::$defaultPage =
+			\psm\Utils\Utils_Files::SanFilename(
+				$defaultPage
+			);
 	}
 
 
 	// get page object
 	public static function getPageObj() {
 		if(self::$pageObj == NULL)
-			self::$pageObj = \psm\Portal\Page::LoadPage(self::getPage());
+			self::$pageObj = \psm\Portal\Page::LoadPage(\psm\MODULE, self::getPage());
 		return self::$pageObj;
 	}
 

@@ -64,7 +64,7 @@ class NavBar_Item {
 
 
 	private function isActive() {
-		$page = \psm\Portal::getPortal()->getPage();
+		$page = \psm\Portal::getPage();
 		return ($this->name == $page);
 	}
 

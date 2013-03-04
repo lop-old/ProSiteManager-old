@@ -9,7 +9,7 @@ class Module_Loader {
 
 
 	// load mods.txt modules list
-	public static function &LoadModules($modsFile) {
+	public static function &LoadModulesTxt($modsFile) {
 		if(!\psm\Utils\Utils_Strings::endsWith($modsFile, '.txt'))
 			$modsFile .= '.txt';
 		// mods.txt file not found

@@ -35,7 +35,7 @@ define('TAB',     "\t"); // tab
 
 // class loader
 include(__DIR__.DIR_SEP.'ClassLoader.php');
-ClassLoader::registerClassPath('psm', __DIR__.DIR_SEP.'classes');
+ClassLoader::registerClassPath('psm', Portal::getLocalPath('portal classes'));
 
 // debug mode
 if(defined('psm\DEBUG') && \psm\DEBUG == TRUE) {
@@ -141,7 +141,9 @@ class Portal {
 		self::$portal = $this;
 
 		// load modules
-		self::$modules = \psm\Portal\Module_Loader::LoadModules($this->getLocalPath('root').DIR_SEP.'mods.txt');
+		self::$modules = \psm\Portal\Module_Loader::LoadModules(
+			$this->getLocalPath('root').DIR_SEP.'mods.txt'
+		);
 
 
 
@@ -186,6 +188,7 @@ class Portal {
 		return self::getDefaultLocalPath($name, $arg);
 	}
 	private static function getDefaultLocalPath($name, $arg='') {
+		$name = trim(str_replace('_', ' ', $name));
 		if(empty($name)) return NULL;
 		// website root path
 		if($name == 'root')
@@ -193,16 +196,22 @@ class Portal {
 		// portal path
 		if($name == 'portal')
 			return __DIR__;
+		// portal classes path
+		if($name == 'portal classes')
+			return __DIR__.DIR_SEP.'classes';
 		// module path
 		if($name == 'module' || $name == 'mod')
 			return self::getLocalPath('root').DIR_SEP.$arg;
 		return NULL;
 	}
+
+
 	// web url paths
 	public static function getWebPath($name, $arg='') {
 		return self::getDefaultWebPath($name, $arg);
 	}
 	private static function getDefaultWebPath($name, $arg='') {
+		$name = trim(str_replace('_', ' ', $name));
 		if(empty($name)) return NULL;
 		// images
 		if($name == 'images' || $name == 'img')

@@ -69,9 +69,11 @@ class DB {
 	}
 	// close all db connections
 	public static function CloseAll() {
-		foreach(self::$dbPool as $db) {
-			if($db['pdo'] != NULL)
-				$db['pdo'] = NULL;
+		$keys = array_keys(self::$dbPool);
+		foreach($keys as $key) {
+			if(@self::$dbPool[$key]['pdo'] != NULL)
+				self::$dbPool[$key]['pdo'] = NULL;
+			unset(self::$dbPool[$key]);
 		}
 	}
 

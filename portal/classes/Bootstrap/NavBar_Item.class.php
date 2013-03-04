@@ -47,11 +47,14 @@ class NavBar_Item {
 		// dropdown menu
 		if($this->isDropdown === TRUE)
 			return '			'.
+				'<li class="dropdown'.($this->isSelected ? ' active' : '').'">'.
 				'<a'.($this->isSelected ? ' class="active"' : '').
 				' href="'.(empty($this->url) ? '#' : $this->url).'"'.
-				'class="dropdown-toggle" data-toggle="dropdown">'.
-				(empty($this->icon) ? '' : '<i class="'.$this->icon.'icon-white"></i> ').
-				$this->title.' <b class="caret"></b></a>'.NEWLINE;
+				' class="dropdown-toggle" data-toggle="dropdown"> '.
+				(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
+				$this->title.' <b class="caret"></b></a>'.NEWLINE.
+'<ul class="dropdown-menu"><li><a href="#">a</a></li><li><a href="#">b</a></li><li><a href="#">c</a></li></ul>'.
+				'</li>'.NEWLINE;
 		// divider
 		if($this->isDivider === TRUE)
 			return '			'.

@@ -5,6 +5,7 @@ class NavBar {
 	private $brand = NULL;
 	private $items = array();
 	private $itemsRight = array();
+	private $selected = NULL;
 
 
 	public static function factory() {
@@ -81,6 +82,13 @@ class NavBar {
 	}
 
 
+	// set selected
+	public function setSelected($selected) {
+		$this->selected = $selected;
+		return $this;
+	}
+
+
 	// add items
 	public function add(\psm\Bootstrap\NavBar_Item $item, $right=FALSE) {
 		if($right === TRUE)
@@ -91,12 +99,14 @@ class NavBar {
 	}
 	// add menu button
 	public function addButton($name, $title, $url, $icon, $right=FALSE) {
-		$this->add( new NavBar_Item($name, $title, $url, $icon), $right );
+		$isSelected = ($this->selected == $name);
+		$this->add( new NavBar_Item($name, $title, $url, $icon, FALSE, $isSelected), $right );
 		return $this;
 	}
 	// add dropdown menu
 	public function addDropdown($name, $title, $url, $icon, $right=FALSE) {
-		$this->add( new NavBar_Item($name, $title, $url, $icon, TRUE), $right );
+		$isSelected = ($this->selected == $name);
+		$this->add( new NavBar_Item($name, $title, $url, $icon, TRUE, $isSelected), $right );
 		return $this;
 	}
 	// add menu break

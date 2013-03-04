@@ -6,13 +6,14 @@ class NavBar_Item {
 	private $isDropdown = FALSE;
 	private $isDivider  = FALSE;
 
-	private $name  = NULL;
-	private $title = NULL;
-	private $url   = NULL;
-	private $icon  = NULL;
+	private $name;
+	private $title;
+	private $url;
+	private $icon;
+	private $isSelected;
 
 
-	public function __construct($name='', $title='', $url='', $icon='', $dropdown=FALSE) {
+	public function __construct($name='', $title='', $url='', $icon='', $dropdown=FALSE, $isSelected=FALSE) {
 		// divider
 		if($name == '-') {
 			$this->isDivider = TRUE;
@@ -32,6 +33,7 @@ class NavBar_Item {
 		$this->title = $title;
 		$this->url   = $url;
 		$this->icon  = $icon;
+		$this->isSelected = $isSelected;
 	}
 
 
@@ -45,7 +47,7 @@ class NavBar_Item {
 		// dropdown menu
 		if($this->isDropdown === TRUE)
 			return '			'.
-				'<a'.($this->isActive() ? ' class="active"' : '').
+				'<a'.($this->isSelected ? ' class="active"' : '').
 				' href="'.(empty($this->url) ? '#' : $this->url).'"'.
 				'class="dropdown-toggle" data-toggle="dropdown">'.
 				(empty($this->icon) ? '' : '<i class="'.$this->icon.'icon-white"></i> ').
@@ -56,16 +58,10 @@ class NavBar_Item {
 				'<li class="divider'.(TRUE ? '-vertical' : '').'"></li>'.NEWLINE;
 		// menu button
 		return '			'.
-			'<li'.($this->isActive() ? ' class="active"' : '').'>'.
+			'<li'.($this->isSelected ? ' class="active"' : '').'>'.
 			'<a href="'.(empty($this->url) ? '#' : $this->url).'">'.
 			(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
 			$this->title.'</a></li>'.NEWLINE;
-	}
-
-
-	private function isActive() {
-		$page = \psm\Portal::getPage();
-		return ($this->name == $page);
 	}
 
 

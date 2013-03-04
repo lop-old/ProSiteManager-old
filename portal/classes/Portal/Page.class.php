@@ -3,7 +3,7 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 abstract class Page {
 
 	// page paths
-	private static $paths = array();
+	private static $pagePaths = array();
 
 
 	/**
@@ -30,19 +30,12 @@ abstract class Page {
 	 */
 	public static function LoadPage($page) {
 		$page = \psm\Utils\Utils_Files::SanFilename($page);
-		// default path - portalname/pages/
-		if(count(self::$paths) == 0) {
-			self::$paths = array(
-				\psm\Utils\Utils_Files::mergePaths(
-					\psm\Portal::getLocalPath('root'),
-					\psm\Portal::getPortal()->getPortalName(),
-					'pages'
-				)
-			);
-		}
+		// default path - mod/pages/
+		if(count(self::$pagePaths) == 0)
+			self::addPath(\psm\Portal::getLocalPath('module', 'wa').DIR_SEP.'pages');
 		// look for page
-		foreach(self::$paths as $v) {
-			$file = DIR_SEP.\psm\Utils\Utils_Files::mergePaths($v, $page.'.php');
+		foreach(self::$pagePaths as $v) {
+			$file = DIR_SEP.$v.DIR_SEP.$page.'.php';
 			// file not found
 			if(!file_exists($file))
 				continue;
@@ -51,22 +44,24 @@ abstract class Page {
 			// file failed to load
 			if($result === FALSE)
 				continue;
-			// portal name
-			$portalName = \psm\Portal::getPortal()->getPortalName();
-			// page class name
-			$clss = '\\'.$portalName.'\\page_'.$page;
+			// module name
+			$modName = \psm\Portal::getModuleName();
 			// load page class
+			$clss = $modName.'\Pages\page_'.$page;
 			if(class_exists($clss))
 				return new $clss();
-			return $result;
+			// string result
+			return (string) $result;
 		}
-echo '<p>Page not found!! '.$page.'</p>';
+		return '<p>Page not found!! '.$page.'</p>';
 	}
 
 
+	// add pages path
 	public static function addPath($path) {
-		if(in_array($path, self::$paths)) return;
-		self::$paths[] = $path;
+		$path = \psm\Utils\Utils_Files::trimPath($path);
+		if(!in_array($path, self::$pagePaths))
+			self::$pagePaths[] = $path;
 	}
 
 

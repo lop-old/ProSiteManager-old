@@ -26,7 +26,7 @@ class Utils_Files {
 	 * @param string $path Path to trim.
 	 * @return string Cleaned path string.
 	 */
-	public static function trimPath($path) {
+	public static function trimPath($path, $sepBefore=FALSE, $sepAfter=FALSE) {
 		if(is_array($path))
 			return array_map(__METHOD__, $path);
 		$path = str_replace(
@@ -38,7 +38,10 @@ class Utils_Files {
 			$path = substr($path, 1);
 		while(substr($path, -1, 1) == DIR_SEP)
 			$path = substr($path, 0, -1);
-		return $path;
+		return
+			($sepBefore ? DIR_SEP : '').
+			$path.
+			($sepAfter ? DIR_SEP : '');
 	}
 
 
@@ -59,9 +62,9 @@ class Utils_Files {
 echo '<p>stop SanFilename() '.$filename.'</p>'; exit();
 		}
 		// remove dots from front and end
-		while(substr($filename, 0, 1) == '.')
+		while(\psm\Utils\Utils_Strings::startsWith($filename, '.'))
 			$filename = substr($filename, 1);
-		while(substr($filename,-1, 1) == '.')
+		while(\psm\Utils\Utils_Strings::endsWith($filename, '.'))
 			$filename = substr($filename, 0, -1);
 		// clean string
 		$filename = str_replace(str_split(preg_replace('/([[:alnum:]_\\.-]*)/', '_', $filename)), '_', $filename);

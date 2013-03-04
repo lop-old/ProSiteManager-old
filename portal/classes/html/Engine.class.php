@@ -1,9 +1,11 @@
 <?php namespace psm\html;
 if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';} else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+\ob_start();
 class Engine {
 
 	// main engine instance
 	private static $engine = NULL;
+	private static $hasDisplayed = FALSE;
 
 	// main html file
 	private $htmlMain;
@@ -61,41 +63,37 @@ $paths
 
 
 	// build page
-	private $buildHasRun = FALSE;
 	public function Display() {
 		// run only once
-		if($this->buildHasRun)
-			die('<p>Engine already built the page!</p>');
-		$this->buildHasRun = TRUE;
-
+		if(self::_hasDisplayed(TRUE))
+			return;
+		// end output buffer
+		$this->addToPage(
+			\ob_get_clean()
+		);
 		/* build header */
 		// split by {header content} tag
 		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
 		// open header block
-		$this->_Render(
+		$this->_echo(
 			$splitHeader->getPart(0)
 		);
-//var_dump($this->htmlMain->getBlock('header'));
-//exit();
 		// build header
-		$this->_Render(
+		$this->_echo(
 			$this->htmlMain->getBlock('header')
 		);
-//		$this->blocksHeader->Display(TRUE);
 		// build inline css
-		$this->_Render(
+		$this->_echo(
 			'<style type="text/css" title="currentStyle">'.NEWLINE.
 			$this->htmlMain->getBlock('css').
 			'</style>'
 		);
-//		$this->blocksCss->Display(TRUE);
 		// build inline javascript
-		$this->_Render(
+		$this->_echo(
 			$this->htmlMain->getBlock('js')
 		);
-//		$this->blocksJs->Display(TRUE);
 		// close header block
-		$this->_Render(
+		$this->_echo(
 			$splitHeader->getPart(1)
 		);
 		unset($splitHeader, $this->blocksHeader,
@@ -105,16 +103,15 @@ $paths
 		// split by {page content} tag
 		$splitPage = new SplitBlock('{page content}', $this->htmlMain->getBlock('body'));
 		// open body block
-		$this->_Render(
+		$this->_echo(
 			$splitPage->getPart(0)
 		);
 		// build page content
-		$this->_Render(
+		$this->_echo(
 			$this->htmlMain->getBlock('page')
 		);
-//		$this->blocksPage->Display(TRUE);
 		// close body block
-		$this->_Render(
+		$this->_echo(
 			$splitPage->getPart(1)
 		);
 		unset($splitPage, $this->blocksPage);
@@ -123,15 +120,14 @@ $paths
 		// split by {footer content} tag
 		$splitFooter = new SplitBlock('{footer content}', $this->htmlMain->getBlock('foot'));
 		// open footer block
-		$this->_Render(
+		$this->_echo(
 			$splitFooter->getPart(0)
 		);
-		$this->_Render(
+		$this->_echo(
 			$this->htmlMain->getBlock('footer')
 		);
-//		$this->blocksFooter->Display(TRUE);
 		// close footer block
-		$this->_Render(
+		$this->_echo(
 			$splitFooter->getPart(1)
 		);
 		unset($splitFooter, $this->blocksFooter);
@@ -139,7 +135,7 @@ $paths
 	}
 
 
-	private function _Render($data) {
+	private function _echo($data) {
 		// string tags
 		$args = array('data' => &$data);
 		$this->tagString->trigger($args);
@@ -147,6 +143,7 @@ $paths
 		$args = array('data' => &$data);
 		$this->tagPaths->trigger($args);
 		echo $data;
+		ob_flush();
 	}
 
 
@@ -196,7 +193,7 @@ $paths
 		if($data == NULL)
 			return NULL;
 		// page class
-		if($data instanceof \psm\Page)
+		if($data instanceof \psm\Portal\Page)
 			return $data->Render();
 		// default to string
 		$data = (string) $data;
@@ -214,6 +211,17 @@ $paths
 //		$args[0] = &$data;
 //		self::$globalTags->trigger($args);
 //	}
+
+
+	public static function hasDisplayed() {
+		return self::_hasDisplayed();
+	}
+	private static function _hasDisplayed($hasDisplayed=FALSE) {
+		$hasBefore = self::$hasDisplayed;
+		if($hasDisplayed === TRUE)
+			self::$hasDisplayed = TRUE;
+		return $hasBefore;
+	}
 
 
 }

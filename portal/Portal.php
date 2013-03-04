@@ -71,8 +71,6 @@ class Portal {
 	private static $portal = null;
 	// module instances
 	private static $modules = array();
-	// module name
-	private $module;
 	// template engine
 	private $engine = NULL;
 
@@ -81,8 +79,8 @@ class Portal {
 	private static $wPaths = array();
 
 	// page
-	private $page = NULL;
-	private $defaultPage = 'home';
+	private static $pageObj = NULL;
+	private static $defaultPage = 'home';
 	// action
 	private $action = NULL;
 
@@ -167,6 +165,9 @@ class Portal {
 //		include($portalIndex);
 	}
 	public function __destruct() {
+		// render if not already done
+		if(!\psm\html\Engine::hasDisplayed())
+			self::getEngine()->Display();
 		// unload modules
 		self::$modules = NULL;
 		self::$modules = array();
@@ -179,8 +180,8 @@ class Portal {
 		$this->engine = NULL;
 		// unload db
 		\psm\DB\DB::CloseAll();
+		\ob_end_flush();
 	}
-
 
 
 	// local file paths
@@ -220,44 +221,15 @@ class Portal {
 	}
 
 
-
-
-
-
-
-
-	/**
-	 *
-	 *
-	 */
-	public function genericRender() {
-		// load page
-		$pageObj = \psm\Portal\Page::LoadPage($this->getPage());
-		// failed to load
-		if($pageObj == NULL) {
-echo '<p>PAGE IS NULL</p>';
-			return;
-		}
-		// get engine
-		$engine = $this->getEngine();
-		if($engine == NULL) {
-echo '<p>ENGINE IS NULL</p>';
-			return;
-		}
-		$engine->addToPage($pageObj);
-		$engine->Display();
-	}
-
-
 	// get portal instance
 	public static function getPortal() {
 		return self::$portal;
 	}
 
 
-	// get portal name
-	public function getPortalName() {
-		return $this->module;
+	// get module name
+	public static function getModuleName() {
+		return \psm\MODULE;
 	}
 
 
@@ -323,21 +295,48 @@ echo '<p>ENGINE IS NULL</p>';
 
 
 	// page
-	public function getPage() {
-		// already set
-		if($this->page !== NULL)
-			return $this->page;
-		// get page
-		$this->page = \psm\Utils\Vars::getVar('page', 'str');
-		// default page
-		if(empty($this->page))
-			$this->page = $this->defaultPage;
-		$this->page = \psm\Utils\Utils_Files::SanFilename($this->page);
-		return $this->page;
+	public static function getPage() {
+		// page already defined
+		if(defined('psm\PAGE'))
+			return \psm\PAGE;
+		// get page from url
+		self::setPage(
+			\psm\Utils\Vars::getVar('page', 'str')
+		);
+		if(defined('psm\PAGE')) return \psm\PAGE;
+		// default page define
+		if(defined('psm\DEFAULT_PAGE'))
+			self::setPage(\psm\DEFAULT_PAGE);
+		if(defined('psm\PAGE')) return \psm\PAGE;
+		// default page portal var
+		self::setPage(self::$defaultPage);
+		if(defined('psm\PAGE')) return \psm\PAGE;
+		// unknown page
+		return '404';
+	}
+	private static function setPage($page) {
+		if(empty($page)) return;
+		if(defined('psm\PAGE')) return;
+		define(
+			'psm\PAGE',
+			\psm\Utils\Utils_Files::SanFilename(
+				$page
+			)
+		);
 	}
 	// default page
-	public function setDefaultPage($defaultPage) {
-		$this->defaultPage = \psm\Utils\Utils_Files::SanFilename($defaultPage);
+	public static function setDefaultPage($defaultPage) {
+		self::$defaultPage = \psm\Utils\Utils_Files::SanFilename(
+			$defaultPage
+		);
+	}
+
+
+	// get page object
+	public static function getPageObj() {
+		if(self::$pageObj == NULL)
+			self::$pageObj = \psm\Portal\Page::LoadPage(self::getPage());
+		return self::$pageObj;
 	}
 
 

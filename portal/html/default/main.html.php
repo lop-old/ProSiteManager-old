@@ -29,7 +29,7 @@ class html_main extends \psm\html\tplFile_Main {
 		->setSelected(\psm\Portal::getModName())
 		->setBrand(\psm\Portal::getModObj()->getModTitleHtml())
 		->addBreak()
-		->addButton('',			'Home',				'./',					'icon-home')
+		->addButton('',			'Home',				'/',					'icon-home')
 		->addButton('wa',		'WebAuction',		'?mod=wa',				'icon-shopping-cart')
 		->addButton('wb',		'WeBook',			'?mod=wb',				'icon-book')
 		->addDropdown('profile','lorenzop',			NULL,					'icon-user',			TRUE)

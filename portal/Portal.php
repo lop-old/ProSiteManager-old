@@ -38,6 +38,7 @@ ClassLoader::registerClassPath('psm', \psm\Paths::getLocal('portal classes'));
 
 // debug mode
 if(defined('psm\DEBUG') && \psm\DEBUG == TRUE) {
+	error_reporting(E_ALL | E_STRICT);
 	// log to file
 	ini_set('log_errors', 'On');
 	ini_set('error_log', 'php_errors.log');
@@ -145,7 +146,7 @@ class Portal {
 		$this->engine = NULL;
 		// unload db
 		\psm\DB\DB::CloseAll();
-		\ob_end_flush();
+		@\ob_end_flush();
 	}
 
 

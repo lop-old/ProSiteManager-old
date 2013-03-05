@@ -43,7 +43,7 @@ class NavBar_Item {
 		if($this->isBrand === TRUE)
 			return '		'.
 				'<a class="brand" href="'.
-				(empty($this->url) ? '#' : $this->url).'">'.
+				(empty($this->url) ? './?mod='.\psm\Portal::getModName() : $this->url).'">'.
 				$this->title.'</a>'.NEWLINE;
 		// dropdown menu
 		if($this->isDropdown === TRUE)

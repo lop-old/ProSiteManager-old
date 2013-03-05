@@ -10,12 +10,16 @@ class Utils_Strings {
 	 * @return boolean
 	 */
 	public static function startsWith($haystack, $needle, $ignoreCase=FALSE) {
-		if(empty($haystack) || empty($needle)) return FALSE;
-		if($ignoreCase){
+		if(empty($haystack) || empty($needle))
+			return FALSE;
+		if($ignoreCase) {
 			$haystack = strtolower($haystack);
-			$needle   = strtolower($needle);}
-			return !strncmp($haystack, $needle, strlen($needle));
-		return (substr($haystack, 0, strlen($needle)) === $needle);
+			$needle   = strtolower($needle);
+		}
+		$length = strlen($needle);
+		if($length == 0)
+			return FALSE;
+		return (substr($haystack, 0, $length) === $needle);
 	}
 	/**
 	 *
@@ -23,13 +27,38 @@ class Utils_Strings {
 	 * @return boolean
 	 */
 	public static function endsWith($haystack, $needle, $ignoreCase=FALSE) {
-		if(empty($haystack) || empty($needle)) return FALSE;
+		if(empty($haystack) || empty($needle))
+			return FALSE;
 		if($ignoreCase){
 			$haystack = strtolower($haystack);
-			$needle   = strtolower($needle);}
-			$length   = strlen($needle);
-			if($length == 0) return FALSE;
-			return (substr($haystack, 0-$length) === $needle);
+			$needle   = strtolower($needle);
+		}
+		$length = strlen($needle);
+		if($length == 0)
+			return FALSE;
+		return (substr($haystack, 0-$length) === $needle);
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+	public static function forceStartsWith(&$haystack, $needle) {
+		if(empty($haystack) || empty($needle))
+			return;
+		if(!self::startsWith($haystack, $needle))
+			$haystack = $needle.$haystack;
+	}
+	/**
+	 *
+	 *
+	 */
+	public static function forceEndsWith(&$haystack, $needle) {
+		if(empty($haystack) || empty($needle))
+			return;
+		if(!self::endsWith($haystack, $needle))
+			$haystack = $haystack.$needle;
 	}
 
 

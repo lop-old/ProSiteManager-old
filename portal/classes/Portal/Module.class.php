@@ -17,20 +17,20 @@ abstract class Module {
 		$this->portal = \psm\Portal::getPortal();
 		$this->engine = \psm\Portal::getEngine();
 		// register paths
-		$this->_registerPagesPath(\psm\Portal::getLocalPath('module pages',   $this->getModName() ));
-		$this->_registerClassPath(\psm\Portal::getLocalPath('module classes', $this->getModName() ));
+		$this->_registerPagesPath();
+		$this->_registerClassPath();
 	}
 
 
 	// register paths
 	protected function _registerPagesPath($path='') {
 		if(empty($path))
-			$path = __DIR__.DIR_SEP.'classes';
+			$path = \psm\Paths::getLocal('module pages');
 		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
 	}
 	protected function _registerClassPath($path='') {
 		if(empty($path))
-			$path = __DIR__.DIR_SEP.'classes';
+			$path = \psm\Paths::getLocal('module classes');
 		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
 	}
 

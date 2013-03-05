@@ -29,8 +29,8 @@ class Tag_String extends Tag {
 
 
 	public function addString($tagName, $value) {
-		if(!\psm\Utils\Utils::startsWith($tagName, '{') || !\psm\Utils\Utils::endsWith($tagName, '}'))
-			$tagName = '{'.$tagName.'}';
+		\psm\Utils\Utils_Strings::forceStartsWith($tagName, '{');
+		\psm\Utils\Utils_Strings::forceEndsWith  ($tagName, '}');
 		$this->tags[$tagName] = $value;
 	}
 

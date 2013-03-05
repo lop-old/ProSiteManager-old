@@ -11,8 +11,7 @@ class Module_Loader {
 
 	// load mods.txt modules list
 	public static function &LoadModulesTxt($modsFile) {
-		if(!\psm\Utils\Utils_Strings::endsWith($modsFile, '.txt'))
-			$modsFile .= '.txt';
+		\psm\Utils\Utils_Strings::forceEndsWith($modsFile, '.txt');
 		// mods.txt file not found
 		if(!file_exists($modsFile))
 			die('Modules list file not found!');
@@ -35,7 +34,7 @@ class Module_Loader {
 	// load a module
 	private static function LoadModule($name) {
 		// file mod/mod.php
-		$file = \psm\Portal::getLocalPath('module', $name).DIR_SEP.$name.'.php';
+		$file = \psm\Paths::getLocal('module', $name).DIR_SEP.$name.'.php';
 		// module file not found
 		if(!file_exists($file)) {
 //TODO:

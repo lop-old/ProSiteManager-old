@@ -9,20 +9,36 @@ abstract class tplFile {
 	protected static $cachedFiles = array();
 
 
-	public static function LoadFile($theme, $filename) {
-//TODO: add caching!!!
-		$filepath =
-			'wa'.DIR_SEP.'html'.DIR_SEP.\psm\Utils\Utils_Files::SanFilename($theme).
-//TODO: is there a safer way?
-			DIR_SEP.str_replace('..', '', $filename).'.html.php';
-		if(!file_exists($filepath))
-			die('<p>File not found! '.$filepath.'</p>');
-		include($filepath);
+	public static function LoadFile($modName, $theme, $filename) {
+		$theme = \psm\Utils\Utils_Files::SanFilename($theme);
+		$filename = str_replace('..', '', $filename);
+		if(empty($modName))  return NULL;
+		if(empty($theme))    return NULL;
+		if(empty($filename)) return NULL;
+		// portal html only
+		if(empty($modName)) {
+			$paths = \psm\Paths::getLocal('portal html').DIR_SEP.$theme;
+		// search in portal and mod html
+		} else {
+			$paths = array();
+			foreach(\psm\Paths::getLocal('html', $modName) as $p)
+				$paths[] = $p.DIR_SEP.$theme;
+		}
+		// find file
+		$filefound = \psm\Utils\Utils_Files::findFile($filename.'.html.php', $paths);
+		if(!$filefound)
+			die('<p>File not found! '.$filename.'.html.php'.'</p>');
+		include_once($filefound);
 		$clss = '\wa\html\html_'.$filename;
 		if(!class_exists($clss))
 			die('<p>Class not found! '.$clss.'</p>');
 		return new $clss();
 	}
+
+
+//	protected function __construct() {
+//		parent::__construct();
+//	}
 
 
 	public function addBlock($blockName, &$data, $top=FALSE) {
@@ -40,11 +56,6 @@ abstract class tplFile {
 			$this->blocks[$blockName] .= $rendered;
 	}
 	public function getBlock($blockName='block') {
-//if($blockName == 'header'){
-//	var_dump($this->blocks);
-//exit();
-//}
-
 		// return cached block
 		if(isset($this->blocks[$blockName]))
 			return $this->blocks[$blockName];

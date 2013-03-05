@@ -4,7 +4,7 @@
 // Mattsoft.net PoiXson.com
 
 
-//defines for use in index.php
+// defines for use in index.php
 //define('psm\DEBUG',          TRUE);
 //define('psm\DEFAULT_MODULE', 'mysite');
 //define('psm\DEFAULT_PAGE',   'home');
@@ -24,18 +24,15 @@ define('NEWLINE', "\n"); // new line
 define('TAB',     "\t"); // tab
 // runtime defines - created after first portal instance is initialized.
 // ===============
-// PATH_ROOT     - The root path of the website.
-// PATH_PORTAL   - The portal framework path. This folder contains portal.php
+// \psm\MODULE - The module name currently being displayed.
+// \psm\PAGE   - The page name currently being displayed.
 
 
-//TODO: add these
-// PORTAL_MODULE - The module name currently being displayed.
-// PORTAL_PAGE   - The page name currently being displayed.
-
-
+// path handler
+include(__DIR__.DIR_SEP.'Paths.class.php');
 // class loader
 include(__DIR__.DIR_SEP.'ClassLoader.php');
-ClassLoader::registerClassPath('psm', Portal::getLocalPath('portal classes'));
+ClassLoader::registerClassPath('psm', \psm\Paths::getLocal('portal classes'));
 
 // debug mode
 if(defined('psm\DEBUG') && \psm\DEBUG == TRUE) {
@@ -73,10 +70,6 @@ class Portal {
 	private static $modules = array();
 	// template engine
 	private $engine = NULL;
-
-	// paths
-	private static $lPaths = array();
-	private static $wPaths = array();
 
 	// page
 	private static $pageObj = NULL;
@@ -158,53 +151,10 @@ class Portal {
 	protected static function _LoadModules() {
 		if(count(self::$modules) == 0)
 			self::$modules = \psm\Portal\Module_Loader::LoadModulesTxt(
-				self::getLocalPath('root').DIR_SEP.'mods.txt'
+				\psm\Paths::getLocal('root').DIR_SEP.'mods.txt'
 			);
 		if(count(self::$modules) == 0)
 			die('No modules/plugins loaded!');
-	}
-
-
-	// local file paths
-	public static function getLocalPath($name, $arg='') {
-		return self::getDefaultLocalPath($name, $arg);
-	}
-	private static function getDefaultLocalPath($name, $arg='') {
-		$name = trim(str_replace('_', ' ', $name));
-		if(empty($name)) return NULL;
-		// website root path
-		if($name == 'root')
-			return \realpath(__DIR__.DIR_SEP.'..'.DIR_SEP);
-		// portal path
-		if($name == 'portal')
-			return __DIR__;
-		// portal classes path
-		if($name == 'portal classes')
-			return __DIR__.DIR_SEP.'classes';
-		// module path
-		if($name == 'module' || $name == 'mod')
-			return self::getLocalPath('root').DIR_SEP.$arg;
-		// module classes path
-		if($name == 'module classes' || $name == 'mod class')
-			return self::getLocalPath('module', $arg).DIR_SEP.'classes';
-		// module pages path
-		if($name == 'module pages' || $name == 'mod pages')
-			return self::getLocalPath('module', $arg).DIR_SEP.'pages';
-		return NULL;
-	}
-
-
-	// web url paths
-	public static function getWebPath($name, $arg='') {
-		return self::getDefaultWebPath($name, $arg);
-	}
-	private static function getDefaultWebPath($name, $arg='') {
-		$name = trim(str_replace('_', ' ', $name));
-		if(empty($name)) return NULL;
-		// images
-		if($name == 'images' || $name == 'img')
-			return '/images/';
-		return NULL;
 	}
 
 
@@ -228,6 +178,16 @@ class Portal {
 
 
 	/**
+	 * Gets the portal theme.
+	 *
+	 *
+	 */
+	public static function getPortalTheme() {
+		return 'default';
+	}
+
+
+	/**
 	 * Sets the website title.
 	 *
 	 *
@@ -246,38 +206,9 @@ class Portal {
 
 
 //TODO:
-//	/**
-//	 * Sets a local or web path.
-//	 *
-//	 *
-//	 */
-//	protected function setPath($name, $path) {
-//		if(isset($this->paths[$name]))
-//			die('Path already set! '.$name.' - '.$path);
-//		$this->paths[$name] = $path;
-//		define('psm\PATH_'.strtoupper($name), $path);
-//	}
-
-
-//		// new instance if needed
-//		if($this->engine == NULL)
-//			$this->engine = new html_Engine();
-//		return $this->engine;
-//	}
-//	/**
-//	 * Gets the main template engine instance, creating a new one if needed.
-//	 *
-//	 * @return html_Engine
-//	 */
-//	public static function getEngine() {
-//		$portal = self::getPortal();
-//		if(!($portal instanceof Portal))
-//			die('<p>Unable to get Portal object!</p>');
-//		$engine = $portal->_getEngine();
-//		if(!($engine instanceof html_Engine))
-//			die('<p>Unable to get Engine object!</p>');
-//		return $engine;
-//	}
+	public static function GetRenderTime() {
+		return '1.111';
+	}
 
 
 	// get module name

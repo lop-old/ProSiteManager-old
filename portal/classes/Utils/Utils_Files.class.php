@@ -80,11 +80,32 @@ echo '<p>stop SanFilename() '.$filename.'</p>'; exit();
 	// format file size
 	public static function fromBytes($size) {
 		if($size < 0) $size = 0;
-		if($size < 1024)          return(round($size                , 0).'&nbsp;Bytes');
-		if($size < 1048576)       return(round($size / 1024         , 2).'&nbsp;KB');
-		if($size < 1073741824)    return(round($size / 1048576      , 2).'&nbsp;MB');
-		if($size < 1099511627776) return(round($size / 1073741824   , 2).'&nbsp;GB');
-		                          return(round($size / 1099511627776, 2).'&nbsp;TB');
+		if($size < 1024)          return round($size                , 0).'&nbsp;Bytes';
+		if($size < 1048576)       return round($size / 1024         , 2).'&nbsp;KB';
+		if($size < 1073741824)    return round($size / 1048576      , 2).'&nbsp;MB';
+		if($size < 1099511627776) return round($size / 1073741824   , 2).'&nbsp;GB';
+		                          return round($size / 1099511627776, 2).'&nbsp;TB';
+	}
+
+
+	// find file from list
+	public static function findFile($filename, $paths) {
+		if(!is_array($paths)) $paths = array($paths);
+		// loop paths
+		foreach($paths as $path) {
+			if(empty($path)) continue;
+			$path = self::trimPath($path, TRUE, TRUE).$filename;
+			if(file_exists($path))
+				return $path;
+		}
+		return FALSE;
+	}
+	// find file and get contents
+	public static function findFileContents($filename, $paths) {
+		$file = self::findFile($filename, $paths);
+		if($file === FALSE)
+			return FALSE;
+		return file_get_contents($file);
 	}
 
 

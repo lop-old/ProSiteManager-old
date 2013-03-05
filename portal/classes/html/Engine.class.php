@@ -11,6 +11,10 @@ class Engine {
 	// main html file
 	private $htmlMain;
 
+	// site/page title
+	private $siteTitle = NULL;
+	private $pageTitle = NULL;
+
 	// tag parsers
 	private $tagString;
 	private $tagPaths;
@@ -31,8 +35,7 @@ class Engine {
 	public function __construct(html_File &$htmlMain=NULL) {
 		// load main html file
 		if($htmlMain == NULL)
-//TODO: add theme
-			$this->htmlMain = \psm\html\tplFile::LoadFile('default', 'main');
+			$this->htmlMain = \psm\html\tplFile::LoadFile('wa', \psm\Portal::getPortalTheme(), 'main');
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
@@ -41,7 +44,7 @@ class Engine {
 		$this->tagString = new Tag_String();
 $paths = array(
 '{path=static}'=>'portal/static/',
-'{path=theme}'=>'wa/html/default/',
+'{path=theme}'=>'portal/html/default/',
 );
 		$this->tagPaths = new Tag_String(
 $paths
@@ -72,6 +75,9 @@ $paths
 		$this->addToPage(
 			\ob_get_clean()
 		);
+		// build title
+//TODO: $this->siteTitle $this->pageTitle
+		$this->tagString->addString('{title}', $this->siteTitle);
 		/* build header */
 		// split by {header content} tag
 		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
@@ -145,6 +151,15 @@ $paths
 		$this->tagPaths->trigger($args);
 		echo $data;
 		ob_flush();
+	}
+
+
+//TODO: not finished
+	public function setPageTitle($title) {
+		$this->pageTitle = $title;
+	}
+	public function setSiteTitle($title) {
+		$this->siteTitle = $title;
 	}
 
 

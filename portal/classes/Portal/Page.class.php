@@ -33,10 +33,12 @@ abstract class Page {
 		$page = \psm\Utils\Utils_Files::SanFilename($page);
 		// default path - mod/pages/
 		if(count(self::$pagePaths) == 0)
-			self::addPath(\psm\Portal::getLocalPath('module', $modName).DIR_SEP.'pages');
+			self::addPath(\psm\Paths::getLocal('module', $modName).DIR_SEP.'pages');
 		// look for page
 		foreach(self::$pagePaths as $v) {
 			$file = DIR_SEP.$v.DIR_SEP.$page.'.php';
+echo '<p>'.__file__.' '.__line__.'</p>';
+echo '<p>'.$file.'</p>';exit();
 			// file not found
 			if(!file_exists($file))
 				continue;

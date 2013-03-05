@@ -7,26 +7,11 @@ class html_main extends \psm\html\tplFile_Main {
 	private $subMenu;
 
 
-	public function __construct() {
-		parent::__construct();
-		// main menu
-		$this->mainMenu = \psm\Widgets\NavBar\NavBar::factory()
-			->setSelected(\psm\Portal::getModName())
-			->setBrand('WebAuction<sup>Plus</sup>')
-			->addBreak()
-			->addButton('',			'Home',				'/',					'icon-home')
-			->addButton('wa',		'WebAuction',		'/wa/',					'icon-shopping-cart')
-			->addButton('wb',		'WeBook',			'/wb/',					'icon-book')
-			->addDropdown('profile','lorenzop',			NULL,					'icon-user',			TRUE)
-		;
-		// sub menu
-		$this->subMenu  = \psm\Widgets\NavBar\NavBar::factory()
-			->setSelected(\psm\Portal::getPage())
-			->addButton('current',	'Current Sales',	'./?page=current',		'icon-home')
-			->addButton('myshop',	'My Shop',			'./?page=myshop',		'icon-shopping-cart')
-			->addButton('mymailbox','My Mailbox',		'./?page=mymailbox',	'icon-envelope')
-		;
-	}
+//	public function __construct() {
+//		parent::__construct();
+//print_r(\psm\Portal::getModObj());
+//exit();
+//	}
 
 
 	/**
@@ -38,6 +23,25 @@ class html_main extends \psm\html\tplFile_Main {
 	 * @return string
 	 */
 	protected function _head() {
+
+		// main menu
+		$this->mainMenu = \psm\Widgets\NavBar\NavBar::factory()
+		->setSelected(\psm\Portal::getModName())
+		->setBrand(\psm\Portal::getModObj()->getModTitleHtml())
+		->addBreak()
+		->addButton('',			'Home',				'./',					'icon-home')
+		->addButton('wa',		'WebAuction',		'?mod=wa',				'icon-shopping-cart')
+		->addButton('wb',		'WeBook',			'?mod=wb',				'icon-book')
+		->addDropdown('profile','lorenzop',			NULL,					'icon-user',			TRUE)
+		;
+		// sub menu
+		$this->subMenu  = \psm\Widgets\NavBar\NavBar::factory()
+		->setSelected(\psm\Portal::getPage())
+		->addButton('current',	'Current Sales',	'./?page=current',		'icon-home')
+		->addButton('myshop',	'My Shop',			'./?page=myshop',		'icon-shopping-cart')
+		->addButton('mymailbox','My Mailbox',		'./?page=mymailbox',	'icon-envelope')
+		;
+
 //\psm\Portal::getPortal()->getEngine()->addCss('
 //');
 		// css
@@ -148,7 +152,8 @@ $num_queries=3;
 {footer content}
 
 				<p><a href="http://dev.bukkit.org/server-mods/webauctionplus/" target="_blank" style="color: #333333;">
-				<u>WebAuctionPlus</u> '.\wa\module_wa::getVersion().'</a><br /><span style="font-size: smaller;">by lorenzop</span><span style="font-size: xx-small;"> &copy; 2012-2013</span></p>
+				<u>'.\psm\Portal::getModObj()->getModTitle().'</u> '.\psm\Portal::getModObj()->getModVersion().'</a><br />'.
+					'<span style="font-size: smaller;">by lorenzop</span><span style="font-size: xx-small;"> &copy; 2012-2013</span></p>
 			</td>
 			<td class="footer-td-3">'.
 				'<a href="http://twitter.github.com/bootstrap/" target="_blank">'.

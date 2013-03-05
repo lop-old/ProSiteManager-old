@@ -18,6 +18,8 @@
 
 // static defines
 // ==============
+if(defined('psm\INDEX_FILE'))
+	die('<p>Portal.php already included?</p>');
 define('psm\INDEX_FILE', TRUE);
 define('DIR_SEP', DIRECTORY_SEPARATOR);
 define('NEWLINE', "\n"); // new line
@@ -163,7 +165,6 @@ class Portal {
 	 *
 	 * @return Portal
 	 */
-	
 	public static function getPortal() {
 		return self::$portal;
 	}
@@ -256,6 +257,13 @@ class Portal {
 //			)
 //		);
 //	}
+	public static function getModObj($modName='') {
+		if(empty($modName))
+			$modName = self::getModName();
+		if(!isset(self::$modules[$modName]))
+			return NULL;
+		return self::$modules[$modName];
+	}
 
 
 	// get page

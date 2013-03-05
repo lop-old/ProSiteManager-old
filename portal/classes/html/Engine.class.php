@@ -143,6 +143,7 @@ $paths
 
 
 	private function _echo($data) {
+		if(empty($data)) return;
 		// string tags
 		$args = array('data' => &$data);
 		$this->tagString->trigger($args);
@@ -150,7 +151,7 @@ $paths
 		$args = array('data' => &$data);
 		$this->tagPaths->trigger($args);
 		echo $data;
-		ob_flush();
+		@ob_flush();
 	}
 
 

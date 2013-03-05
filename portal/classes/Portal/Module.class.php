@@ -8,6 +8,9 @@ abstract class Module {
 	public abstract function getModName();
 	public abstract function getModVersion();
 
+	public abstract function getModTitle();
+	public abstract function getModTitleHtml();
+
 	protected $portal;
 	protected $engine;
 
@@ -25,12 +28,12 @@ abstract class Module {
 	// register paths
 	protected function _registerPagesPath($path='') {
 		if(empty($path))
-			$path = \psm\Paths::getLocal('module pages');
+			$path = \psm\Paths::getLocal('module pages', $this->getModName());
 		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
 	}
 	protected function _registerClassPath($path='') {
 		if(empty($path))
-			$path = \psm\Paths::getLocal('module classes');
+			$path = \psm\Paths::getLocal('module classes', $this->getModName());
 		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
 	}
 

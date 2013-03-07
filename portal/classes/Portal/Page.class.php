@@ -25,38 +25,37 @@ abstract class Page {
 
 	/**
 	 * Loads a page class.
-	 *
+	 *     default path - <mod>/pages/<page>.page.php
 	 * @param string $page Name of the page to load.
 	 * @return page Returns the page class instance, which can be rendered.
 	 */
 	public static function LoadPage($modName, $page) {
 		$page = \psm\Utils\Utils_Files::SanFilename($page);
-		// default path - mod/pages/
-		if(count(self::$pagePaths) == 0)
-			self::addPath(\psm\Paths::getLocal('module', $modName).DIR_SEP.'pages');
-		// look for page
-		foreach(self::$pagePaths as $v) {
-			$file = DIR_SEP.$v.DIR_SEP.$page.'.php';
-echo '<p>'.__file__.' '.__line__.'</p>';
-echo '<p>'.$file.'</p>';exit();
-			// file not found
-			if(!file_exists($file))
-				continue;
-			// load file
-			$result = include($file);
-			// file failed to load
-			if($result === FALSE)
-				continue;
-			// module name
-			$modName = \psm\Portal::getModName();
-			// load page class
-			$clss = $modName.'\Pages\page_'.$page;
-			if(class_exists($clss))
-				return new $clss();
-			// string result
-			return (string) $result;
+		// find page file
+		$paths = \psm\Paths::getLocal('pages', $modName);
+		$filepath = \psm\Utils\Utils_Files::findFile($page.'.page.php', $paths);
+		// page not found
+//TODO:
+		if($filepath == NULL) {
+			\psm\msgPage::Error('Page not found!! '.$page);
+			return;
 		}
-		return '<p>Page not found!! '.$page.'</p>';
+		// load file
+		$result = include($filepath);
+		// file failed to load
+//TODO:
+		if($result === FALSE) {
+			\psm\msgPage::Error('Failed to load page!! '.$page);
+			return;
+		}
+		// module name
+		$modName = \psm\Portal::getModName();
+		// load page class
+		$clss = $modName.'\Pages\page_'.$page;
+		if(class_exists($clss))
+			return new $clss();
+		// string result
+		return (string) $result;
 	}
 
 

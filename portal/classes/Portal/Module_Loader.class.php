@@ -14,7 +14,7 @@ class Module_Loader {
 		\psm\Utils\Utils_Strings::forceEndsWith($modsFile, '.txt');
 		// mods.txt file not found
 		if(!file_exists($modsFile))
-			die('Modules list file not found!');
+			\psm\msgPage::Error('Modules list file not found!');
 		$data = file_get_contents($modsFile);
 		$array = explode("\n", $data);
 		foreach($array as $line) {

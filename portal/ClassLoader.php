@@ -59,7 +59,8 @@ class ClassLoader {
 				} catch (\Exception $ignore) {}
 			}
 		}
-		echo '<p style="color: red;">Unknown class: '.(empty($namespace)?'':$namespace.'\\').$classname.'</p>';
+		//echo '<p style="color: red;">Unknown class: '.(empty($namespace)?'':$namespace.'\\').$classname.'</p>';
+		\psm\msgPage::Error('Unknown class: '.(empty($namespace)?'':$namespace.'\\').$classname);
 		return FALSE;
 	}
 

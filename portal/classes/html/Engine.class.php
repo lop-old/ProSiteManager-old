@@ -26,13 +26,15 @@ class Engine {
 	 * @return html_Engine
 	 */
 	public static function getEngine() {
+echo __FILE__.'-'.__LINE__;
+echo '<br />b';exit();
 		if(self::$engine == NULL)
 			self::$engine = new self();
 		return self::$engine;
 	}
 
 
-	public function __construct(html_File &$htmlMain=NULL) {
+	public function __construct(\psm\html\tplFile &$htmlMain=NULL) {
 		// load main html file
 		if($htmlMain == NULL)
 			$this->htmlMain = \psm\html\tplFile::LoadFile('wa', \psm\Portal::getPortalTheme(), 'main');

@@ -1,4 +1,4 @@
-<?php  namespace;
+<?php
 
 // Kint backtrace library
 require(__DIR__.DIR_SEP.'debuggers'.DIR_SEP.'kint'.DIR_SEP.'Kint.class.php');

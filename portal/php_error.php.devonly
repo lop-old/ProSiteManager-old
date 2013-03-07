@@ -1,4 +1,4 @@
-<?php namespace;
+<?php
 
 // php_error library
 require(__DIR__.DIR_SEP.'debuggers'.DIR_SEP.'php_error.php');

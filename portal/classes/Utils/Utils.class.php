@@ -24,7 +24,7 @@ class Utils {
 	 */
 	public static function Validate($className, $clss) {
 		if(!self::isClass($className, $clss))
-			throw new \InvalidArgumentException('Class object isn\'t of type '.$className);
+			\psm\msgPage::Error("Class object isn't of type ".$className);
 	}
 
 

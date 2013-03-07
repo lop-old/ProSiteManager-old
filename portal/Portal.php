@@ -19,7 +19,7 @@
 // static defines
 // ==============
 if(defined('psm\INDEX_FILE'))
-	die('<p>Portal.php already included?</p>');
+	\psm\msgPage::Error('Portal.php already included?');
 define('psm\INDEX_FILE', TRUE);
 define('DIR_SEP', DIRECTORY_SEPARATOR);
 define('NEWLINE', "\n"); // new line
@@ -36,32 +36,23 @@ include(__DIR__.DIR_SEP.'Paths.class.php');
 include(__DIR__.DIR_SEP.'ClassLoader.php');
 ClassLoader::registerClassPath('psm', \psm\Paths::getLocal('portal classes'));
 
-// debug mode
-if(defined('psm\DEBUG') && \psm\DEBUG == TRUE) {
-	error_reporting(E_ALL | E_STRICT);
-	// log to file
-	ini_set('log_errors', 'On');
-	ini_set('error_log', 'php_errors.log');
-	if(file_exists(__DIR__.'/php_error.php')) {
-		// php_error library
-		require('php_error.php');
-		$reportErrors = '\php_error\reportErrors';
-		$reportErrors(array(
-			'catch_ajax_errors'      => TRUE,
-			'catch_supressed_errors' => FALSE,
-			'catch_class_not_found'  => FALSE,
-			'snippet_num_lines'      => 11,
-			'application_root'       => __DIR__,
-			'background_text'        => 'PSM',
-		));
-		unset($reportErrors);
-	} else {
-		// log to display
-		ini_set('display_errors', 'On');
-		ini_set('html_errors',    'On');
-		error_reporting(E_ALL | E_STRICT);
-	}
+
+// Kint backtracer
+if(file_exists(__DIR__.DIR_SEP.'kint.php')) {
+	require(__DIR__.DIR_SEP.'kint.php');
 }
+// else
+// php_error
+if(file_exists(__DIR__.DIR_SEP.'php_error.php')) {
+	require(__DIR__.DIR_SEP.'php_error.php');
+// no debugger
+}
+// else {
+	// log to display
+	ini_set('display_errors', 'On');
+	ini_set('html_errors',    'On');
+	error_reporting(E_ALL | E_STRICT);
+//}
 
 
 // portal core
@@ -82,6 +73,35 @@ class Portal {
 
 
 	public static function factory($args=array()) {
+
+
+// World Groups
+//$a = array(
+//	'Survival' => array('world', 'pvp'),
+//	'Creative' => array('clean'),
+//);
+//$data = json_encode($a);
+//$orig = $data;
+//echo $orig.'<br />';
+//
+//$data = str_replace(
+//	array('{', '}', ':', ',' ),
+//	array('' , '' , ' ', ', '),
+//	$data);
+//
+//echo $data.'<br />';
+//
+//$data = str_replace(
+//	array(', ', ' '),
+//	array(',' , ':'),
+//	$data);
+//$data = '{'.$data.'}';
+//
+//echo $data.'<br />';
+//echo '<br />'.($data == $orig);
+//exit();
+
+
 		if(self::$portal != NULL)
 			return self::$portal;
 		// no page caching
@@ -110,9 +130,11 @@ class Portal {
 
 		// load mods.txt
 		self::_LoadModules();
+echo __FILE__.'-'.__LINE__;
+echo '<br />b';exit();
 		// no modules loaded
 		if(count(self::$modules) == 0)
-			die('<p>No modules/plugins loaded!</p>');
+			\psm\msgPage::Error('No modules/plugins loaded!');
 
 		self::getModName();
 		self::getPage();
@@ -126,13 +148,16 @@ class Portal {
 	public function __construct() {
 		// portal instance
 		if(self::$portal != NULL)
-			die('<p>Portal already loaded!</p>');
+			\psm\msgPage::Error('Portal already loaded!');
 		self::$portal = $this;
 	}
 
 
 	// destruct portal
 	public function __destruct() {
+		// load page if not already done
+		if(self::$pageObj == NULL)
+			self::getModObj()->Init();
 		// render if not already done
 		if(!\psm\html\Engine::hasDisplayed())
 			self::getEngine()->Display();
@@ -157,7 +182,7 @@ class Portal {
 				\psm\Paths::getLocal('root').DIR_SEP.'mods.txt'
 			);
 		if(count(self::$modules) == 0)
-			die('No modules/plugins loaded!');
+			\psm\Portal\msgPage::Error('No modules/plugins loaded!');
 	}
 
 

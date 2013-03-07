@@ -42,7 +42,7 @@ class User {
 //		Session::factory();
 		// db to use
 		if($db == NULL)
-			die('<p>db can\'t be null!</p>');
+			\psm\msgPage::Error("db can't be null!");
 		$this->db = $db;
 		// default/custom table name
 		$this->tableName = (empty($tableName) ? self::defaultTableName : $tableName);
@@ -72,7 +72,7 @@ class User {
 		$st->execute($params);
 		// not found
 		if($st->rowCount() != 1) {
-die('Invalid login');
+\psm\msgPage::Error('Invalid login');
 //$_SESSION[$config['session name']] = '';
 			return;
 		}

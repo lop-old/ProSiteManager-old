@@ -27,11 +27,11 @@ abstract class tplFile {
 		// find file
 		$filefound = \psm\Utils\Utils_Files::findFile($filename.'.html.php', $paths);
 		if(!$filefound)
-			die('<p>File not found! '.$filename.'.html.php'.'</p>');
+			\psm\msgPage::Error('File not found! '.$filename.'.html.php');
 		include_once($filefound);
 		$clss = '\wa\html\html_'.$filename;
 		if(!class_exists($clss))
-			die('<p>Class not found! '.$clss.'</p>');
+			\psm\msgPage::Error('Class not found! '.$clss);
 		return new $clss();
 	}
 

@@ -1,7 +1,7 @@
 <?php namespace psm\Widgets\DataTables;
 if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
-class Table {
+class Table extends \psm\Widgets\Widget {
 
 	private $headings = array();
 	private $queryClass = NULL;
@@ -21,7 +21,8 @@ class Table {
 	 */
 	public function __construct($headings, $queryClass, $usingAjax=FALSE) {
 		$this->headings = $headings;
-		\psm\Utils\Utils::Validate('psm\DataTables\Query', $queryClass);
+		// validate Query class type
+		\psm\Utils\Utils::Validate('psm\Widgets\DataTables\Query', $queryClass);
 		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
 		\psm\html\tplFile_Main::addFileCSS(
@@ -47,7 +48,7 @@ class Table {
 	public function Render() {
 		if(!$this->usingAjax) {
 			if(!$this->queryClass->runQuery()) {
-die('Failed to query db.');
+\psm\msgPage::Error('Failed to query db.');
 			}
 		}
 		$this->Render_JS();

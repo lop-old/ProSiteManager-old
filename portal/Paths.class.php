@@ -85,30 +85,48 @@ class Paths {
 			return self::_getPath('local', 'portal').DIR_SEP.'html';
 
 		// module
-		if($name == 'module')
+		if($name == 'module') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return self::_getPath('local', 'root').DIR_SEP.$arg;
+		}
 		// module classes
-		if($name == 'module classes')
+		if($name == 'module classes') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'classes';
+		}
 		// module pages
-		if($name == 'module pages')
+		if($name == 'module pages') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'pages';
+		}
 		// module html
-		if($name == 'module html')
+		if($name == 'module html') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'html';
+		}
 
 		// pages array
-		if($name == 'pages')
+		if($name == 'pages') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return array(
 				self::_getPath('local', 'portal pages'),
 				self::_getPath('local', 'module pages', $arg),
 			);
+		}
 		// html array
-		if($name == 'html')
+		if($name == 'html') {
+			if(empty($arg))
+				\psm\msgPage::Error('Missing argument!');
 			return array(
 				self::_getPath('local', 'portal html'),
 				self::_getPath('local', 'module html', $arg),
 			);
+		}
 
 		return NULL;
 	}

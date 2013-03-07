@@ -14,7 +14,7 @@ abstract class tplFile_Main extends tplFile {
 
 	protected function __construct() {
 		if(self::$htmlMain != NULL)
-			die('<p>Main html file has already been loaded!</p>');
+			\psm\msgPage::Error('Main html file has already been loaded!');
 		self::$htmlMain = $this;
 		// define empty blocks
 		$this->blocks['header'] = &$this->header;

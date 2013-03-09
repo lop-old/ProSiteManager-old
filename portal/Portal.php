@@ -37,22 +37,26 @@ include(__DIR__.DIR_SEP.'ClassLoader.php');
 ClassLoader::registerClassPath('psm', \psm\Paths::getLocal('portal classes'));
 
 
-// Kint backtracer
-if(file_exists(__DIR__.DIR_SEP.'kint.php')) {
-	require(__DIR__.DIR_SEP.'kint.php');
-}
-// else
-// php_error
-if(file_exists(__DIR__.DIR_SEP.'php_error.php')) {
-	require(__DIR__.DIR_SEP.'php_error.php');
-// no debugger
-}
-// else {
+// debug mode
+ini_set('log_errors', 'On');
+ini_set('error_log', 'php_error.log');
+if(defined('psm\DEBUG') && \psm\DEBUG === TRUE) {
 	// log to display
 	ini_set('display_errors', 'On');
 	ini_set('html_errors',    'On');
 	error_reporting(E_ALL | E_STRICT);
-//}
+	// Kint backtracer
+	if(file_exists(__DIR__.DIR_SEP.'kint.php')) {
+		require(__DIR__.DIR_SEP.'kint.php');
+	}
+	// php_error
+	if(file_exists(__DIR__.DIR_SEP.'php_error.php')) {
+		require(__DIR__.DIR_SEP.'php_error.php');
+	}
+} else {
+	// log to display
+	ini_set('display_errors', 'Off');
+}
 
 
 // portal core
@@ -130,8 +134,6 @@ class Portal {
 
 		// load mods.txt
 		self::_LoadModules();
-echo __FILE__.'-'.__LINE__;
-echo '<br />b';exit();
 		// no modules loaded
 		if(count(self::$modules) == 0)
 			\psm\msgPage::Error('No modules/plugins loaded!');
@@ -170,7 +172,8 @@ echo '<br />b';exit();
 		// unload engine
 		$this->engine = NULL;
 		// unload db
-		\psm\DB\DB::CloseAll();
+//TODO: removing this
+//		\psm\dbPool\dbPool::CloseAll();
 		@\ob_end_flush();
 	}
 
@@ -201,6 +204,12 @@ echo '<br />b';exit();
 	 */
 	public static function getEngine() {
 		return \psm\html\Engine::getEngine();
+	}
+
+
+	// debug mode
+	public static function isDebug() {
+		return defined('psm\DEBUG') && \psm\DEBUG === TRUE;
 	}
 
 

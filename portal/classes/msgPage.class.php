@@ -8,9 +8,10 @@ class msgPage {
 	 *
 	 *
 	 */
-	public static function Error($msg) {
+	public static function Error($msg='') {
 		echo '<div style="background-color: #ffbbbb;">'.NEWLINE;
-		echo '<h4>'.$msg.'</h4>'.NEWLINE;
+		if(!empty($msg))
+			echo '<h4>Error: '.$msg.'</h4>'.NEWLINE;
 		echo '<h3>Backtrace:</h3>'.NEWLINE;
 //		echo '<pre>'.NEWLINE;
 //		\debug_print_backtrace();

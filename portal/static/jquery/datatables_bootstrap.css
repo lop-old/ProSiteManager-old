@@ -28,10 +28,11 @@ div.dataTables_length label,
 div.dataTables_filter label {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	font-size: larger;
+	margin-bottom: 0;
 }
 table.dataTable {
 	/* space above table */
-	margin-top: 4px;
+	margin-top: 0;
 }
 
 

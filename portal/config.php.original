@@ -3,7 +3,7 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 
 
-\psm\DB\Pool::add_MySQL(array(
+\psm\dbPool\dbPool::add_MySQL(array(
 'main' => array(
 	'host'		=>	'localhost',	// hostname or ip of db server
 	'port'		=>	3306,			// port of db server

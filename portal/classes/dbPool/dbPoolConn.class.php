@@ -3,8 +3,6 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class dbPoolConn extends dbPrepared {
 
-	private $conn = NULL;
-
 
 	public static function factory($dbName, $driver, $config=array()) {
 		return new self(

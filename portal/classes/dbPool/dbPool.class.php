@@ -28,7 +28,7 @@ class dbPool {
 			return NULL;
 		}
 		// clean
-		$db->Clean();
+		$db->Cleanup();
 		return $db;
 	}
 

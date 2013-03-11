@@ -1,6 +1,9 @@
-<?php
-
+<?php namespace psm\Throttler;
+if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 /**
+ * Based on bandwidth-throttler - http://www.phpclasses.org/package/6709-PHP-Limit-the-speed-of-files-served-for-download.html
+ *
  * QoS Bandwidth Throttler (part of Lotos Framework)
  *
  * Copyright (c) 2005-2010 Artur Graniszewski (aargoth@boo.pl) 
@@ -14,16 +17,17 @@
  * @version    $Id$
  */ 
 
+
 /**
  * Configuration interface.
  */
-interface IThrottleConfig {}
+interface ThrottlerConfig {}
+
 
 /**
  * Configuration class.
  */
-class ThrottleConfig implements IThrottleConfig
-{
+class ThrottlerConfig implements ThrottlerConfig {
 	/**
 	 * Burst rate limit in bytes per second.
 	 *
@@ -53,11 +57,11 @@ class ThrottleConfig implements IThrottleConfig
 	public $enabled = false;
 }
 
+
 /**
  * Another configuration class.
  */
-class ThrottleConfigBySize implements IThrottleConfig
-{
+class ThrottlerConfigBySize implements ThrottlerConfig {
 	/**
 	 * Maximal peak rate limit in bytes per second.
 	 *
@@ -87,11 +91,11 @@ class ThrottleConfigBySize implements IThrottleConfig
 	public $enabled = false;
 }
 
+
 /**
  * The main class.
  */
-class Throttle
-{
+class Throttler {
 	/**
 	 * Last heartbeat time in microseconds.
 	 *
@@ -145,20 +149,20 @@ class Throttle
 	 * @param IThrottleConfig $config Configuration object or null to use system defaults
 	 * @return Throttle
 	 */
-	public function __construct(IThrottleConfig $config = null) {
-		if(function_exists('apache_setenv')) {
-			// disable gzip HTTP compression so it would not alter the transfer rate
-			apache_setenv('no-gzip', '1');
-		}
+	public function __construct(ThrottlerConfig $config = NULL) {
+//		if(function_exists('apache_setenv')) {
+//			// disable gzip HTTP compression so it would not alter the transfer rate
+//			apache_setenv('no-gzip', '1');
+//		}
 		// disable the script timeout if supported by the server
 		if(false === strpos(ini_get('disable_functions'), 'set_time_limit')) {
 			// suppress the warnings (in case of the safe_mode)
 			@set_time_limit(0);
 		}
-		if($config) {
-			$this->config = $config;
+		if($config == NULL) {
+			$this->config = new ThrottlerConfig();
 		} else {
-			$this->config = new ThrottleConfig();
+			$this->config = $config;
 		}
 
 		// set the burst rate by default as the current transfer rate
@@ -186,7 +190,7 @@ class Throttle
 	public function onFlush(& $buffer) {
 		// do nothing when buffer is empty (in case of implicit ob_flush() or script halt)
 		// and check if this is a last portion of the output, if it is - do not throttle
-		if($buffer === "" || $this->isFinishing) {
+		if($buffer === '' || $this->isFinishing) {
 			return $buffer;
 		}
 

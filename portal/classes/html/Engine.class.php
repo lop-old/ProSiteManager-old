@@ -26,8 +26,6 @@ class Engine {
 	 * @return html_Engine
 	 */
 	public static function getEngine() {
-echo __FILE__.'-'.__LINE__;
-echo '<br />b';exit();
 		if(self::$engine == NULL)
 			self::$engine = new self();
 		return self::$engine;
@@ -83,67 +81,52 @@ $paths
 		/* build header */
 		// split by {header content} tag
 		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
-		// open header block
-		$this->_echo(
-			$splitHeader->getPart(0)
-		);
-		// build header
-		$this->_echo(
-			$this->htmlMain->getBlock('header')
-		);
-		// build inline css
-		$this->_echo(
+		// put it together
+		$headerBlock =
+			$splitHeader->getPart(0)                      .NEWLINE.
+			$this->htmlMain->getBlock('header')           .NEWLINE.
 			'<style type="text/css" title="currentStyle">'.NEWLINE.
-			$this->htmlMain->getBlock('css').
-			'</style>'
-		);
-		// build inline javascript
-		$this->_echo(
-			$this->htmlMain->getBlock('js')
-		);
-		// close header block
-		$this->_echo(
-			$splitHeader->getPart(1)
-		);
-		unset($splitHeader, $this->blocksHeader,
+			$this->htmlMain->getBlock('css')              .NEWLINE.
+			'</style>'                                    .NEWLINE.
+			$this->htmlMain->getBlock('js')               .NEWLINE.
+			$splitHeader->getPart(1);
+		$this->_echo($headerBlock);
+		unset($headerBlock, $splitHeader, $this->blocksHeader,
 			$this->blocksCss, $this->blocksJs);
 
 		/* build page */
 		// split by {page content} tag
 		$splitPage = new SplitBlock('{page content}', $this->htmlMain->getBlock('body'));
-		// open body block
-		$this->_echo(
-			$splitPage->getPart(0)
-		);
-		// build page content
-		$this->_echo(
-			$this->htmlMain->getBlock('page')
-		);
-		// close body block
-		$this->_echo(
-			$splitPage->getPart(1)
-		);
-		unset($splitPage, $this->blocksPage);
+		// put it together
+		$bodyBlock =
+			$splitPage->getPart(0)           .NEWLINE.
+			$this->htmlMain->getBlock('page').NEWLINE.
+			$splitPage->getPart(1);
+		$this->_echo($bodyBlock);
+		unset($bodyBlock, $splitPage, $this->blocksPage);
 
 		/* build footer */
 		// split by {footer content} tag
 		$splitFooter = new SplitBlock('{footer content}', $this->htmlMain->getBlock('foot'));
-		// open footer block
-		$this->_echo(
-			$splitFooter->getPart(0)
-		);
-		$this->_echo(
-			$this->htmlMain->getBlock('footer')
-		);
-		// close footer block
-		$this->_echo(
-			$splitFooter->getPart(1)
-		);
-		unset($splitFooter, $this->blocksFooter);
+		// build footer
+		$footerBlock =
+			$splitFooter->getPart(0)           .NEWLINE.
+			$this->htmlMain->getBlock('footer').NEWLINE.
+			$splitFooter->getPart(1)           .NEWLINE;
+		if(!strpos($footerBlock, '{footer copyright}'))
+			$footerBlock .= '<center>{footer copyright}</center>';
+		$footerBlock = str_replace('{footer copyright}',
+'<p><a href="http://dev.bukkit.org/server-mods/webauctionplus/" target="_blank" style="color: #333333;">'.
+'<u>'.\psm\Portal::getModObj()->getModTitle().'</u> '.\psm\Portal::getModObj()->getModVersion().'</a><br />'.
+'<span style="font-size: smaller;">by lorenzop</span><span style="font-size: xx-small;"> &copy; 2012-2013</span></p>',
+			$footerBlock);
+		$this->_echo($footerBlock);
+		unset($footerBlock, $splitFooter, $this->blocksFooter);
 
 	}
 
 
+//TODO: this should be changed
 	private function _echo($data) {
 		if(empty($data)) return;
 		// string tags

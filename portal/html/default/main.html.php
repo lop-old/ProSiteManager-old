@@ -151,9 +151,8 @@ $num_queries=3;
 
 {footer content}
 
-				<p><a href="http://dev.bukkit.org/server-mods/webauctionplus/" target="_blank" style="color: #333333;">
-				<u>'.\psm\Portal::getModObj()->getModTitle().'</u> '.\psm\Portal::getModObj()->getModVersion().'</a><br />'.
-					'<span style="font-size: smaller;">by lorenzop</span><span style="font-size: xx-small;"> &copy; 2012-2013</span></p>
+{footer copyright}
+
 			</td>
 			<td class="footer-td-3">'.
 				'<a href="http://twitter.github.com/bootstrap/" target="_blank">'.

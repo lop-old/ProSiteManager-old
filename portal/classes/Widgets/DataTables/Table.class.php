@@ -3,6 +3,8 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class Table extends \psm\Widgets\Widget {
 
+	const HARD_LIMIT_ROWS = 1000;
+
 	private $headings = array();
 	private $queryClass = NULL;
 
@@ -125,7 +127,7 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 		if($this->usingAjax)
 			return;
 		$data = '';
-		while(TRUE) {
+		for($i = 0; $i < Table::HARD_LIMIT_ROWS; $i++) {
 			$row = $this->queryClass->getRow();
 			if($row == FALSE) break;
 //echo '<pre>';print_r($row);echo '</pre>';

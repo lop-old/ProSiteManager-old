@@ -1,8 +1,9 @@
-<?php namespace psm\dbPool;
+<?php namespace psm\pxdb;
 if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 require(__DIR__.DIR_SEP.'phppdo'.DIR_SEP.'phppdo.php');
-class dbPool {
+class dbPool
+implements \psm\pxdb\interfaces\dbPool {
 
 	const dbNameDefault = 'main';
 
@@ -27,8 +28,13 @@ class dbPool {
 			\psm\msgPage::Error('Failed to connect to database '.$dbName.'!');
 			return NULL;
 		}
+//TODO:
+//		// clone connection
+//		if($db->inUse()) {
+//			
+//		}
 		// clean
-		$db->Cleanup();
+		$db->Clean();
 		return $db;
 	}
 
@@ -60,7 +66,7 @@ class dbPool {
 			if(empty($dbName))    continue;
 			if(!is_array($array)) continue;
 			// new db conn
-			$db = \psm\dbPool\dbPoolConn::factory($dbName, 'mysql', $config[$dbName]);
+			$db = \psm\pxdb\dbPoolConn::factory($dbName, 'mysql', $config[$dbName]);
 			if($db == NULL) continue;
 			self::$pool[$dbName] = $db;
 		}

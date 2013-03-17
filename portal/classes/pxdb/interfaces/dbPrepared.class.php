@@ -7,7 +7,7 @@ interface dbPrepared {
 	public function Clean();
 	public function Exec($sql='');
 	public function hasNext();
-	public function getAffectedRows();
+	public function getRowCount();
 	public function getInsertId();
 	public function setString($index, $value);
 	public function setInt($index, $value);

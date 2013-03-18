@@ -46,12 +46,12 @@ if(defined('psm\DEBUG') && \psm\DEBUG === TRUE) {
 	ini_set('html_errors',    'On');
 	error_reporting(E_ALL | E_STRICT);
 	// Kint backtracer
-	if(file_exists(__DIR__.DIR_SEP.'kint.php')) {
-		require(__DIR__.DIR_SEP.'kint.php');
+	if(file_exists(\psm\Paths::getLocal('portal').DIR_SEP.'kint.php')) {
+		include(\psm\Paths::getLocal('portal').DIR_SEP.'kint.php');
 	}
 	// php_error
-	if(file_exists(__DIR__.DIR_SEP.'php_error.php')) {
-		require(__DIR__.DIR_SEP.'php_error.php');
+	if(file_exists(\psm\Paths::getLocal('portal').DIR_SEP.'php_error.php')) {
+		include(\psm\Paths::getLocal('portal').DIR_SEP.'php_error.php');
 	}
 } else {
 	// log to display
@@ -144,6 +144,10 @@ class Portal {
 		// load portal instance
 		$portal = new self();
 	}
+	public static function Unload() {
+		self::$portal = null;
+		exit();
+	}
 
 
 	// new portal instance
@@ -173,7 +177,7 @@ class Portal {
 		$this->engine = NULL;
 		// unload db
 //TODO: removing this
-//		\psm\dbPool\dbPool::CloseAll();
+//		\psm\pxdb\dbPool::CloseAll();
 		@\ob_end_flush();
 	}
 

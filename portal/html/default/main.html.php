@@ -25,17 +25,18 @@ class html_main extends \psm\html\tplFile_Main {
 	protected function _head() {
 
 		// main menu
-		$this->mainMenu = \psm\Widgets\NavBar\NavBar::factory()
+		$this->mainMenu = \psm\Widgets\Widget_NavBar::factory()
 		->setSelected(\psm\Portal::getModName())
 		->setBrand(\psm\Portal::getModObj()->getModTitleHtml())
 		->addBreak()
 		->addButton('',			'Home',				'/',					'icon-home')
 		->addButton('wa',		'WebAuction',		'?mod=wa',				'icon-shopping-cart')
 		->addButton('wb',		'WeBook',			'?mod=wb',				'icon-book')
+		->addButton('wiki',		'Wiki',				'?page=wiki',			'icon-align-justify',	TRUE)
 		->addDropdown('profile','lorenzop',			NULL,					'icon-user',			TRUE)
 		;
 		// sub menu
-		$this->subMenu  = \psm\Widgets\NavBar\NavBar::factory()
+		$this->subMenu  = \psm\Widgets\Widget_NavBar::factory()
 		->setSelected(\psm\Portal::getPage())
 		->addButton('current',	'Current Sales',	'./?page=current',		'icon-home')
 		->addButton('myshop',	'My Shop',			'./?page=myshop',		'icon-shopping-cart')

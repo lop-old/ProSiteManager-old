@@ -1,7 +1,11 @@
 <?php
 
 // php_error library
-require(__DIR__.DIR_SEP.'debuggers'.DIR_SEP.'php_error.php');
+include(
+	\psm\Paths::getLocal('portal').DIR_SEP.
+	'debuggers'.DIR_SEP.
+	'php_error.php'
+);
 if(\function_exists('php_error\reportErrors')) {
 	$reportErrors = '\php_error\reportErrors';
 	$reportErrors(array(

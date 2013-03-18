@@ -71,8 +71,10 @@ abstract class tplFile {
 	}
 	protected function getFunc($blockName) {
 		$func = '_'.$blockName;
-		if(!method_exists($this, $func))
+		if(!method_exists($this, $func)) {
+\psm\msgPage::Error('Block not found for '.$blockName.' !');
 			return null;
+		}
 		return $this->$func();
 	}
 

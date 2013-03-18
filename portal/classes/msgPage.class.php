@@ -16,10 +16,12 @@ class msgPage {
 //		echo '<pre>'.NEWLINE;
 //		\debug_print_backtrace();
 //		echo '</pre>'.NEWLINE;
-		if(function_exists('Kint\trace'))
+		if(method_exists('Kint', 'trace'))
 			\Kint::trace();
+		else
+			echo '<pre>'.print_r(debug_backtrace(), TRUE).'</pre>';
 		echo '</div>'.NEWLINE;
-		exit();
+		\psm\Portal::Unload(); exit();
 	}
 
 

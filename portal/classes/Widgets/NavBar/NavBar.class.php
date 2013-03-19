@@ -9,13 +9,6 @@ class NavBar extends \psm\Widgets\Widget {
 	private $selected = NULL;
 
 
-	public static function factory() {
-		return new self();
-	}
-	public function __construct() {
-	}
-
-
 	public function setBrand($brand) {
 		// convert from string
 		if($brand != NULL)

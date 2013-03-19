@@ -127,7 +127,7 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 		if($this->usingAjax)
 			return;
 		$data = '';
-		for($i = 0; $i < Table::HARD_LIMIT_ROWS; $i++) {
+		for($i = 0; $i < self::HARD_LIMIT_ROWS; $i++) {
 			$row = $this->queryClass->getRow();
 			if($row == FALSE) break;
 //echo '<pre>';print_r($row);echo '</pre>';

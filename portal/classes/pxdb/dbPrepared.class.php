@@ -107,7 +107,8 @@ implements \psm\pxdb\interfaces\dbPrepared {
 	public function setString($index, $value) {
 		if($this->st == NULL) return NULL;
 		try {
-			$this->st->bindParam($index, \psm\Utils\Vars::castType($value, 'str'));
+			$value = \psm\Utils\Vars::castType($value, 'str');
+			$this->st->bindParam($index, $value);
 			$this->args .= ' String: '.\psm\Utils\Vars::castType($value, 'str');
 			return $this;
 		} catch (\SQLException $e) {
@@ -120,7 +121,8 @@ implements \psm\pxdb\interfaces\dbPrepared {
 	public function setInt($index, $value) {
 		if($this->st == NULL) return NULL;
 		try {
-			$this->st->bindParam($index, \psm\Utils\Vars::castType($value, 'int'));
+			$value = \psm\Utils\Vars::castType($value, 'int');
+			$this->st->bindParam($index, $value);
 			$this->args .= ' Int: '.\psm\Utils\Vars::castType($value, 'str');
 			return $this;
 		} catch (\SQLException $e) {
@@ -133,7 +135,8 @@ implements \psm\pxdb\interfaces\dbPrepared {
 	public function setDouble($index, $value) {
 		if($this->st == NULL) return NULL;
 		try {
-			$this->st->bindParam($index, \psm\Utils\Vars::castType($value, 'float'));
+			$value = \psm\Utils\Vars::castType($value, 'float');
+			$this->st->bindParam($index, $value);
 			$this->args .= ' Double: '.\psm\Utils\Vars::castType($value, 'str');
 			return $this;
 		} catch (\SQLException $e) {
@@ -146,7 +149,8 @@ implements \psm\pxdb\interfaces\dbPrepared {
 	public function setLong($index, $value) {
 		if($this->st == NULL) return NULL;
 		try {
-			$this->st->bindParam($index, \psm\Utils\Vars::castType($value, 'long'));
+			$value = \psm\Utils\Vars::castType($value, 'long');
+			$this->st->bindParam($index, $value);
 			$this->args .= ' Long: '+\psm\Utils\Vars::castType($value, 'str');
 			return $this;
 		} catch (\SQLException $e) {
@@ -159,7 +163,8 @@ implements \psm\pxdb\interfaces\dbPrepared {
 	public function setBoolean($index, $value) {
 		if($this->st == NULL) return NULL;
 		try {
-			$this->st->bindParam($index, \psm\Utils\Vars::castType($value, 'bool'));
+			$value = \psm\Utils\Vars::castType($value, 'bool');
+			$this->st->bindParam($index, $value);
 			$this->args .= ' Bool: '.($value==TRUE ? 'TRUE' : 'FALSE');
 			return $this;
 		} catch (\SQLException $e) {

@@ -12,72 +12,17 @@ class page_wiki extends \psm\Portal\Page {
 			return $this->_edit();
 		}
 		$wiki = \psm\Widgets\Widget_Wiki::factory();
-		$text = "
 
 
-== Header1 ==
-=== Header2 ===
-==== Header3 ====
-===== Header4 =====
-====== Header5 ======
-
-
-
-'''This will be bold''' this wont
-
-
-''how bout some italic'' how bout not
-
-**strong**
-
-__this is underline__ this is not underline
-
-<b>bold1</b>
-'''bold2'''
-
-;asfdaf
-:sdgdfhgdfh
-''sdagsdfgdfgh''
-'''dfgdsfg'''
-asf
-
- indent
- dsfgdfgh
- sdgdfh
-
-stgdfdhg
-				[[link]]
-				[http://google.com/ google.com]
-	asdgfsdgsfdgdsfg
-	sdgdsfgdfsghdfsgh
-		
-{| border=\"1\" cellspacing=\"0\" cellpadding=\"2\"
-|-
-!scope=\"col\"| Item
-!scope=\"col\"| Quantity
-!scope=\"col\"| Price
-|-
-!scope=\"row\"| Bread
-| 0.3 kg
-| $0.65
-|-
-!scope=\"row\"| Butter
-| 0.125 kg
-| $1.25
-|-
-!scope=\"row\" colspan=\"2\"| Total
-| $1.90
-|}
-
-
-
-sdgsgdfgdsfgh
-
-__something__
---else--
-
-
-";
+		$db = \psm\pxdb\dbPool::getDB(self::dbName);
+		$sql = 'SELECT `topic_id`, `topic`, UNIX_TIMESTAMP(`timestamp`) AS `timestamp`, `text`, `last_editby` FROM `pxn_WikiPages` WHERE `topic` = ? LIMIT 1';
+		$db->Prepare($sql);
+//		$db->setString(1, 'ProSiteManager');
+		$db->setString(1, 'test');
+		$db->Exec();
+		if($db->getRowCount() == 0 || !$db->hasNext())
+			return 'Page not found!';
+		$text = $db->getString('text');
 		return $wiki->Render($text);
 	}
 

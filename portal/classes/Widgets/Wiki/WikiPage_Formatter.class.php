@@ -30,7 +30,7 @@ class WikiPage_Formatter extends \psm\Widgets\Wiki\WikiPageParser {
 		if(!isset($this->headings[$text]))
 			$this->headings[$text] = $h;
 		return
-			'<h'.$h.'>'.$text.'</h'.$h.'>'.
+			'<h'.$h.' style="padding-top: 15px;">'.$text.'</h'.$h.'>'.
 //			'<div style="float: right; font-size: x-small; margin-top: -8px; margin-left: 6px; margin-right: '.($h <= 1 ? $h*20 : 40 ).'px;">'.
 //				'<a href="./?page=wiki&action=edit">-Edit-</a></div>'.
 			($h <= 1 ? '<hr />' : '');

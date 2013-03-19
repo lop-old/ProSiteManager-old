@@ -4,6 +4,26 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 class Utils_Strings {
 
 
+	public static function trim($text) {
+		while(TRUE) {
+			if(!self::_trim(substr($text, 0, 1)))
+				break;
+			$text = \substr($text, 1);
+		}
+		while(TRUE) {
+			if(!self::_trim(substr($text, -1, 1)))
+				break;
+			$text = \substr($text, 0, -1);
+		}
+		return $text;
+	}
+	private static function _trim($char) {
+		if($char == ' '  || $char == "\t") return TRUE;
+		if($char == "\n" || $char == "\r") return TRUE;
+		return FALSE;
+	}
+
+
 	/**
 	 *
 	 *

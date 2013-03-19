@@ -10,6 +10,7 @@ class WikiPage extends \psm\Widgets\Widget {
 	// load parsers
 	public function __construct() {
 		$this->_LoadParser('Formatter');
+		$this->_LoadParser('Lists');
 	}
 	protected function _LoadParser($parserName) {
 		if(isset($this->parsers[$parserName]))
@@ -45,7 +46,7 @@ class WikiPage extends \psm\Widgets\Widget {
 		// finished
 		return '
 <div style="float: right; font-size: x-small;"><a href="./?action=edit">-Edit Page-</a></div>
-<span style="background-color: #eeeeff;">'.$text.'</span><br /><br />';
+'.$text.'<br /><br />';
 //		return $text;
 //		return '&gt; WIKI &lt;';
 	}

@@ -1,6 +1,7 @@
 <?php namespace psm\html;
 if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+global $ClassCount; $ClassCount++;
 \ob_start();
 class Engine {
 
@@ -120,6 +121,7 @@ $paths
 '<u>'.\psm\Portal::getModObj()->getModTitle().'</u> '.\psm\Portal::getModObj()->getModVersion().'</a><br />'.
 '<span style="font-size: smaller;">by lorenzop</span><span style="font-size: xx-small;"> &copy; 2012-2013</span></p>',
 			$footerBlock);
+		$footerBlock = \str_replace('{class count}', \psm\getClassCount(), $footerBlock);
 		$this->_echo($footerBlock);
 		unset($footerBlock, $splitFooter, $this->blocksFooter);
 

@@ -60,6 +60,7 @@ if(defined('psm\DEBUG') && \psm\DEBUG === TRUE) {
 
 
 // portal core
+global $ClassCount; $ClassCount++;
 class Portal {
 
 	// portal instance

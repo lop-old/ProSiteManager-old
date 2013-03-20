@@ -12,6 +12,12 @@ function __autoload($classname) {
 
 // portal namespace
 } namespace psm {
+// class load count
+global $ClassCount; $ClassCount = 1;
+function getClassCount() {
+	global $ClassCount;
+	return $ClassCount;
+}
 // class loader handler
 class ClassLoader {
 

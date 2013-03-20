@@ -3,6 +3,9 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 global $ClassCount; $ClassCount++;
 abstract class Language {
+//final class Language {
+//	private function __construct() {}
+
 
 	private $messages = array();
 

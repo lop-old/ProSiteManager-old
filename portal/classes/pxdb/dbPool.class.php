@@ -3,8 +3,9 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 global $ClassCount; $ClassCount++;
 require(__DIR__.DIR_SEP.'phppdo'.DIR_SEP.'phppdo.php');
-class dbPool
+final class dbPool
 implements \psm\pxdb\interfaces\dbPool {
+	private function __construct() {}
 
 	const dbNameDefault = 'main';
 

@@ -19,7 +19,8 @@ function getClassCount() {
 	return $ClassCount;
 }
 // class loader handler
-class ClassLoader {
+final class ClassLoader {
+	private function __construct() {}
 
 	// class paths array
 	private static $paths = array();

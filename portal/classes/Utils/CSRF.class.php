@@ -14,7 +14,8 @@ global $ClassCount; $ClassCount++;
 //   4. When validating GET and POST data, execute ValidateToken().
 
 
-class CSRF {
+final class CSRF {
+	private function __construct() {}
 
 	const SESSION_KEY = 'csrf_token';
 

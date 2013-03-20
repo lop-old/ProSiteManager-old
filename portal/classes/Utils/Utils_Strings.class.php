@@ -4,22 +4,33 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 class Utils_Strings {
 
 
-	public static function trim($text) {
+	public static function trim($text, $alsoTrim=NULL) {
+		if(!is_array($alsoTrim)) {
+			if(empty($alsoTrim))
+				$alsoTrim = array();
+			else
+				$alsoTrim = \str_split($alsoTrim, 1);
+		}
 		while(TRUE) {
-			if(!self::_trim(substr($text, 0, 1)))
+			if(!self::_trim(substr($text, 0, 1), $alsoTrim))
 				break;
 			$text = \substr($text, 1);
 		}
 		while(TRUE) {
-			if(!self::_trim(substr($text, -1, 1)))
+			if(!self::_trim(substr($text, -1, 1), $alsoTrim))
 				break;
 			$text = \substr($text, 0, -1);
 		}
 		return $text;
 	}
-	private static function _trim($char) {
+	// return true if the char should be trimmed
+	private static function _trim($char, $alsoTrim) {
 		if($char == ' '  || $char == "\t") return TRUE;
 		if($char == "\n" || $char == "\r") return TRUE;
+		if(!empty($alsoTrim))
+			foreach($alsoTrim as $one)
+				if($char == $one)
+					return TRUE;
 		return FALSE;
 	}
 

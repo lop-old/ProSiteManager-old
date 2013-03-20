@@ -15,7 +15,7 @@ class NavBar_Item {
 	private $isSelected;
 
 
-	public function __construct($name='', $title='', $url='', $icon='', $dropdown=FALSE, $isSelected=FALSE) {
+	public function __construct($name='', $title='', \psm\Portal\URL $url=NULL, $icon='', $dropdown=FALSE, $isSelected=FALSE) {
 		// divider
 		if($name == '-') {
 			$this->isDivider = TRUE;
@@ -40,31 +40,40 @@ class NavBar_Item {
 
 
 	public function Render() {
+		$url = $this->url;
 		// brand
-		if($this->isBrand === TRUE)
-			return '		'.
-				'<a class="brand" href="'.
-				(empty($this->url) ? './?mod='.\psm\Portal::getModName() : $this->url).'">'.
+		if($this->isBrand === TRUE) {
+			if(empty($url)) $url = \psm\Portal\URL::factory()->setMod( \psm\Portal::getModName() )->getURL();
+			else            $url = $this->url->getURL();
+			return TAB.TAB.
+				'<a class="brand" href="'.$url.'">'.
 				$this->title.'</a>'.NEWLINE;
+		}
 		// dropdown menu
-		if($this->isDropdown === TRUE)
-			return '			'.
+		if($this->isDropdown === TRUE) {
+			if(empty($url)) $url = '#';
+			else            $url = $this->url->getURL();
+			return TAB.TAB.TAB.
 				'<li class="dropdown'.($this->isSelected ? ' active' : '').'">'.
 				'<a'.($this->isSelected ? ' class="active"' : '').
-				' href="'.(empty($this->url) ? '#' : $this->url).'"'.
+				' href="'.$url.'"'.
 				' class="dropdown-toggle" data-toggle="dropdown"> '.
 				(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
 				$this->title.' <b class="caret"></b></a>'.NEWLINE.
 '<ul class="dropdown-menu"><li><a href="#">a</a></li><li><a href="#">b</a></li><li><a href="#">c</a></li></ul>'.
 				'</li>'.NEWLINE;
+		}
 		// divider
-		if($this->isDivider === TRUE)
-			return '			'.
+		if($this->isDivider === TRUE) {
+			return TAB.TAB.TAB.
 				'<li class="divider'.(TRUE ? '-vertical' : '').'"></li>'.NEWLINE;
+		}
 		// menu button
-		return '			'.
+		if(empty($url)) $url = '#';
+		else            $url = $this->url->getURL();
+		return TAB.TAB.TAB.
 			'<li'.($this->isSelected ? ' class="active"' : '').'>'.
-			'<a href="'.(empty($this->url) ? '#' : $this->url).'">'.
+			'<a href="'.$url.'">'.
 			(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
 			$this->title.'</a></li>'.NEWLINE;
 	}

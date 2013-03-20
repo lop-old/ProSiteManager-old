@@ -93,13 +93,13 @@ class NavBar extends \psm\Widgets\Widget {
 		return $this;
 	}
 	// add menu button
-	public function addButton($name, $title, $url, $icon, $right=FALSE) {
+	public function addButton($name, $title, \psm\Portal\URL $url, $icon, $right=FALSE) {
 		$isSelected = ($this->selected == $name);
 		$this->add( new NavBar_Item($name, $title, $url, $icon, FALSE, $isSelected), $right );
 		return $this;
 	}
 	// add dropdown menu
-	public function addDropdown($name, $title, $url, $icon, $right=FALSE) {
+	public function addDropdown($name, $title, \psm\Portal\URL $url, $icon, $right=FALSE) {
 		$isSelected = ($this->selected == $name);
 		$this->add( new NavBar_Item($name, $title, $url, $icon, TRUE, $isSelected), $right );
 		return $this;

@@ -134,6 +134,10 @@ class Paths {
 
 	// generate web path
 	private static function _generateWeb($name, $arg='') {
+		// portal base url
+//TODO: this can't be set static
+		if($name == 'base')
+			return '/mcdev/';
 		// images
 		if($name == 'images' || $name == 'img')
 			return '/images/';

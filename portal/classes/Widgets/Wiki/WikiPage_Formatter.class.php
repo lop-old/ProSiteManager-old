@@ -3,27 +3,28 @@ if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {ec
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
 class WikiPage_Formatter extends \psm\Widgets\Wiki\WikiPageParser {
 
+	private $regex = array();
 	private $headings = array();
 
 
-	public function ParseText($text) {
-		$regex = array(
-			'_heading'	=> '/^(\={2,6}) (.*) (\={2,6})/m',
-			'_bold'		=> "/'''(()|[^'].*)'''/U",
-			'_italic'	=> "/''(()|[^'].*)''/U",
-			'_strong'	=> "/\*\*(.*?)\*\*/U",
-			'_underline'=> "/__(()|[^_].*)__/U",
-			'_indent'	=> "/ (.*)__/U",
-		);
-		foreach($regex as $func => $pattern)
-			$text = preg_replace_callback($pattern, array($this, $func), $text);
-		return $text;
+	public function __construct() {
+		$this->regex['_heading']	= "/^(\={2,6}) (.*) (\={2,6})/m";
+		$this->regex['_bold']		= "/'''(()|[^'].*)'''/U";
+		$this->regex['_strong']		= "/\*\*(.*?)\*\*/U";
+		$this->regex['_italic']		= "/''(()|[^'].*)''/U";
+		$this->regex['_emphasis']	= "/\/\/(.*?)\/\//";
+		$this->regex['_underline']	= "/__(()|[^_].*)__/U";
+		$this->regex['_super']		= "/\^\^(()|.*)\^\^/U";
+		$this->regex['_sub']		= "/,,(()|.*),,/U";
+		$this->regex['_hr']			= "/\-\-\-\-/m";
+	}
+	public function regex() {
+		return $this->regex;
 	}
 
 
 	// heading
 	protected function _heading($text) {
-//echo '<pre>'.print_r($text, TRUE).'</pre>';exit();
 		$h = \strlen($text[1]) - 1;
 		$h = \psm\Utils\Utils_Numbers::MinMax($h, 1, 5);
 		$text = \trim($text[2]);
@@ -41,13 +42,17 @@ class WikiPage_Formatter extends \psm\Widgets\Wiki\WikiPageParser {
 	protected function _bold($text) {
 		return '<b>'.$text[1].'</b>';
 	}
+	// strong
+	protected function _strong($text) {
+		return '<strong>'.$text[1].'</strong>';
+	}
 	// italic
 	protected function _italic($text) {
 		return '<i>'.$text[1].'</i>';
 	}
-	// strong
-	protected function _strong($text) {
-		return '<strong>'.$text[1].'</strong>';
+	// emphasis
+	protected function _emphasis($text) {
+		return '<em>'.$text[1].'</em>';
 	}
 	// underline
 	protected function _underline($text) {
@@ -55,9 +60,19 @@ class WikiPage_Formatter extends \psm\Widgets\Wiki\WikiPageParser {
 	}
 
 
-	// indent
-	protected function _indent($text) {
-		return '<di>'.$text[1].'</di>';
+	// super-script
+	protected function _super($text) {
+		return '<sup>'.$text[1].'</sup>';
+	}
+	// sub-script
+	protected function _sub($text) {
+		return '<sub>'.$text[1].'</sub>';
+	}
+
+
+	// horizontal rule
+	protected function _hr($text) {
+		return '<hr />';
 	}
 
 

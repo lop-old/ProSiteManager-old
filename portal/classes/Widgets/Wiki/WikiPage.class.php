@@ -11,6 +11,7 @@ class WikiPage extends \psm\Widgets\Widget {
 	public function __construct() {
 		$this->_LoadParser('Formatter');
 		$this->_LoadParser('Lists');
+		$this->_LoadParser('Blocks');
 	}
 	protected function _LoadParser($parserName) {
 		if(isset($this->parsers[$parserName]))

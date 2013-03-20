@@ -59,6 +59,25 @@ if(defined('psm\DEBUG') && \psm\DEBUG === TRUE) {
 }
 
 
+
+
+
+
+//echo '<pre>';print_r($_SERVER);exit();
+
+
+
+//TODO: move this class into classes folder
+
+
+
+
+
+
+
+
+
+
 // portal core
 global $ClassCount; $ClassCount++;
 class Portal {
@@ -186,7 +205,7 @@ class Portal {
 	// load modules
 	protected static function _LoadModules() {
 		if(count(self::$modules) == 0)
-			self::$modules = \psm\Portal\Module_Loader::LoadModulesTxt(
+			self::$modules = \psm\Portal\ModuleLoader::LoadModulesTxt(
 				\psm\Paths::getLocal('root').DIR_SEP.'mods.txt'
 			);
 		if(count(self::$modules) == 0)
@@ -347,7 +366,7 @@ class Portal {
 	// get page object
 	public static function getPageObj() {
 		if(self::$pageObj == NULL)
-			self::$pageObj = \psm\Portal\Page::LoadPage(\psm\MODULE, self::getPage());
+			self::$pageObj = \psm\Portal\PageLoader::LoadPage(\psm\MODULE, self::getPage());
 		return self::$pageObj;
 	}
 

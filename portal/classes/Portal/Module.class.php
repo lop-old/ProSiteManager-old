@@ -1,6 +1,6 @@
 <?php namespace psm\Portal;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 abstract class Module {
 
@@ -18,8 +18,8 @@ abstract class Module {
 
 	public function __construct() {
 		// get common objects
-		$this->portal = \psm\Portal::getPortal();
-		$this->engine = \psm\Portal::getEngine();
+		$this->portal = \psm\PortalLoader::getPortal();
+		$this->engine = \psm\PortalLoader::getEngine();
 		// register paths
 		$this->_registerPagesPath();
 		$this->_registerClassPath();

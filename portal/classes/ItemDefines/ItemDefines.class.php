@@ -1,6 +1,6 @@
 <?php namespace psm\ItemDefines;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class ItemDefines {
 
@@ -22,10 +22,10 @@ class ItemDefines {
 		if(\psm\Utils\Utils_Strings::endsWith($type, '.php'))
 			$type = substr($type, 0, -4);
 		$typePath = $type.'.php';
-		$packPath = 'ItemPacks/'.$pack.'/';
+		$packPath = 'ItemPacks'.DIR_SEP.$pack.DIR_SEP;
 		if(file_exists($packPath.$typePath)) {
 			include($packPath.$typePath);
-			$className = '\psm\ItemDefines\DefinesLoader_'.$pack.'_'.$type;
+			$className = '\\psm\\ItemDefines\\DefinesLoader_'.$pack.'_'.$type;
 			if(class_exists($className)) {
 				if($type == 'items')
 					$clss = new $className(self::$itemsArray);

@@ -1,6 +1,6 @@
 <?php namespace psm;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 final class Paths {
 	private function __construct() {}
 
@@ -88,32 +88,32 @@ final class Paths {
 		// module
 		if($name == 'module') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return self::_getPath('local', 'root').DIR_SEP.$arg;
 		}
 		// module classes
 		if($name == 'module classes') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'classes';
 		}
 		// module pages
 		if($name == 'module pages') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'pages';
 		}
 		// module html
 		if($name == 'module html') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return self::_getPath('local', 'module', $arg).DIR_SEP.'html';
 		}
 
 		// pages array
 		if($name == 'pages') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return array(
 				self::_getPath('local', 'portal pages'),
 				self::_getPath('local', 'module pages', $arg),
@@ -122,7 +122,7 @@ final class Paths {
 		// html array
 		if($name == 'html') {
 			if(empty($arg))
-				\psm\msgPage::Error('Missing argument!');
+				\psm\Portal::Error('Missing argument!');
 			return array(
 				self::_getPath('local', 'portal html'),
 				self::_getPath('local', 'module html', $arg),

@@ -1,8 +1,9 @@
 <?php namespace wa\html;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 use \psm\Portal;
+use \psm\Widgets;
 class html_main extends \psm\html\tplFile_Main {
 
 	private $mainMenu;
@@ -20,7 +21,7 @@ class html_main extends \psm\html\tplFile_Main {
 	protected function _head() {
 
 		// main menu
-		$this->mainMenu = \psm\Widgets\Widget_NavBar::factory()
+		$this->mainMenu = Widgets\Widget_NavBar::factory()
 		->setSelected(Portal::getModName())
 		->setBrand(Portal::getModObj()->getModTitleHtml())
 		->addBreak()
@@ -31,7 +32,7 @@ class html_main extends \psm\html\tplFile_Main {
 		->addDropdown('profile','lorenzop',			Portal\URL::factory(),							'icon-user',			TRUE)
 		;
 		// sub menu
-		$this->subMenu  = \psm\Widgets\Widget_NavBar::factory()
+		$this->subMenu  = Widgets\Widget_NavBar::factory()
 		->setSelected(Portal::getPage())
 		->addButton('current',	'Current Sales',	Portal\URL::factory()->setPage('current'),		'icon-home')
 		->addButton('myshop',	'My Shop',			Portal\URL::factory()->setPage('myshop'),		'icon-shopping-cart')

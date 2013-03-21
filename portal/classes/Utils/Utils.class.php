@@ -1,6 +1,6 @@
 <?php namespace psm\Utils;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 final class Utils {
 	private function __construct() {}
@@ -26,7 +26,7 @@ final class Utils {
 	 */
 	public static function Validate($className, $clss) {
 		if(!self::isClass($className, $clss))
-			\psm\msgPage::Error("Class object isn't of type ".$className);
+			\psm\Portal::Error("Class object isn't of type ".$className);
 	}
 
 
@@ -71,8 +71,8 @@ final class Utils {
 //	 * @return
 //	 */
 	public static function ScrollToBottom() {
-		echo '<!-- ScrollToBottom() -->'."\n".
-			'<script type="text/javascript"><!--//'."\n".
+		echo '<!-- ScrollToBottom() -->'.NEWLINE.
+			'<script type="text/javascript"><!--//'.NEWLINE.
 			'document.scrollTop=document.scrollHeight; '.
 			'window.scroll(0,document.body.offsetHeight); '.
 			'//--></script>';

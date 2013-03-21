@@ -1,6 +1,6 @@
 <?php namespace psm\Portal;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 final class ModuleLoader {
 	private function __construct() {}
@@ -16,7 +16,7 @@ final class ModuleLoader {
 		\psm\Utils\Utils_Strings::forceEndsWith($modsFile, '.txt');
 		// mods.txt file not found
 		if(!file_exists($modsFile))
-			\psm\msgPage::Error('Modules list file not found!');
+			\psm\Portal::Error('Modules list file not found!');
 		$data = file_get_contents($modsFile);
 		$array = explode("\n", $data);
 		foreach($array as $line) {
@@ -45,7 +45,7 @@ final class ModuleLoader {
 		}
 		include $file;
 		// class \mod\module_mod
-		$clss = $name.'\module_'.$name;
+		$clss = $name.'\\module_'.$name;
 		// class not found
 		if(!class_exists($clss)) {
 //TODO:
@@ -63,7 +63,7 @@ final class ModuleLoader {
 		self::$moduleName = \psm\Utils\Vars::getVar('mod', 'str');
 		if(!empty(self::$moduleName)) return self::$moduleName;
 		// mod from define
-		if(defined('psm\MODULE'))
+		if(defined('psm\\MODULE'))
 			self::$moduleName = \psm\MODULE;
 		if(!empty(self::$moduleName)) return self::$moduleName;
 		// default mod

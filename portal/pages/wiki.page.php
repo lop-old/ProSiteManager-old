@@ -1,6 +1,6 @@
 <?php namespace wa\Pages;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class page_wiki extends \psm\Portal\Page {
 
@@ -19,6 +19,7 @@ class page_wiki extends \psm\Portal\Page {
 		$sql = 'SELECT `topic_id`, `topic`, UNIX_TIMESTAMP(`timestamp`) AS `timestamp`, `text`, `last_editby` FROM `pxn_WikiPages` WHERE `topic` = ? LIMIT 1';
 		$db->Prepare($sql);
 //		$db->setString(1, 'ProSiteManager');
+//		$db->setString(1, 'schfree original home');
 		$db->setString(1, 'test');
 		$db->Exec();
 		if($db->getRowCount() == 0 || !$db->hasNext())

@@ -1,6 +1,6 @@
 <?php namespace psm\Portal;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 final class PageLoader {
 	private function __construct() {}
@@ -20,7 +20,7 @@ final class PageLoader {
 		// page not found
 //TODO:
 		if($filepath == NULL) {
-			\psm\msgPage::Error('Page not found!! '.$page);
+			\psm\Portal::Error('Page not found!! '.$page);
 			return;
 		}
 		// load file
@@ -28,13 +28,13 @@ final class PageLoader {
 		// file failed to load
 //TODO:
 		if($result === FALSE) {
-			\psm\msgPage::Error('Failed to load page!! '.$page);
+			\psm\Portal::Error('Failed to load page!! '.$page);
 			return;
 		}
 		// module name
 		$modName = \psm\Portal::getModName();
 		// load page class
-		$clss = $modName.'\Pages\page_'.$page;
+		$clss = $modName.'\\Pages\\page_'.$page;
 		if(class_exists($clss))
 			return new $clss();
 		// string result

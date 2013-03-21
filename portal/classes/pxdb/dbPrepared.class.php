@@ -1,6 +1,6 @@
 <?php namespace psm\pxdb;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 abstract class dbPrepared
 implements \psm\pxdb\interfaces\dbPrepared {
@@ -17,7 +17,7 @@ implements \psm\pxdb\interfaces\dbPrepared {
 
 
 	public function Prepare($sql) {
-		if(empty($sql)) \psm\msgPage::Error("sql can't be empty!");
+		if(empty($sql)) \psm\Portal::Error("sql can't be empty!");
 		$this->Clean();
 		if($this->getConn() == NULL) return NULL;
 		try {

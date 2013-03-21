@@ -1,6 +1,6 @@
 <?php namespace psm\pxdb;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 require(__DIR__.DIR_SEP.'phppdo'.DIR_SEP.'phppdo.php');
 final class dbPool
@@ -21,13 +21,13 @@ implements \psm\pxdb\interfaces\dbPool {
 			$dbName = self::dbNameDefault;
 		// db doesn't exist
 		if(!self::dbExists($dbName)) {
-			\psm\msgPage::Error('Database '.$dbName.' doesn\'t exist!');
+			\psm\Portal::Error('Database '.$dbName." doesn't exist!");
 			return NULL;
 		}
 		// get db connection
 		$db = self::$pool[$dbName];
 		if(!$db->isConnected()) {
-			\psm\msgPage::Error('Failed to connect to database '.$dbName.'!');
+			\psm\Portal::Error('Failed to connect to database '.$dbName.'!');
 			return NULL;
 		}
 //TODO:
@@ -54,7 +54,7 @@ implements \psm\pxdb\interfaces\dbPool {
 			'.php';
 		// config file not found
 		if(!file_exists($filePath)) {
-			\psm\msgPage::Error('Database config not found! '.$filePath);
+			\psm\Portal::Error('Database config not found! '.$filePath);
 			return FALSE;
 		}
 		// load db config.php or config.<mod>.php
@@ -63,7 +63,7 @@ implements \psm\pxdb\interfaces\dbPool {
 	// add db to pool - call from config
 	protected static function add_MySQL($config=array()) {
 		if(!is_array($config))
-			\psm\msgPage::Error('Database config argument must be an array!');
+			\psm\Portal::Error('Database config argument must be an array!');
 		foreach($config as $dbName => $array) {
 			if(empty($dbName))    continue;
 			if(!is_array($array)) continue;

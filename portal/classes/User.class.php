@@ -1,6 +1,6 @@
 <?php namespace psm;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class User {
 
@@ -43,7 +43,7 @@ class User {
 //		Session::factory();
 		// db to use
 		if($db == NULL)
-			\psm\msgPage::Error("db can't be null!");
+			\psm\Portal::Error("db can't be null!");
 		$this->db = $db;
 		// default/custom table name
 		$this->tableName = (empty($tableName) ? self::defaultTableName : $tableName);
@@ -64,7 +64,9 @@ class User {
 		// encrypt password
 		$password = \psm\Utils\PassCrypt::hashNow($password);
 		$table = 'PSM_Users';
-		$query = "SELECT `user_id`, `username`, `email`, `date_join` FROM `".\psm\DB\DB::san($table)."` WHERE `username` = :username AND `password` = :password LIMIT 1";
+		$query = "SELECT `user_id`, `username`, `email`, `date_join` ".
+			"FROM `".\psm\dbPool\dbPool::san($table)."` ".
+			"WHERE `username` = :username AND `password` = :password LIMIT 1";
 		$params = array(
 			':username' => $username,
 			':password' => $password,
@@ -73,7 +75,7 @@ class User {
 		$st->execute($params);
 		// not found
 		if($st->rowCount() != 1) {
-\psm\msgPage::Error('Invalid login');
+\psm\Portal::Error('Invalid login');
 //$_SESSION[$config['session name']] = '';
 			return;
 		}

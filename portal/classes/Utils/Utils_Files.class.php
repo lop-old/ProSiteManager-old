@@ -1,6 +1,6 @@
 <?php namespace psm\Utils;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 final class Utils_Files {
 	private function __construct() {}
@@ -62,7 +62,7 @@ final class Utils_Files {
 			return '';
 		// shouldn't contain /
 		if(strpos($filename, '/') !== FALSE) {
-echo '<p>stop SanFilename() '.$filename.'</p>'; exit();
+\psm\Portal::Error('Stop at SanFilename() '.$filename);
 		}
 		// remove dots from front and end
 		while(\psm\Utils\Utils_Strings::startsWith($filename, '.'))

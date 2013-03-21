@@ -1,6 +1,6 @@
 <?php namespace psm\pxdb;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class dbPoolConn extends dbPrepared
 implements \psm\pxdb\interfaces\dbPoolConn {
@@ -22,14 +22,14 @@ implements \psm\pxdb\interfaces\dbPoolConn {
 	private function __construct($dbName, $driver, $database, $host='localhost', $port=3306, $u='', $p='') {
 		// db already exists
 		if(dbPool::dbExists($dbName)) {
-			\psm\msgPage::Error('Database config '.$dbName.' already loaded!');
+			\psm\Portal::Error('Database config '.$dbName.' already loaded!');
 			return FALSE;
 		}
 		// build data source name
 		$dsn = self::BuildDSN($driver, $database, $host, $port);
 		if(empty($u)) $u = 'ro'.'ot';
 		if(empty($dsn))
-			\psm\msgPage::Error('Failed to generate DSN for database!');
+			\psm\Portal::Error('Failed to generate DSN for database!');
 		try {
 			$clss =
 				(!class_exists('PDO') || !extension_loaded('pdo_'.$driver)) ?
@@ -47,7 +47,7 @@ implements \psm\pxdb\interfaces\dbPoolConn {
 			$this->conn->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 			return TRUE;
 		} catch(\PDOException $e) {
-			\psm\msgPage::Error($e->getMessage());
+			\psm\Portal::Error($e->getMessage());
 		}
 		return FALSE;
 	}
@@ -57,10 +57,10 @@ implements \psm\pxdb\interfaces\dbPoolConn {
 	private static function BuildDSN($driver, $database, $host='localhost', $port=3306) {
 		// driver
 		if(empty($driver))
-			\psm\msgPage::Error('Database driver not set!');
+			\psm\Portal::Error('Database driver not set!');
 		// database
 		if(empty($database))
-			\psm\msgPage::Error('database not set!');
+			\psm\Portal::Error('database not set!');
 		// host
 		if(empty($host))
 			$host = 'localhost';

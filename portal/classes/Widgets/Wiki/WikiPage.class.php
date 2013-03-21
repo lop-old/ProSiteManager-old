@@ -1,6 +1,6 @@
 <?php namespace psm\Widgets\Wiki;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class WikiPage extends \psm\Widgets\Widget {
 
@@ -20,7 +20,7 @@ class WikiPage extends \psm\Widgets\Widget {
 //		if(!\psm\Utils\Utils_Strings::startsWith($parserName, '\\'))
 		$clss = 'psm\\Widgets\\Wiki\\WikiPage_'.$parserName;
 		if(!class_exists($clss)) {
-			\psm\msgPage::Error('Wiki parser class not found! '.$clss);
+			\psm\Portal::Error('Wiki parser class not found! '.$clss);
 			return;
 		}
 		$clss = '\\'.$clss;
@@ -41,9 +41,9 @@ class WikiPage extends \psm\Widgets\Widget {
 		foreach($lines as $line) {
 //			$line = \trim($line);
 			if(empty($line))
-				$text .= "<br />\n";
+				$text .= '<br />'.NEWLINE;
 			else
-				$text .= $line."\n";
+				$text .= $line.NEWLINE;
 		}
 		// finished
 		return '

@@ -1,6 +1,6 @@
 <?php namespace psm\html;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 abstract class tplFile {
 
@@ -28,11 +28,11 @@ abstract class tplFile {
 		// find file
 		$filefound = \psm\Utils\Utils_Files::findFile($filename.'.html.php', $paths);
 		if(!$filefound)
-			\psm\msgPage::Error('File not found! '.$filename.'.html.php');
+			\psm\Portal::Error('File not found! '.$filename.'.html.php');
 		include_once($filefound);
-		$clss = '\wa\html\html_'.$filename;
+		$clss = '\\wa\\html\\html_'.$filename;
 		if(!class_exists($clss))
-			\psm\msgPage::Error('Class not found! '.$clss);
+			\psm\Portal::Error('Class not found! '.$clss);
 		return new $clss();
 	}
 
@@ -73,7 +73,7 @@ abstract class tplFile {
 	protected function getFunc($blockName) {
 		$func = '_'.$blockName;
 		if(!method_exists($this, $func)) {
-\psm\msgPage::Error('Block not found for '.$blockName.' !');
+\psm\Portal::Error('Block not found for '.$blockName.' !');
 			return null;
 		}
 		return $this->$func();

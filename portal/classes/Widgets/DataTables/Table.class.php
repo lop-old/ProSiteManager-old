@@ -1,6 +1,6 @@
 <?php namespace psm\Widgets\DataTables;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 class Table extends \psm\Widgets\Widget {
 
@@ -25,16 +25,16 @@ class Table extends \psm\Widgets\Widget {
 	public function __construct($headings, $queryClass, $usingAjax=FALSE) {
 		$this->headings = $headings;
 		// validate Query class type
-		\psm\Utils\Utils::Validate('psm\Widgets\DataTables\Query', $queryClass);
+		\psm\Utils\Utils::Validate('psm\\Widgets\\DataTables\\Query', $queryClass);
 		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
 		\psm\html\tplFile_Main::addFileCSS(
-			'{path=static}jquery-ui/redmond/jquery.ui.theme.css',
-			'{path=static}jquery/datatables_bootstrap.css'
+			'{path=static}jquery-ui'.DIR_SEP.'redmond'.DIR_SEP.'jquery.ui.theme.css',
+			'{path=static}jquery'.DIR_SEP.'datatables_bootstrap.css'
 		);
 		\psm\html\tplFile_Main::addFileJS(
-			'{path=static}jquery/jquery.dataTables-1.9.4.min.js',
-			'{path=static}jquery/datatables_bootstrap.js'
+			'{path=static}jquery'.DIR_SEP.'jquery.dataTables-1.9.4.min.js',
+			'{path=static}jquery'.DIR_SEP.'datatables_bootstrap.js'
 		);
 	}
 
@@ -51,7 +51,7 @@ class Table extends \psm\Widgets\Widget {
 	public function Render() {
 		if(!$this->usingAjax) {
 			if(!$this->queryClass->runQuery()) {
-\psm\msgPage::Error('Failed to query db.');
+\psm\Portal::Error('Failed to query db.');
 			}
 		}
 		$this->Render_JS();

@@ -1,6 +1,6 @@
 <?php namespace psm\html;
-if(!defined('psm\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die("<font size=+2>Access Denied!!</font>");}
+if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
+	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
 abstract class tplFile_Main extends tplFile {
 
@@ -15,7 +15,7 @@ abstract class tplFile_Main extends tplFile {
 
 	protected function __construct() {
 		if(self::$htmlMain != NULL)
-			\psm\msgPage::Error('Main html file has already been loaded!');
+			\psm\Portal::Error('Main html file has already been loaded!');
 		self::$htmlMain = $this;
 		// define empty blocks
 		$this->blocks['header'] = &$this->header;
@@ -38,7 +38,7 @@ abstract class tplFile_Main extends tplFile {
 //	}
 	public static function addFileCSS_single($file, $top=FALSE) {
 		if(empty($file)) return;
-		\psm\Portal::getEngine()->addHeader(
+		\psm\PortalLoader::getEngine()->addHeader(
 			NEWLINE.
 			'<link rel="stylesheet" type="text/css" href="'.$file.'" />'.
 			NEWLINE,
@@ -63,7 +63,7 @@ abstract class tplFile_Main extends tplFile {
 	}
 	public static function addFileJS_single($file, $top=FALSE) {
 		if(empty($file)) return;
-		\psm\Portal::getEngine()->addHeader(
+		\psm\PortalLoader::getEngine()->addHeader(
 			str_replace(
 				'{file}',
 				$file,

@@ -6,8 +6,8 @@ include(
 	'debuggers'.DIR_SEP.
 	'php_error.php'
 );
-if(\function_exists('php_error\reportErrors')) {
-	$reportErrors = '\php_error\reportErrors';
+if(\function_exists('php_error\\reportErrors')) {
+	$reportErrors = '\\php_error\\reportErrors';
 	$reportErrors(array(
 		'catch_ajax_errors'      => TRUE,
 		'catch_supressed_errors' => FALSE,

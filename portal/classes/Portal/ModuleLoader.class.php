@@ -58,18 +58,40 @@ final class ModuleLoader {
 
 	// selected module name
 	public static function getModuleName() {
-		if(!empty(self::$moduleName)) return self::$moduleName;
-		// mod from url
-		self::$moduleName = \psm\Utils\Vars::getVar('mod', 'str');
-		if(!empty(self::$moduleName)) return self::$moduleName;
-		// mod from define
+		// already set
+		if(!empty(self::$moduleName))
+			return self::$moduleName;
+		// mod from url  ?mod=
+		if(self::setModule(\psm\Utils\Vars::getVar('mod', 'str')))
+			return self::$moduleName;
+//TODO: this needs to check against an array of domains
+		// mod from hostname  mod.domain.com
+		foreach(self::$modules as $name => $mod) {
+echo '<p>'.$_SERVER['SERVER_NAME'].' - '.$name.'</p>';
+			if(\psm\Utils\Utils_Strings::startsWith($_SERVER['SERVER_NAME'], $name, TRUE))
+				if(self::setModule($name))
+					return self::$moduleName;
+		}
+		// mod from define  \psm\MODULE
 		if(defined('psm\\MODULE'))
-			self::$moduleName = \psm\MODULE;
-		if(!empty(self::$moduleName)) return self::$moduleName;
+			if(self::setModule(\psm\MODULE))
+				return self::$moduleName;
 		// default mod
-		self::$moduleName = \psm\DEFAULT_MODULE;
-		if(!empty(self::$moduleName)) return self::$moduleName;
-		return reset(self::$modules);
+		if(defined('psm\\DEFAULT_MODULE'))
+			if(self::setModule(\psm\DEFAULT_MODULE))
+				return self::$moduleName;
+		// first available
+		if(count(self::$modules) > 0)
+			if(self::setModule(reset(self::$modules)))
+				return self::$moduleName;
+		// every last hope has failed
+		return NULL;
+	}
+	private static function setModule($name) {
+		if(empty($name))
+			return FALSE;
+		self::$moduleName = $name;
+		return TRUE;
 	}
 
 

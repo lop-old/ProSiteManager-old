@@ -65,6 +65,9 @@ $paths
 //		$this->blocksPage   = new html_BlockArray('portal - page contents');
 //		$this->blocksFooter = new html_BlockArray('portal - footer contents');
 	}
+	public static function Unload() {
+		self::$engine = NULL;
+	}
 
 
 	// build page

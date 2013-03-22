@@ -70,12 +70,13 @@ final class Utils {
 //	 *
 //	 * @return
 //	 */
-	public static function ScrollToBottom() {
-		echo '<!-- ScrollToBottom() -->'.NEWLINE.
+	public static function ScrollToBottom($id='') {
+		if(empty($id)) $id = 'document';
+		echo NEWLINE.'<!-- ScrollToBottom() -->'.NEWLINE.
 			'<script type="text/javascript"><!--//'.NEWLINE.
-			'document.scrollTop=document.scrollHeight; '.
+			$id.'.scrollTop='.$id.'.scrollHeight; '.
 			'window.scroll(0,document.body.offsetHeight); '.
-			'//--></script>';
+			'//--></script>'.NEWLINE.NEWLINE;
 	}
 
 
@@ -94,6 +95,11 @@ final class Utils {
 	}
 
 
+//	public static function msSleep($ms) {
+//		\usleep(
+//			((int)$ms) * 1000
+//		);
+//	}
 //	// render time
 //	private static $qtime = -1;
 //	/**
@@ -115,6 +121,13 @@ final class Utils {
 //		return round(self::GetTimestamp() - $qtime, $roundPlaces);
 //	}
 //	$config['qtime'] = GetTimestamp();
+//	// render time
+//	function GetTimestamp(){
+//		$qtime=explode(' ',microtime()); return($qtime[0]+$qtime[1]);}
+//		function GetRenderTime($roundnum=3){global $qtime;
+//		if($qtime==0){return(0);}
+//		return(round(GetTimestamp()-$qtime,$roundnum));}
+//		$config['qtime']=GetTimestamp();
 
 
 	/**

@@ -111,5 +111,33 @@ final class Utils_Files {
 	}
 
 
+	public static function chmodR($path, $fileMode, $dirMode) {
+		$path = trim($path);
+		if(empty($path)) return;
+		if(strlen($path) < 10) return;
+		// dir
+		if(is_dir($path)) {
+			if(!\chmod($path, $dirMode)) {
+				$modeStr = \decoct($dirMode);
+				echo '<p>Failed to chmod '.$modeStr.' '.$path.'</p>';
+				return;
+			}
+			$handler = opendir($path);
+			while( ($file = readdir($handler)) !== FALSE ) {
+				if($file == '.' || $file == '..') continue;
+				self::chmodR($path.DIR_SEP.$file, $fileMode, $dirMode);
+			}
+		// file
+		} else {
+			if(is_link($path)) return;
+			if(!\chmod($path, $fileMode)) {
+				$modeStr = \decoct($fileMode);
+				echo '<p>Failed to chmod '.$modeStr.' '.$path.'</p>';
+				return;
+			}
+		}
+	}
+
+
 }
 ?>

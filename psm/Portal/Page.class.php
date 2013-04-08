@@ -13,7 +13,7 @@ abstract class Page {
 	 *
 	 * @return string Returns the output html, or FALSE if failed.
 	 */
-	abstract public function Render();
+	public abstract function Render();
 
 
 	/**
@@ -21,7 +21,7 @@ abstract class Page {
 	 *
 	 * @param string $action Action to be performed.
 	 */
-	abstract protected function Action($action);
+	public abstract function Action($action);
 
 
 	// add pages path

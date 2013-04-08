@@ -4,7 +4,17 @@ if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {e
 global $ClassCount; $ClassCount++;
 abstract class Module {
 
+
+	// init page
 	public abstract function Init();
+	public static function AutoInit() {
+		// load page
+		\psm\Portal::LoadPage();
+		\psm\Portal::LoadAction();
+		// display page
+		$engine->Display();
+	}
+
 
 	public abstract function getModName();
 	public abstract function getModVersion();
@@ -20,6 +30,14 @@ abstract class Module {
 	}
 
 
+	public static function setSiteTitle($siteTitle) {
+		\psm\Portal::getEngine()->setSiteTitle($siteTitle);
+	}
+	public static function setPageTitle($pageTitle) {
+		\psm\Portal::getEngine()->setPageTitle($pageTitle);
+	}
+
+
 	// register paths
 	protected function _registerPagesPath($path='') {
 		if(empty($path))
@@ -30,15 +48,6 @@ abstract class Module {
 		if(empty($path))
 			$path = \psm\Paths::getLocal('module classes', $this->getModName());
 		\psm\Loader::registerClassPath($this->getModName(), $path);
-	}
-
-
-	// load page
-	protected function _LoadPage() {
-		$content = \psm\Portal::getPageObj();
-		if(empty($content))
-			$content = '<p>PAGE IS NULL</p>';
-		\psm\Portal::getEngine()->addToPage($content);
 	}
 
 

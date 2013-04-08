@@ -72,7 +72,7 @@ class Engine {
 	// build page
 	public function Display() {
 		// run only once
-		if(self::_hasDisplayed(TRUE))
+		if(self::hasDisplayed(TRUE))
 			return;
 		// end output buffer
 		$this->addToPage(
@@ -216,10 +216,7 @@ class Engine {
 //	}
 
 
-	public static function hasDisplayed() {
-		return self::_hasDisplayed();
-	}
-	private static function _hasDisplayed($hasDisplayed=FALSE) {
+	public static function hasDisplayed($hasDisplayed=FALSE) {
 		$hasBefore = self::$hasDisplayed;
 		if($hasDisplayed === TRUE)
 			self::$hasDisplayed = TRUE;

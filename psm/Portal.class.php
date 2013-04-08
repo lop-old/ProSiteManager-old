@@ -20,7 +20,7 @@ class Portal {
 	private static $pageObj = NULL;
 	private static $defaultPage = 'home';
 	// action
-	private $action = NULL;
+	private static $action = NULL;
 
 
 	public static function auto($args=array()) {
@@ -76,13 +76,18 @@ class Portal {
 			else
 				echo '<p>Unknown argument! '.$key.' - '.$value.'</p>';
 		}
+
 		// load mods.txt
 		self::LoadModules();
 		self::getModName();
-		self::getPage();
 
 		// load portal instance
 		self::$portal = new \psm\Portal();
+
+		// get page
+		self::getPage();
+		// get action
+		self::getAction();
 	}
 
 
@@ -256,18 +261,6 @@ class Portal {
 	}
 
 
-	// action
-	public static function getAction() {
-		// already set
-		if($this->action !== NULL)
-			return $this->action;
-		// get action
-		$this->action = Utils\Vars::getVar('action', 'str');
-		$this->action = Utils\DirsFiles::SanFilename($this->action);
-		return $this->action;
-	}
-
-
 	// get module name
 	public static function getModName() {
 		// module already defined
@@ -360,11 +353,45 @@ class Portal {
 	}
 
 
-	// get page object
+	// get page class object
 	public static function getPageObj() {
-		if(self::$pageObj == NULL)
-			self::$pageObj = \psm\Portal\PageLoader::LoadPage(\psm\MODULE, self::getPage());
+		if(self::$pageObj != NULL)
+			return self::$pageObj;
+		self::$pageObj =
+			\psm\Portal\PageLoader::LoadPage(
+				\psm\MODULE,
+				self::getPage()
+			);
 		return self::$pageObj;
+	}
+	// load page class
+	public static function LoadPage() {
+		// already loaded
+		if(self::$pageObj != NULL) return;
+		// load page object
+		self::$pageObj = \psm\Portal::getPageObj();
+		// failed to load
+		if(self::$pageObj == NULL)
+			self::$pageObj = '<p>PAGE IS NULL</p>';
+		\psm\Portal::getEngine()->addToPage(self::$pageObj);
+	}
+
+
+	// action
+	public static function getAction() {
+		// already set
+		if(self::$action !== NULL)
+			return self::$action;
+		// get action
+		self::$action =
+			Utils\DirsFiles::SanFilename(
+				Utils\Vars::getVar('action', 'str')
+			);
+		return self::$action;
+	}
+	public static function LoadAction() {
+		if(!empty(self::$action) && \psm\Utils\FuncArgs::classEquals('psm\\Portal\\Page', self::$pageObj))
+			self::$pageObj->Action(self::$action);
 	}
 
 

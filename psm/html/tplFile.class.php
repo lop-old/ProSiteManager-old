@@ -11,8 +11,8 @@ abstract class tplFile {
 
 
 	public static function LoadFile($modName, $theme, $filename) {
-		$theme = \psm\Utils\Utils_Files::SanFilename($theme);
-		$filename = str_replace('..', '', $filename);
+		$theme = \psm\Utils\DirsFiles::SanFilename($theme);
+		$filename = \str_replace('..', '', $filename);
 		if(empty($modName))  return NULL;
 		if(empty($theme))    return NULL;
 		if(empty($filename)) return NULL;
@@ -26,12 +26,12 @@ abstract class tplFile {
 				$paths[] = $p.DIR_SEP.$theme;
 		}
 		// find file
-		$filefound = \psm\Utils\Utils_Files::findFile($filename.'.html.php', $paths);
+		$filefound = \psm\Utils\DirsFiles::FindFile($filename.'.html.php', $paths);
 		if(!$filefound)
 			\psm\Portal::Error('File not found! '.$filename.'.html.php');
 		include_once($filefound);
 		$clss = '\\wa\\html\\html_'.$filename;
-		if(!class_exists($clss))
+		if(!\class_exists($clss))
 			\psm\Portal::Error('Class not found! '.$clss);
 		return new $clss();
 	}
@@ -72,7 +72,7 @@ abstract class tplFile {
 	}
 	protected function getFunc($blockName) {
 		$func = '_'.$blockName;
-		if(!method_exists($this, $func)) {
+		if(!\method_exists($this, $func)) {
 \psm\Portal::Error('Block not found for '.$blockName.' !');
 			return null;
 		}

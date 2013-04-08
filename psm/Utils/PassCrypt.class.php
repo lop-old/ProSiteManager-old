@@ -59,75 +59,64 @@ class PassCrypt {
 		if(empty($this->hashSequence))
 			$this->hashSequence = self::defaultHashSequence;
 		// split to array
-		$modes = explode(' ', $this->hashSequence);
+		$modes = \explode(' ', $this->hashSequence);
 		foreach($modes as $hashMode) {
-			$hashMode = trim($hashMode);
+			$hashMode = \trim($hashMode);
 			if(empty($hashMode)) continue;
 			self::_hashThis($data, $hashMode, $this->salt);
 		}
 		return $data;
 	}
 	private static function _hashThis(&$data, $mode, $salt) {
-		@list($mode, $arg) = explode(':', $mode, 2);
+		@list($mode, $arg) = \explode(':', $mode, 2);
 		if(!empty($salt))
-			$mode = str_replace('{salt}', $this->salt, $mode);
-		$mode = trim($mode);
-		$arg  = trim($arg);
+			$mode = \str_replace('{salt}', $this->salt, $mode);
+		$mode = \trim($mode);
+		$arg  = \trim($arg);
 		// md5
 		if($mode == 'md5') {
-			$data =
-				md5($data);
+			$data = \md5($data);
 			return;
 		}
 		// reverse string
 		if($mode == 'rev') {
-			$data =
-				strrev($data);
+			$data = \strrev($data);
 			return;
 		}
 		// split / reverse
 		if($mode == 'splitrev') {
 			$data =
-				substr($data, 0, strlen($data)/2).
-				strrev(substr($data, strlen($data)/2));
+				\substr($data, 0, \strlen($data)/2).
+				\strrev(\substr($data, \strlen($data)/2));
 			return;
 		}
 		// reverse / split
 		if($mode == 'revsplit') {
 			$data =
-				strrev(substr($data, 0, strlen($data)/2)).
-				substr($data, strlen($data)/2);
+				\strrev(\substr($data, 0, \strlen($data)/2)).
+				\substr($data, \strlen($data)/2);
 			return;
 		}
 		// salt
 		if($mode == 'salt') {
 			// salt self length
-			if(Utils_Strings::startsWith($arg, '#')) {
-				$arg = (int) substr($arg, 1);
+			if(\psm\Utils\Strings::startsWith($arg, '#')) {
+				$arg = (int) \substr($arg, 1);
 				// from front of hash
 				if($arg > 0)
-					$data =
-						substr($data, 0, $arg).
-						':'.
-						$data;
+					$data = \substr($data, 0, $arg).':'.$data;
 				// from end of hash
 				else
-					$data =
-						$data.
-						':'.
-						substr($data, $arg);
+					$data = $data.':'.\substr($data, $arg);
 			// salt string
 			} else {
-				$data =
-					trim($arg).
-					':'.
-					$data;
+				$data = \trim($arg).':'.$data;
 			}
 			return;
 		}
 		// loop
 		if($mode == 'loop') {
-			$parts = explode(':', $arg, 2);
+			$parts = \explode(':', $arg, 2);
 			$count = (int) $parts[0];
 			for($i=0; $i < $count; $i++)
 				self::_hashThis($data, $parts[1]);

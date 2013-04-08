@@ -29,9 +29,7 @@ class URL {
 		$url = '';
 		$i = 0;
 		foreach($args as $name => $value) {
-			$i++;
-			if($i != 1)
-				$url .= '&';
+			$i++; if($i != 1) $url .= '&';
 			$url .= $name.'='.$value;
 		}
 		return './?'.$url;
@@ -40,8 +38,7 @@ class URL {
 
 	// mod name
 	public function setMod($mod) {
-		if(empty($mod))
-			$mod = NULL;
+		if(empty($mod)) $mod = NULL;
 		$this->mod = $mod;
 		return $this;
 	}

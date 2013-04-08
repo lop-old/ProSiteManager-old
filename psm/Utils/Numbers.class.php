@@ -2,18 +2,17 @@
 if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
-final class Utils_Numbers {
+final class Numbers {
 	private function __construct() {}
 
 
-	// String to seconds
 	/**
-	 *
+	 * String to seconds
 	 *
 	 * @return int seconds
 	 */
 	public static function toSeconds($text) {
-		$a = substr($text, -1, 1);
+		$a = \substr($text, -1, 1);
 		if($a == 'm') return ((int) $text) * 60;
 		if($a == 'h') return ((int) $text) * 3600;
 		if($a == 'd') return ((int) $text) * 86400;
@@ -22,9 +21,8 @@ final class Utils_Numbers {
 		if($a == 'y') return ((int) $text) * 31536000;
 		              return  (int) $text;
 	}
-	// Seconds to string
 	/**
-	 *
+	 * Seconds to string
 	 *
 	 * @return string
 	 */
@@ -32,28 +30,28 @@ final class Utils_Numbers {
 		$result = '';
 		// years
 		if($seconds > 31536000) {
-			$t = floor($seconds / 31536000);
+			$t = \floor($seconds / 31536000);
 			$seconds = $seconds % 31536000;
 			$result .= ' '.$t.' Year'.
 				($t>1 ? 's' : '');
 		}
 		// days
 		if($seconds > 86400) {
-			$t = floor($seconds / 86400);
+			$t = \floor($seconds / 86400);
 			$seconds = $seconds % 86400;
 			$result .= ' '.$t.' Day'.
 				($t>1 ? 's' : '');
 		}
 		// hours
 		if($seconds > 3600) {
-			$t = floor($seconds / 3600);
+			$t = \floor($seconds / 3600);
 			$seconds = $seconds % 3600;
 			$result .= ' '.$t.' Hour'.
 				($t>1 ? 's' : '');
 		}
 		// minutes
 		if($seconds > 60) {
-			$t = floor($seconds / 60);
+			$t = \floor($seconds / 60);
 			$seconds = $seconds % 60;
 			$result .= ' '.$t.' Minute'.
 				($t>1 ? 's' : '');
@@ -64,8 +62,8 @@ final class Utils_Numbers {
 				($seconds>1 ? 's' : '');
 		}
 		// trim extra space
-		if(substr($result, 0, 1) == ' ')
-			$result = substr($result, 1);
+		if(\substr($result, 0, 1) == ' ')
+			$result = \substr($result, 1);
 		return $result;
 	}
 
@@ -76,7 +74,8 @@ final class Utils_Numbers {
 	 * @return string Roman numerals string representing input number.
 	 */
 	public static function NumberToRoman($number) {
-		if($number > 15) return (string) $number;
+		if($number > 15)
+			return (string) $number;
 		$number = (int) $number;
 		$result = '';
 		$lookup = array(
@@ -95,8 +94,8 @@ final class Utils_Numbers {
 			'I' => 1
 		);
 		foreach($lookup as $roman => $value) {
-			$matches = intval($number / $value);
-			$result .= str_repeat($roman, $matches);
+			$matches = \intval($number / $value);
+			$result .= \str_repeat($roman, $matches);
 			$number = $number % $value;
 		}
 		return $result;
@@ -110,8 +109,8 @@ final class Utils_Numbers {
 	 * @return int value
 	 */
 	public static function MinMax($value, $min=FALSE, $max=FALSE) {
-		if($min !== FALSE) if($value < $min) $value = $min;
-		if($max !== FALSE) if($value > $max) $value = $max;
+		if($min !== FALSE && $value < $min) $value = $min;
+		if($max !== FALSE && $value > $max) $value = $max;
 		return $value;
 	}
 

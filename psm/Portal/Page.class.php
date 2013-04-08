@@ -26,7 +26,7 @@ abstract class Page {
 
 	// add pages path
 	public static function addPath($path) {
-		$path = \psm\Utils\Utils_Files::trimPath($path);
+		$path = \psm\Utils\Files::TrimPath($path);
 		if(!in_array($path, self::$pagePaths))
 			self::$pagePaths[] = $path;
 	}

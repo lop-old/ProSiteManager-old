@@ -11,13 +11,13 @@ final class Paths {
 
 	// get local path
 	public static function getLocal($name, $arg='') {
-		$name = trim(str_replace('_', ' ', $name));
+		$name = \trim(\str_replace('_', ' ', $name));
 		if(empty($name)) return NULL;
 		return self::_getPath('local', $name, $arg);
 	}
 	// get web path
 	public static function getWeb($name, $arg='') {
-		$name = trim(str_replace('_', ' ', $name));
+		$name = \trim(\str_replace('_', ' ', $name));
 		if(empty($name)) return NULL;
 		return self::_getPath('web', $name, $arg);
 	}

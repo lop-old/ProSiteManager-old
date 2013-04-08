@@ -2,44 +2,43 @@
 if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
-class Tag_String extends Tag {
-
-//	private $parts = NULL;
-//
-//
-//	public function __construct($tag, $data, $count=2) {
-//		$this->parts = explode($tag, $data, $count);
-//	}
-//
-//
-//	public function &getPart($part) {
-//		$part = (int)$part;
-//		if(!isset($this->parts[$part]))
-//			return null;
-//		return $this->parts[$part];
-//	}
-
+class TagArray implements TagParser {
 
 	private $tags = array();
 
 
-	public function __construct(&$tags=NULL) {
-		if($tags != NULL)
-			$this->tags = &$tags;
+	public function __construct() {
+		$args = \func_get_args();
+		if(count($args) == 0) {
+		} else
+		if(count($args) == 1) {
+			$this->add($args);
+		} else {
+			foreach($args as $arg)
+				$this->add($arg);
+		}
 	}
 
 
-	public function addString($tagName, $value) {
-		\psm\Utils\Utils_Strings::forceStartsWith($tagName, '{');
-		\psm\Utils\Utils_Strings::forceEndsWith  ($tagName, '}');
-		$this->tags[$tagName] = $value;
+	public function add($tags) {
+		if(!\is_array($tags)) return;
+		foreach($tags as $tagName => $tagValue)
+			$this->addTag($tagName, $tagValue);
+	}
+	public function addTag($tagName, $tagValue) {
+		\psm\Utils\Strings::forceStartsWith($tagName, '{');
+		\psm\Utils\Strings::forceEndsWith  ($tagName, '}');
+		$this->tags[$tagName] = $tagValue;
 	}
 
 
-	protected function RenderTags(&$args) {
-		$data = &$args['data'];
-		foreach($this->tags as $tagName => $value)
-			$data = str_replace($tagName, $value, $data);
+	public function RenderTags(&$args) {
+		if(\is_array($args))
+			$data = &$args['data'];
+		else
+			$data = &$args;
+		foreach($this->tags as $tagName => $tagValue)
+			$data = \str_replace($tagName, $tagValue, $data);
 		return $data;
 	}
 

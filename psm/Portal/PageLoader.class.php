@@ -13,10 +13,10 @@ final class PageLoader {
 	 * @return page Returns the page class instance, which can be rendered.
 	 */
 	public static function LoadPage($modName, $page) {
-		$page = \psm\Utils\Utils_Files::SanFilename($page);
+		$page = \psm\Utils\DirsFiles::SanFilename($page);
 		// find page file
 		$paths = \psm\Paths::getLocal('pages', $modName);
-		$filepath = \psm\Utils\Utils_Files::findFile($page.'.page.php', $paths);
+		$filepath = \psm\Utils\DirsFiles::FindFile($page.'.page.php', $paths);
 		// page not found
 //TODO:
 		if($filepath == NULL) {
@@ -35,7 +35,7 @@ final class PageLoader {
 		$modName = \psm\Portal::getModName();
 		// load page class
 		$clss = $modName.'\\Pages\\page_'.$page;
-		if(class_exists($clss))
+		if(\class_exists($clss))
 			return new $clss();
 		// string result
 		return (string) $result;

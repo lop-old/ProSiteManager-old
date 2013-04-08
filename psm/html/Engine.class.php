@@ -17,8 +17,8 @@ class Engine {
 	private $pageTitle = NULL;
 
 	// tag parsers
-	private $tagString;
-	private $tagPaths;
+	private $globalTags;
+	private $pathTags;
 
 
 	/**
@@ -40,15 +40,14 @@ class Engine {
 		else
 			$this->htmlMain = $htmlMain;
 		// validate html_File class type
-		\psm\Utils\Utils::Validate('psm\\html\\tplFile_Main', $this->htmlMain);
+		\psm\Utils\FuncArgs::classValidate('psm\\html\\tplFile_Main', $this->htmlMain);
 		// tag parsers
-		$this->tagString = new Tag_String();
-$paths = array(
-'{path=static}'=>'portal/static/',
-'{path=theme}'=>'portal/html/default/',
-);
-		$this->tagPaths = new Tag_String(
-$paths
+		$this->globalTags = new TagArray();
+		$this->pathTags = new TagArray(
+			array(
+				'{path=static}'	=> 'psm/static/',
+				'{path=theme}'	=> 'psm/html/default/',
+			)
 //			Portal::getPortal()->getPathsArray()
 		);
 //		self::$globalTags = new listenerGroup();
@@ -81,7 +80,7 @@ $paths
 		);
 		// build title
 //TODO: $this->siteTitle $this->pageTitle
-		$this->tagString->addString('{title}', $this->siteTitle);
+		$this->globalTags->addTag('{title}', $this->siteTitle);
 		/* build header */
 		// split by {header content} tag
 		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
@@ -141,7 +140,7 @@ $paths
 		$args = array('data' => &$data);
 		$this->tagPaths->trigger($args);
 		echo $data;
-		@ob_flush();
+		@\ob_flush();
 	}
 
 
@@ -205,8 +204,8 @@ $paths
 		// default to string
 		$data = (string) $data;
 		// file:
-		if(\psm\Utils\Utils_Strings::startsWith($data, 'file:', TRUE))
-			return substr(5, $data);
+		if(\psm\Utils\Strings::StartsWith($data, 'file:', TRUE))
+			return \substr(5, $data);
 		// string
 		return $data;
 	}

@@ -2,7 +2,7 @@
 if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
 	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
 global $ClassCount; $ClassCount++;
-class pxnShell {
+class LiveShell {
 
 	private $process = NULL;
 	private $stdIn  = NULL;
@@ -26,7 +26,7 @@ class pxnShell {
 			$line = $shell->getLine();
 			if($line === FALSE)
 				break;
-			$line = trim($line);
+			$line = \trim($line);
 			$data .= $line.NEWLINE;
 			echo '<p>'.$line.'</p>'.NEWLINE;
 //TODO: add a timer to this too

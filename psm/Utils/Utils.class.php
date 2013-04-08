@@ -7,42 +7,18 @@ final class Utils {
 
 
 	/**
-	 * Validates the type of class for an object.
-	 *
-	 * @return boolean Returns true if object is the type $className.
-	 */
-	public static function isClass($className, $clss) {
-		//echo '<p>$className - '.$className.'</p>';
-		//echo '<p>get_class($clss) - '.get_class($clss).'</p>';
-		//echo '<p>get_parent_class($clss) - '.get_parent_class($clss).'</p>';
-		return
-			get_class($clss) == $className ||
-			is_subclass_of($clss, $className
-		);
-	}
-	/**
-	 * Validates the type of class for an object, throwing an exception
-	 * if invalid.
-	 */
-	public static function Validate($className, $clss) {
-		if(!self::isClass($className, $clss))
-			\psm\Portal::Error("Class object isn't of type ".$className);
-	}
-
-
-	/**
 	 * Sends http headers to disable page caching.
 	 *
 	 * @return boolean True if successful; False if headers already sent.
 	 */
 	public static function NoPageCache() {
 		if(self::$NoPageCache_hasRun) return FALSE;
-		if(headers_sent()) return FALSE;
-		@header('Expires: Mon, 26 Jul 1990 05:00:00 GMT');
-		@header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-		@header('Cache-Control: no-store, no-cache, must-revalidate');
-		@header('Cache-Control: post-check=0, pre-check=0', false);
-		@header('Pragma: no-cache');
+		if(\headers_sent()) return FALSE;
+		@\header('Expires: Mon, 26 Jul 1990 05:00:00 GMT');
+		@\header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+		@\header('Cache-Control: no-store, no-cache, must-revalidate');
+		@\header('Cache-Control: post-check=0, pre-check=0', false);
+		@\header('Pragma: no-cache');
 		self::$NoPageCache_hasRun = TRUE;
 		return TRUE;
 	}
@@ -56,11 +32,11 @@ final class Utils {
 //	 * @return
 //	 */
 	public static function ForwardTo($url, $delay=0) {
-		if(headers_sent() || $delay != 0) {
+		if(\headers_sent() || $delay != 0) {
 			echo '<header><meta http-equiv="refresh" content="'.((int)$delay).';url='.$url.'"></header>';
 		} else {
-			header('HTTP/1.0 302 Found');
-			header('Location: '.$url);
+			\header('HTTP/1.0 302 Found');
+			\header('Location: '.$url);
 		}
 		exit();
 	}
@@ -89,9 +65,9 @@ final class Utils {
 	 */
 	public static function appendArray(&$array, &$data, $top=FALSE) {
 		// top of array
-		if($top) array_unshift($array, $data);
+		if($top) \array_unshift($array, $data);
 		// bottom of array
-		else     array_push($array, $data);
+		else     \array_push($array, $data);
 	}
 
 
@@ -108,7 +84,7 @@ final class Utils {
 //	 * @return
 //	 */
 //	public static function GetTimestamp() {
-//		$qtime = explode(' ', microtime(), 2);
+//		$qtime = \explode(' ', \microtime(), 2);
 //		return $qtime[0] + $qtime[1];
 //	}
 //	/**
@@ -122,12 +98,16 @@ final class Utils {
 //	}
 //	$config['qtime'] = GetTimestamp();
 //	// render time
-//	function GetTimestamp(){
-//		$qtime=explode(' ',microtime()); return($qtime[0]+$qtime[1]);}
-//		function GetRenderTime($roundnum=3){global $qtime;
-//		if($qtime==0){return(0);}
-//		return(round(GetTimestamp()-$qtime,$roundnum));}
-//		$config['qtime']=GetTimestamp();
+//	public static function GetTimestamp(){
+//		$qtime = \explode(' ', \microtime());
+//		return $qtime[0] + $qtime[1];
+//	}
+//	public static function GetRenderTime($roundnum=3){
+//		global $qtime;
+//		if($qtime == 0) return 0;
+//		return round(self::GetTimestamp() - $qtime, $roundnum);
+//	}
+//	echo \psm\Utils::GetTimestamp();
 
 
 	/**
@@ -136,7 +116,7 @@ final class Utils {
 	 * @return True if GD functions are available.
 	 */
 	public static function GDSupported() {
-		return(function_exists('gd_info'));
+		return \function_exists('gd_info');
 	}
 
 

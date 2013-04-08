@@ -12,14 +12,8 @@ abstract class Module {
 	public abstract function getModTitle();
 	public abstract function getModTitleHtml();
 
-	protected $portal;
-	protected $engine;
-
 
 	public function __construct() {
-		// get common objects
-		$this->portal = \psm\PortalLoader::getPortal();
-		$this->engine = \psm\PortalLoader::getEngine();
 		// register paths
 		$this->_registerPagesPath();
 		$this->_registerClassPath();
@@ -30,21 +24,21 @@ abstract class Module {
 	protected function _registerPagesPath($path='') {
 		if(empty($path))
 			$path = \psm\Paths::getLocal('module pages', $this->getModName());
-		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
+		\psm\Loader::registerClassPath($this->getModName(), $path);
 	}
 	protected function _registerClassPath($path='') {
 		if(empty($path))
 			$path = \psm\Paths::getLocal('module classes', $this->getModName());
-		\psm\ClassLoader::registerClassPath($this->getModName(), $path);
+		\psm\Loader::registerClassPath($this->getModName(), $path);
 	}
 
 
 	// load page
 	protected function _LoadPage() {
-		$pageObj = \psm\Portal::getPageObj();
-		if(empty($pageObj))
-			$engine->addToPage('<p>PAGE IS NULL</p>');
-		$this->engine->addToPage($pageObj);
+		$content = \psm\Portal::getPageObj();
+		if(empty($content))
+			$content = '<p>PAGE IS NULL</p>';
+		\psm\Portal::getEngine()->addToPage($content);
 	}
 
 

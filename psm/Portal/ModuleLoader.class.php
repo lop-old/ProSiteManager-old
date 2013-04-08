@@ -13,14 +13,14 @@ final class ModuleLoader {
 
 	// load mods.txt modules list
 	public static function &LoadModulesTxt($modsFile) {
-		\psm\Utils\Utils_Strings::forceEndsWith($modsFile, '.txt');
+		\psm\Utils\Strings::forceEndsWith($modsFile, '.txt');
 		// mods.txt file not found
-		if(!file_exists($modsFile))
+		if(!\file_exists($modsFile))
 			\psm\Portal::Error('Modules list file not found!');
-		$data = file_get_contents($modsFile);
-		$array = explode("\n", $data);
+		$data = \file_get_contents($modsFile);
+		$array = \explode("\n", $data);
 		foreach($array as $line) {
-			$line = trim($line);
+			$line = \trim($line);
 			if(empty($line)) continue;
 			// already loaded
 			if(isset(self::$modules[$line])) continue;
@@ -38,7 +38,7 @@ final class ModuleLoader {
 		// file mod/mod.php
 		$file = \psm\Paths::getLocal('module', $name).DIR_SEP.$name.'.php';
 		// module file not found
-		if(!file_exists($file)) {
+		if(!\file_exists($file)) {
 //TODO:
 			echo '<p>Module file not found! '.$name.'</p>';
 			return;
@@ -47,7 +47,7 @@ final class ModuleLoader {
 		// class \mod\module_mod
 		$clss = $name.'\\module_'.$name;
 		// class not found
-		if(!class_exists($clss)) {
+		if(!\class_exists($clss)) {
 //TODO:
 			echo '<p>Module class not found! '.$clss.'</p>';
 			return;
@@ -68,7 +68,7 @@ final class ModuleLoader {
 		// mod from hostname  mod.domain.com
 		foreach(self::$modules as $name => $mod) {
 echo '<p>'.$_SERVER['SERVER_NAME'].' - '.$name.'</p>';
-			if(\psm\Utils\Utils_Strings::startsWith($_SERVER['SERVER_NAME'], $name, TRUE))
+			if(\psm\Utils\Strings::StartsWith($_SERVER['SERVER_NAME'], $name, TRUE))
 				if(self::setModule($name))
 					return self::$moduleName;
 		}
@@ -82,7 +82,7 @@ echo '<p>'.$_SERVER['SERVER_NAME'].' - '.$name.'</p>';
 				return self::$moduleName;
 		// first available
 		if(count(self::$modules) > 0)
-			if(self::setModule(reset(self::$modules)))
+			if(self::setModule(\reset(self::$modules)))
 				return self::$moduleName;
 		// every last hope has failed
 		return NULL;

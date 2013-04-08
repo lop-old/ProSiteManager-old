@@ -21,6 +21,12 @@ class SplitBlock {
 //		html_engine::renderGlobalTags($this->parts[$part]);
 		return $this->parts[$part];
 	}
+	public function getAllParts() {
+		return \implode(
+			NEWLINE.NEWLINE,
+			$this->parts
+		);
+	}
 
 
 }

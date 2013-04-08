@@ -1,25 +1,69 @@
 <?php namespace {
-if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {echo '<header><meta http-equiv="refresh" content="0;url=../"></header>';}
-	else {header('HTTP/1.0 301 Moved Permanently'); header('Location: ../');} die('<font size="+2">Access Denied!!</font>');}
-// class auto loader
+// PSM - Content Management Framework
+// (c) (t) 2004-2013
+// Mattsoft.net PoiXson.com
 
+if(!defined('psm\\VERSION'))
+	define('psm\\VERSION', '3.0.5');
 
-// class loader
+// static defines
+if(defined('psm\\INDEX_FILE')) {
+	\psm\Portal::Error('Portal.php already included?'); exit();}
+define('psm\\INDEX_FILE', TRUE);
+define('DIR_SEP', DIRECTORY_SEPARATOR);
+define('NEWLINE', "\n"); // new line
+define('TAB',     "\t"); // tab
+
+// class loader hook
 function __autoload($classname) {
-	\psm\ClassLoader::autoload($classname);
+	\psm\Loader::AutoLoad($classname);
+}
+
+// load debuggers
+ini_set('log_errors', 'On');
+ini_set('error_log', 'php_error.log');
+if(defined('psm\\DEBUG') && \psm\DEBUG === TRUE) {
+	// log to display
+	ini_set('display_errors', 'On');
+	ini_set('html_errors',    'On');
+	error_reporting(E_ALL | E_STRICT);
+	// Kint backtracer
+	$kintPath = \psm\Paths::getLocal('portal').DIR_SEP.'debug'.DIR_SEP.'kint'.DIR_SEP.'Kint.class.php';
+	if(file_exists($kintPath))
+		include($kintPath);
+	// php_error
+	$phpErrorPath = \psm\Paths::getLocal('portal').DIR_SEP.'debug'.DIR_SEP.'php_error.php';
+	if(file_exists($phpErrorPath))
+		include($phpErrorPath);
+	if(function_exists('php_error\\reportErrors')) {
+		$reportErrors = '\\php_error\\reportErrors';
+		$reportErrors(array(
+			'catch_ajax_errors'      => TRUE,
+			'catch_supressed_errors' => FALSE,
+			'catch_class_not_found'  => FALSE,
+			'snippet_num_lines'      => 11,
+			'application_root'       => __DIR__,
+			'background_text'        => 'PSM',
+		));
+	}
+} else {
+	// log to display
+	ini_set('display_errors', 'Off');
 }
 
 
 // portal namespace
 } namespace psm {
-// class load count
+
+
+// class count
 global $ClassCount; $ClassCount = 1;
 function getClassCount() {
 	global $ClassCount;
 	return $ClassCount;
 }
-// class loader handler
-final class ClassLoader {
+// class loader
+final class Loader {
 	private function __construct() {}
 
 	// class paths array
@@ -33,33 +77,42 @@ final class ClassLoader {
 	 * @param string $path Path to the classes.
 	 */
 	public static function registerClassPath($name, $path) {
-		self::$paths[$name] = $path;
+		self::$paths[((string) $name)] = ((string) $path);
 	}
 
 
 	/**
-	 * Pass onto this function from __autoload().
+	 * Pass onto this function from __AutoLoad().
 	 *
 	 * @param string $class_name Argument passed on from __autoload().
 	 * @return boolean True if a class was found.
 	 */
-	public static function autoload($classname) {
-		$parts = explode('\\', $classname);
-		if(count($parts) < 2) {
+	public static function AutoLoad($classname) {
+		$classname = (string) $classname;
+		if(\count(self::$paths) == 0)
+			self::registerClassPath('psm', __DIR__);
+		$parts = \explode('\\', $classname);
+		if(\count($parts) < 2) {
 			echo '<p>Unknown class: '.$classname.'</p>';
 			return;
 		}
-		$classname = array_pop($parts);
-		$namespace = implode('\\', $parts);
-		$root_namespace = array_shift($parts);
-		$classpath = implode(DIR_SEP,  $parts);
+		// protected files
+		if($parts[0] == 'static') {
+			\psm\Portal::Error('static namespace is protected!');
+			return FALSE;
+		}
+		// get namespace\class
+		$classname = \array_pop($parts);
+		$namespace = \implode('\\', $parts);
+		$root_namespace = \array_shift($parts);
+		$classpath = \implode(DIR_SEP, $parts);
 		if(!empty($classpath))
 			$classpath .= DIR_SEP;
 		// namespace path
-		if(array_key_exists($root_namespace, self::$paths)) {
+		if(\array_key_exists($root_namespace, self::$paths)) {
 			// class file
 			$filepath = self::$paths[$root_namespace].DIR_SEP.$classpath.$classname.'.class.php';
-			if(file_exists($filepath)) {
+			if(\file_exists($filepath)) {
 				try {
 					include($filepath);
 					return TRUE;
@@ -75,6 +128,4 @@ final class ClassLoader {
 
 }
 }
-
-
 ?>

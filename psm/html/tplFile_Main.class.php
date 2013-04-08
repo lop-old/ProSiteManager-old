@@ -30,7 +30,7 @@ abstract class tplFile_Main extends tplFile {
 	// add css file
 	public static function addFileCSS() {
 		// loop arguments
-		foreach(func_get_args() as $file)
+		foreach(\func_get_args() as $file)
 			self::addFileCSS_single($file);
 	}
 //	protected static function addFileCSS_ifExists() {
@@ -38,7 +38,7 @@ abstract class tplFile_Main extends tplFile {
 //	}
 	public static function addFileCSS_single($file, $top=FALSE) {
 		if(empty($file)) return;
-		\psm\PortalLoader::getEngine()->addHeader(
+		\psm\Portal::getEngine()->addHeader(
 			NEWLINE.
 			'<link rel="stylesheet" type="text/css" href="'.$file.'" />'.
 			NEWLINE,
@@ -50,7 +50,7 @@ abstract class tplFile_Main extends tplFile {
 	// add js file
 	public static function addFileJS() {
 		// loop arguments
-		foreach(func_get_args() as $file)
+		foreach(\func_get_args() as $file)
 			self::addFileJS_single($file);
 	}
 //	protected static function addFileJS_ifExists($file) {
@@ -58,13 +58,13 @@ abstract class tplFile_Main extends tplFile {
 //	}
 	public static function addFileJS_top($file) {
 		// loop arguments
-		foreach(array_reverse(func_get_args()) as $file)
+		foreach(\array_reverse(func_get_args()) as $file)
 			self::addFileJS_single($file, TRUE);
 	}
 	public static function addFileJS_single($file, $top=FALSE) {
 		if(empty($file)) return;
-		\psm\PortalLoader::getEngine()->addHeader(
-			str_replace(
+		\psm\Portal::getEngine()->addHeader(
+			\str_replace(
 				'{file}',
 				$file,
 				self::getMain()->getBlock('includeJS')

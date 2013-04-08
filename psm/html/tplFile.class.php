@@ -4,10 +4,9 @@ if(!defined('psm\\INDEX_FILE') || \psm\INDEX_FILE!==TRUE) {if(headers_sent()) {e
 global $ClassCount; $ClassCount++;
 abstract class tplFile {
 
-//	protected $tags = array();
 	protected $blocks = array();
 
-	protected static $cachedFiles = array();
+//	protected static $cachedFiles = array();
 
 
 	public static function LoadFile($modName, $theme, $filename) {
@@ -35,11 +34,6 @@ abstract class tplFile {
 			\psm\Portal::Error('Class not found! '.$clss);
 		return new $clss();
 	}
-
-
-//	protected function __construct() {
-//		parent::__construct();
-//	}
 
 
 	public function addBlock($blockName, &$data, $top=FALSE) {
@@ -80,9 +74,9 @@ abstract class tplFile {
 	}
 
 
-	public function getFilePath() {
-		return __FILE__;
-	}
+//	public function getFilePath() {
+//		return __FILE__;
+//	}
 
 
 	public function &getTags() {

@@ -12,7 +12,7 @@ class TagArray implements TagParser {
 		if(count($args) == 0) {
 		} else
 		if(count($args) == 1) {
-			$this->add($args);
+			$this->add($args[0]);
 		} else {
 			foreach($args as $arg)
 				$this->add($arg);
@@ -28,15 +28,11 @@ class TagArray implements TagParser {
 	public function addTag($tagName, $tagValue) {
 		\psm\Utils\Strings::forceStartsWith($tagName, '{');
 		\psm\Utils\Strings::forceEndsWith  ($tagName, '}');
-		$this->tags[$tagName] = $tagValue;
+		$this->tags[$tagName] = (string) $tagValue;
 	}
 
 
-	public function RenderTags(&$args) {
-		if(\is_array($args))
-			$data = &$args['data'];
-		else
-			$data = &$args;
+	public function RenderTags(&$data) {
 		foreach($this->tags as $tagName => $tagValue)
 			$data = \str_replace($tagName, $tagValue, $data);
 		return $data;

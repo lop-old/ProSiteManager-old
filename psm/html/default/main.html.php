@@ -62,7 +62,7 @@ class html_main extends \psm\html\tplFile_Main {
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-<title>{site title}</title>
+<title>{title}</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/x-icon" href="{path=static}favicon.ico" />

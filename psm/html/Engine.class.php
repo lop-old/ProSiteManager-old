@@ -80,7 +80,7 @@ class Engine {
 		);
 		// build title
 //TODO: $this->siteTitle $this->pageTitle
-		$this->globalTags->addTag('{title}', $this->siteTitle);
+		$this->globalTags->addTag('{title}', $this->siteTitle.' - '.$this->pageTitle);
 		/* build header */
 		// split by {header content} tag
 		$splitHeader = new SplitBlock('{header content}', $this->htmlMain->getBlock('head'));
@@ -130,15 +130,12 @@ class Engine {
 	}
 
 
-//TODO: this should be changed
 	private function _echo($data) {
 		if(empty($data)) return;
-		// string tags
-		$args = array('data' => &$data);
-		$this->tagString->trigger($args);
-		// path tags
-		$args = array('data' => &$data);
-		$this->tagPaths->trigger($args);
+		// render tags
+		$this->globalTags->RenderTags($data);
+		$this->pathTags->RenderTags($data);
+		// echo data
 		echo $data;
 		@\ob_flush();
 	}

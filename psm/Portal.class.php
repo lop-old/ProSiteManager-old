@@ -23,6 +23,9 @@ class Portal {
 
 
 	public static function auto($args=array()) {
+		self::AutoLoad($args);
+	}
+	public static function AutoLoad($args=array()) {
 // World Groups
 //$a = array(
 //	'Survival' => array('world', 'pvp'),
@@ -87,6 +90,52 @@ class Portal {
 		self::getPage();
 		// get action
 		self::getAction();
+	}
+
+
+	// auto init module
+	public static function AutoLoad_Module() {
+		// load page
+		\psm\Portal::LoadPage();
+		\psm\Portal::LoadAction();
+		// display page
+		\psm\Portal::getEngine()->Display();
+	}
+
+
+	/**
+	 * Loads a page class.
+	 *     default path - <mod>/pages/<page>.page.php
+	 * @param string $page Name of the page to load.
+	 * @return page Returns the page class instance, which can be rendered.
+	 */
+	public static function AutoLoad_Page($modName, $page) {
+		$page = \psm\Utils\DirsFiles::SanFilename($page);
+		// find page file
+		$paths = \psm\Paths::getLocal('pages', $modName);
+		$filepath = \psm\Utils\DirsFiles::FindFile($page.'.page.php', $paths);
+		// page not found
+		//TODO:
+		if(empty($filepath)) {
+			\psm\Portal::Error('Page not found!! '.$page);
+			return;
+		}
+		// load file
+		$result = include($filepath);
+		// file failed to load
+		//TODO:
+		if($result === FALSE) {
+			\psm\Portal::Error('Failed to load page!! '.$page);
+			return;
+		}
+		// module name
+		$modName = \psm\Portal::getModName();
+		// load page class
+		$clss = $modName.'\\Pages\\page_'.$page;
+		if(\class_exists($clss))
+			return new $clss();
+		// string result
+		return (string) $result;
 	}
 
 
@@ -376,7 +425,7 @@ class Portal {
 		if(self::$pageObj != NULL)
 			return self::$pageObj;
 		self::$pageObj =
-			\psm\Portal\PageLoader::LoadPage(
+			\psm\Portal::AutoLoad_Page(
 				\psm\MODULE,
 				self::getPage()
 			);

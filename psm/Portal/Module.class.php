@@ -20,6 +20,12 @@ abstract class Module {
 	}
 
 
+	// display page
+	protected function AutoLoad() {
+		\psm\Portal::AutoLoad_Module();
+	}
+
+
 	public static function setSiteTitle($siteTitle) {
 		\psm\Portal::getEngine()->setSiteTitle($siteTitle);
 	}

@@ -14,7 +14,7 @@ define('TAB',     "\t"); // tab
 
 // class loader hook
 function __autoload($classname) {
-	\psm\Loader::AutoLoad($classname);
+	\psm\Loader::AutoLoadClass($classname);
 }
 
 // load debuggers
@@ -88,7 +88,7 @@ final class Loader {
 	 * @param string $class_name Argument passed on from __autoload().
 	 * @return boolean True if a class was found.
 	 */
-	public static function AutoLoad($classname) {
+	public static function AutoLoadClass($classname) {
 		$classname = (string) $classname;
 		if(\count(self::$paths) == 0)
 			self::registerClassPath('psm', __DIR__);
@@ -124,52 +124,6 @@ final class Loader {
 		\psm\Portal::Error('Unknown class: '.
 			( empty($namespace) ? '?' : $namespace.'\\').$classname );
 		return FALSE;
-	}
-
-
-	// auto init module
-	public static function AutoLoad_Module() {
-		// load page
-		\psm\Portal::LoadPage();
-		\psm\Portal::LoadAction();
-		// display page
-		\psm\Portal::getEngine()->Display();
-	}
-
-
-	/**
-	 * Loads a page class.
-	 *     default path - <mod>/pages/<page>.page.php
-	 * @param string $page Name of the page to load.
-	 * @return page Returns the page class instance, which can be rendered.
-	 */
-	public static function AutoLoad_Page($modName, $page) {
-		$page = \psm\Utils\DirsFiles::SanFilename($page);
-		// find page file
-		$paths = \psm\Paths::getLocal('pages', $modName);
-		$filepath = \psm\Utils\DirsFiles::FindFile($page.'.page.php', $paths);
-		// page not found
-		//TODO:
-		if(empty($filepath)) {
-			\psm\Portal::Error('Page not found!! '.$page);
-			return;
-		}
-		// load file
-		$result = include($filepath);
-		// file failed to load
-		//TODO:
-		if($result === FALSE) {
-			\psm\Portal::Error('Failed to load page!! '.$page);
-			return;
-		}
-		// module name
-		$modName = \psm\Portal::getModName();
-		// load page class
-		$clss = $modName.'\\Pages\\page_'.$page;
-		if(\class_exists($clss))
-			return new $clss();
-		// string result
-		return (string) $result;
 	}
 
 

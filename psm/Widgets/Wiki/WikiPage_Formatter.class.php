@@ -7,15 +7,15 @@ class WikiPage_Formatter extends \psm\Widgets\Wiki\WikiPageParser {
 
 
 	public function __construct() {
-		$this->regex['_heading']	= "/^(\={2,6}) (.*) (\={2,6})/m";
+		$this->regex['_heading']	= "/^(\\={2,6}) (.*) (\\={2,6})/m";
 		$this->regex['_bold']		= "/'''(()|[^'].*)'''/U";
-		$this->regex['_strong']		= "/\*\*(.*?)\*\*/U";
+		$this->regex['_strong']		= "/\\*\\*(.*?)\\*\\*/U";
 		$this->regex['_italic']		= "/''(()|[^'].*)''/U";
-		$this->regex['_emphasis']	= "/\/\/(.*?)\/\//";
+		$this->regex['_emphasis']	= "/\\/\\/(.*?)\\/\\//";
 		$this->regex['_underline']	= "/__(()|[^_].*)__/U";
-		$this->regex['_super']		= "/\^\^(()|.*)\^\^/U";
+		$this->regex['_super']		= "/\\^\\^(()|.*)\\^\\^/U";
 		$this->regex['_sub']		= "/,,(()|.*),,/U";
-		$this->regex['_hr']			= "/\-\-\-\-/m";
+		$this->regex['_hr']			= "/\\-\\-\\-\\-/m";
 	}
 	public function regex() {
 		return $this->regex;

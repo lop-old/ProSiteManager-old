@@ -1,7 +1,7 @@
 <?php namespace wa\html;
 global $ClassCount; $ClassCount++;
-use \psm\Portal;
-use \psm\Widgets;
+use \psm\Portal as Portal;
+use \psm\Widgets as Widgets;
 class html_main extends \psm\html\tplFile_Main {
 
 	private $mainMenu;

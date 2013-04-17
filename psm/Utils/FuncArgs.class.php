@@ -99,16 +99,21 @@ final class FuncArgs {
 		//echo '<p>$className - '.$className.'</p>';
 		//echo '<p>get_class($clss) - '.get_class($clss).'</p>';
 		//echo '<p>get_parent_class($clss) - '.get_parent_class($clss).'</p>';
-		return
-			get_class($clss) == $className ||
-			is_subclass_of($clss, $className
-		);
+		if($clss == NULL || !\is_object($clss))
+			return FALSE;
+		if(\get_class($clss) === $className)
+			return TRUE;
+		if(\is_subclass_of($clss, $className))
+			return TRUE;
+		return FALSE;
 	}
 	/**
 	 * Validates the type of class for an object, throwing an exception
 	 * if invalid.
 	 */
 	public static function classValidate($className, $clss) {
+		if($clss == NULL || !\is_object($clss))
+			return FALSE;
 		if(!self::classEquals($className, $clss))
 			\psm\Portal::Error("Class object isn't of type ".$className);
 	}

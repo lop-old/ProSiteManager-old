@@ -37,8 +37,16 @@ class PassCrypt {
 
 	// set salt (only once)
 	public function setSalt($salt) {
-		if($this->salt != NULL) return;
+		if($this->salt != NULL) {
+			\psm\Portal::Error('Salt already set!');
+			return;
+		}
 		$this->salt = $salt;
+	}
+	private function getSalt() {
+		if(empty($this->salt))
+			return 'nosaltset';
+		return $this->salt;
 	}
 
 
@@ -61,14 +69,14 @@ class PassCrypt {
 		foreach($modes as $hashMode) {
 			$hashMode = \trim($hashMode);
 			if(empty($hashMode)) continue;
-			self::_hashThis($data, $hashMode, $this->salt);
+			self::_hashThis($data, $hashMode, $this->getSalt());
 		}
 		return $data;
 	}
 	private static function _hashThis(&$data, $mode, $salt) {
 		@list($mode, $arg) = \explode(':', $mode, 2);
 		if(!empty($salt))
-			$mode = \str_replace('{salt}', $this->salt, $mode);
+			$mode = \str_replace('{salt}', $this->getSalt(), $mode);
 		$mode = \trim($mode);
 		$arg  = \trim($arg);
 		// md5

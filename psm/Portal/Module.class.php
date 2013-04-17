@@ -3,16 +3,8 @@ global $ClassCount; $ClassCount++;
 abstract class Module {
 
 
-	// init page
+	// init module
 	public abstract function Init();
-	public static function AutoInit() {
-		// load page
-		\psm\Portal::LoadPage();
-		\psm\Portal::LoadAction();
-		// display page
-		$engine->Display();
-	}
-
 
 	public abstract function getModName();
 	public abstract function getModVersion();

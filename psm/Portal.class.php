@@ -9,7 +9,7 @@ global $ClassCount; $ClassCount++;
 class Portal {
 
 	// portal instance
-	private static $portal = null;
+	private static $portal = NULL;
 	// module instances
 	private static $modules = array();
 	// selected module;
@@ -96,13 +96,14 @@ class Portal {
 		if(self::$portal != NULL)
 			self::Error('Portal already loaded!');
 		// no modules loaded
-		if(count(self::$modules) == 0)
+		if(count(self::$modules) <= 0)
 			self::Error('No modules/plugins loaded!');
 	}
 
 
 	// destruct portal
 	public function __destruct() {
+		if(\psm\html\Engine::hasDisplayed()) return;
 		// load page if not already done
 		if(self::$pageObj == NULL) {
 			$mod = self::getModObj();
@@ -111,8 +112,7 @@ class Portal {
 			$mod->Init();
 		}
 		// render if not already done
-		if(!\psm\html\Engine::hasDisplayed())
-			self::getEngine()->Display();
+		self::getEngine()->Display();
 		// unload modules
 		self::$modules = NULL;
 		self::$modules = array();
@@ -126,9 +126,20 @@ class Portal {
 //		\psm\pxdb\dbPool::CloseAll();
 		@\ob_end_flush();
 	}
+	// safe unload
 	public static function Unload() {
-		self::$portal = null;
-		unset(self::$portal);
+		self::$portal = NULL;
+		exit();
+	}
+	// fast unload
+	public static function ExitNow($file='', $line=0) {
+		// disable auto page rendering
+		\psm\html\Engine::hasDisplayed(TRUE);
+		if(!empty($file))
+			echo '<p>file: '.$file.
+				($line > 0 ? ' line: '.$line : '').
+				'</p>';
+		self::Unload();
 		exit();
 	}
 
@@ -138,12 +149,12 @@ class Portal {
 		// already loaded
 		if(\psm\Portal::getPortal() != NULL)
 			return;
-		if(count(self::$modules) == 0)
+		if(count(self::$modules) <= 0)
 			self::LoadModulesTxt(
 				self::$modules,
 				\psm\Paths::getLocal('root').DIR_SEP.'mods.txt'
 			);
-		if(count(self::$modules) == 0)
+		if(count(self::$modules) <= 0)
 			self::Error('No modules/plugins loaded!');
 	}
 	// load mods.txt modules list
@@ -162,7 +173,7 @@ class Portal {
 			// load module
 			$mod = self::LoadModule($line);
 			// failed to load
-			if($mod == null) continue;
+			if($mod == NULL) continue;
 			// mod loaded successfully
 			$mods[$line] = $mod;
 		}
@@ -213,6 +224,14 @@ class Portal {
 	// debug mode
 	public static function isDebug() {
 		return defined('psm\\DEBUG') && \psm\DEBUG === TRUE;
+	}
+
+
+	// portal framework version
+	public static function getVersion() {
+		if(!defined('psm\\VERSION'))
+			return ' &lt;version_unknown&gt; ';
+		return \psm\VERSION;
 	}
 
 

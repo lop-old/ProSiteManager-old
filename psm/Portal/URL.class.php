@@ -16,6 +16,16 @@ class URL {
 	}
 
 
+	// url to string
+	public static function toString($url) {
+		if(empty($url))
+			return '';
+		if(\psm\Utils\FuncArgs::classEquals('psm\\Portal\\URL', $url))
+			return (string) $url->getURL();
+		return (string) $url;
+	}
+
+
 	public function getURL() {
 		if(!empty($this->rawURL))
 			return $this->rawURL;
@@ -37,7 +47,8 @@ class URL {
 
 	// mod name
 	public function setMod($mod) {
-		if(empty($mod)) $mod = NULL;
+		if(empty($mod))
+			$mod = NULL;
 		$this->mod = $mod;
 		return $this;
 	}

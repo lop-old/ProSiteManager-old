@@ -1,79 +1,113 @@
 <?php namespace psm\Widgets\NavBar;
 global $ClassCount; $ClassCount++;
-class NavBar_Item {
-
-	private $isBrand    = FALSE;
-	private $isDropdown = FALSE;
-	private $isDivider  = FALSE;
-
-	private $name;
-	private $title;
-	private $url;
-	private $icon;
-	private $isSelected;
+final class NavBar_html {
+	private function __construct() {}
 
 
-	public function __construct($name='', $title='', \psm\Portal\URL $url=NULL, $icon='', $dropdown=FALSE, $isSelected=FALSE) {
-		// divider
-		if($name == '-') {
-			$this->isDivider = TRUE;
-			return;
-		}
-		// brand
-		if($name == 'brand') {
-			$this->isBrand = TRUE;
-			$dropdown = FALSE;
-			$icon = NULL;
-		}
-		// dropdown
-		if($dropdown === TRUE) {
-			$this->isDropdown = TRUE;
-		}
-		$this->name  = $name;
-		$this->title = $title;
-		$this->url   = $url;
-		$this->icon  = $icon;
-		$this->isSelected = $isSelected;
+//	'<!-- ======'.\str_repeat('=', \strlen($menuName)).' -->'.NEWLINE.
+//	'<!-- Menu: '.$menuName.' -->'.NEWLINE;
+
+
+	// open tags
+	public static function navOpen($isSubMenu=FALSE) {
+		// sub menu
+		if($isSubMenu)
+			return
+				'<!-- ======== -->'.NEWLINE.
+				'<!-- Sub-Menu -->'.NEWLINE.
+				'<div class="container" id="sub-menu">'.NEWLINE.
+				TAB.'<div class="navbar navbar-inverse">'.NEWLINE.
+				TAB.'<div class="navbar-inner">'.NEWLINE.
+				TAB.TAB.'<div class="container">'.NEWLINE.
+				NEWLINE;
+		// main menu
+		else
+			return
+				'<!-- ========= -->'.NEWLINE.
+				'<!-- Main-Menu -->'.NEWLINE.
+				'<div class="navbar navbar-fixed-top">'.NEWLINE.
+				TAB.'<div class="navbar-inner">'.NEWLINE.
+				TAB.TAB.'<div class="container">'.NEWLINE.
+				NEWLINE;
+	}
+	// close tags
+	public static function navClose($isSubMenu=FALSE) {
+		// sub menu
+		if($isSubMenu)
+			return NEWLINE.
+				TAB.TAB.'</div>'.NEWLINE.
+				TAB.'</div></div>'.NEWLINE.
+				'</div>'.NEWLINE.
+				'<!-- Sub-Menu -->'.NEWLINE.
+				'<!-- ======== -->'.NEWLINE.
+				NEWLINE;
+		// main menu
+		else
+			return NEWLINE.
+				TAB.TAB.'</div>'.NEWLINE.
+				TAB.'</div>'.NEWLINE.
+				'</div>'.NEWLINE.
+				'<!-- Main-Menu -->'.NEWLINE.
+				'<!-- ========= -->'.NEWLINE.
+				NEWLINE;
 	}
 
 
-	public function Render() {
-		$url = $this->url;
-		// brand
-		if($this->isBrand === TRUE) {
-			if(empty($url)) $url = \psm\Portal\URL::factory()->setMod( \psm\Portal::getModName() )->getURL();
-			else            $url = $this->url->getURL();
-			return TAB.TAB.
-				'<a class="brand" href="'.$url.'">'.
-				$this->title.'</a>'.NEWLINE;
+	// brand
+	public static function navBrand($title, $url='') {
+		if(empty($url))
+			$url = \psm\Portal\URL::factory()->setMod( \psm\Portal::getModName() );
+		$url = \psm\Portal\URL::toString($url);
+		return TAB.TAB.
+			'<a class="brand" href="'.$url.'">'.
+			$title.'</a>'.
+			NEWLINE;
+	}
+
+
+	// menu button
+	public static function navButton($title, $url='', $isSelected=FALSE, $isDropdown=NULL) {
+		// css classes
+		$liClasses = '';
+		$aClasses  = '';
+		if($isDropdown != NULL) {
+			$menuContent = NavBar::RenderMenu($isDropdown);
+			$liClasses .= 'dropdown ';
 		}
-		// dropdown menu
-		if($this->isDropdown === TRUE) {
-			if(empty($url)) $url = '#';
-			else            $url = $this->url->getURL();
-			return TAB.TAB.TAB.
-				'<li class="dropdown'.($this->isSelected ? ' active' : '').'">'.
-				'<a'.($this->isSelected ? ' class="active"' : '').
-				' href="'.$url.'"'.
-				' class="dropdown-toggle" data-toggle="dropdown"> '.
-				(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
-				$this->title.' <b class="caret"></b></a>'.NEWLINE.
-'<ul class="dropdown-menu"><li><a href="#">a</a></li><li><a href="#">b</a></li><li><a href="#">c</a></li></ul>'.
-				'</li>'.NEWLINE;
+		if($isSelected) {
+			$liClasses .= 'active ';
+			$aClasses  .= 'active ';
 		}
-		// divider
-		if($this->isDivider === TRUE) {
-			return TAB.TAB.TAB.
-				'<li class="divider'.(TRUE ? '-vertical' : '').'"></li>'.NEWLINE;
-		}
-		// menu button
-		if(empty($url)) $url = '#';
-		else            $url = $this->url->getURL();
+		if(!empty($aClasses))
+			$aClasses = 'class="'.$aClasses.'" ';
+		// link
+		if(empty($url))
+			$url = '#';
+		$urlA = '<a '.$aClasses.'href="'.\psm\Portal\URL::toString($url).'">';
+		$urlB = '</a>';
+		if(!empty($liClasses))
+			$liClasses = ' class="'.$liClasses.'" ';
 		return TAB.TAB.TAB.
-			'<li'.($this->isSelected ? ' class="active"' : '').'>'.
-			'<a href="'.$url.'">'.
-			(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
-			$this->title.'</a></li>'.NEWLINE;
+			'<li'.$liClasses.'>'.$urlA.$title.$urlB.'</li>'.NEWLINE;
+
+//			(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
+//			$this->title.'</a></li>'.NEWLINE;
+//				'<a'.($this->isSelected ? ' class="active"' : '').
+//				' href="'.$url.'"'.
+//				' class="dropdown-toggle" data-toggle="dropdown"> '.
+//				(empty($this->icon) ? '' : '<i class="'.$this->icon.' icon-white"></i> ').
+//				$this->title.' <b class="caret"></b></a>'.NEWLINE.
+//'<ul class="dropdown-menu"><li><a href="#">a</a></li><li><a href="#">b</a></li><li><a href="#">c</a></li></ul>'.
+//				'</li>'.NEWLINE;
+
+	}
+
+
+	// divider
+	public static function navBreak() {
+		return TAB.TAB.TAB.
+			'<li class="divider-vertical"></li>'.
+			NEWLINE;
 	}
 
 

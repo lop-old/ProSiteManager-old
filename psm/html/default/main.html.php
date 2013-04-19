@@ -4,9 +4,6 @@ use \psm\Portal as Portal;
 use \psm\Widgets as Widgets;
 class html_main extends \psm\html\tplFile_Main {
 
-	private $mainMenu;
-	private $subMenu;
-
 
 	/**
 	 * html header
@@ -17,28 +14,29 @@ class html_main extends \psm\html\tplFile_Main {
 	 * @return string
 	 */
 	protected function _head() {
-
 		// main menu
-		$this->mainMenu = Widgets\Widget_NavBar::factory()
-		->setSelected(Portal::getModName())
-		->setBrand(Portal::getModObj()->getModTitleHtml())
-		->addBreak()
-		->addButton('',			'Home',				Portal\URL::factory()->setRawURL('/'),			'icon-home')
-		->addButton('wa',		'WebAuction',		Portal\URL::factory()->setMod('wa'),			'icon-shopping-cart')
-		->addButton('wb',		'WeBook',			Portal\URL::factory()->setMod('wb'),			'icon-book')
-		->addButton('wiki',		'Wiki',				Portal\URL::factory()->setPage('wiki'),			'icon-align-justify',	TRUE)
-		->addDropdown('profile','lorenzop',			Portal\URL::factory(),							'icon-user',			TRUE)
-		;
+		$mainMenu = Portal\Menu::newMenu(
+			'main',
+			Portal::getModObj()->getModTitleHtml(),
+			Portal\URL::factory()->setRawURL('/')
+		);
+//		->setSelected(Portal::getPage())
+		Portal\Menu::addBreak($mainMenu);
+		Portal\Menu::addItem($mainMenu,		'home',			'Home',			Portal\URL::factory()->setRawURL('/'),			'icon-home'						);
+		Portal\Menu::addItem($mainMenu,		'wa',			'WebAuction',	Portal\URL::factory()->setMod('wa'),			'icon-shopping-cart'			);
+		Portal\Menu::addItem($mainMenu,		'wb',			'WeBook',		Portal\URL::factory()->setMod('wb'),			'icon-book'						);
+		Portal\Menu::addItem($mainMenu,		'wiki',			'Wiki',			Portal\URL::factory()->setPage('wiki'),			'icon-align-justify',	TRUE	);
+		Portal\Menu::addItem($mainMenu,		'profile',		'lorenzop',		Portal\URL::factory(),							'icon-user',			TRUE	);
 		// sub menu
-		$this->subMenu  = Widgets\Widget_NavBar::factory()
-		->setSelected(Portal::getPage())
-		->addButton('current',	'Current Sales',	Portal\URL::factory()->setPage('current'),		'icon-home')
-		->addButton('myshop',	'My Shop',			Portal\URL::factory()->setPage('myshop'),		'icon-shopping-cart')
-		->addButton('mymailbox','My Mailbox',		Portal\URL::factory()->setPage('mymailbox'),	'icon-envelope')
-		;
+		$quickMenu = Portal\Menu::newMenu(
+			'quick',
+			'Pages:'
+		);
+//		->setSelected(Portal::getModName())
+		Portal\Menu::addItem($quickMenu,	'current',	'Current Sales',	Portal\URL::factory()->setPage('current'),		'icon-home'						);
+		Portal\Menu::addItem($quickMenu,	'myshop',		'My Shop',		Portal\URL::factory()->setPage('myshop'),		'icon-shopping-cart'			);
+		Portal\Menu::addItem($quickMenu,	'mymailbox',	'My Mailbox',	Portal\URL::factory()->setPage('mymailbox'),	'icon-envelope'					);
 
-//Portal::getPortal()->getEngine()->addCss('
-//');
 		// css
 		self::addFileCSS(
 			'{path=static}bootstrap/Cerulean/bootstrap.min.css',
@@ -76,9 +74,9 @@ class html_main extends \psm\html\tplFile_Main {
 	protected function _body() {
 		return '
 
-'.$this->mainMenu->Render().'
+'.Widgets\NavBar::RenderMenu('main').'
 <div id="page-wrap">
-'.$this->subMenu->Render(TRUE).'
+'.Widgets\NavBar::RenderMenu('quick', TRUE).'
 <div class="container">
 
 

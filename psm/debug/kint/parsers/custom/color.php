@@ -82,6 +82,8 @@ class Kint_Parsers_Color extends kintParser
 			$color            = self::$_css3Named[$color];
 		}
 
+		$matches = @$matches;
+
 		if ( $color{0} === '#' ) {
 			$variants['hex'] = $color;
 			$color           = substr( $color, 1 );

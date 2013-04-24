@@ -8,6 +8,8 @@ Kint::$displayCalledFrom = false;
 
 echo '<div class="kint kint-trace"><dl>';
 
+$output = @$output;
+
 foreach ( $output as $i => $step ) {
 	echo '<dt class="kint-parent">'
 		. '<dfn>' . ( $i + 1 ) . '</dfn> '

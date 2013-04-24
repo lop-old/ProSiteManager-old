@@ -9,7 +9,11 @@ abstract class kintParser extends kintVariableData
 	private static function _init()
 	{
 		$fh = opendir( KINT_DIR . 'parsers/custom/' );
-		while ( $fileName = readdir( $fh ) ) {
+		while ( TRUE ) {
+
+			$fileName = readdir( $fh );
+			if( !$fileName ) break;
+
 			if ( substr( $fileName, -4 ) !== '.php' ) continue;
 
 			require KINT_DIR . 'parsers/custom/' . $fileName;
@@ -112,11 +116,12 @@ abstract class kintParser extends kintVariableData
 	{
 		foreach ( $variable as $row ) {
 			if ( is_array( $row ) && !empty( $row ) ) {
-				if ( isset( $keys ) ) {
-					if ( $keys === array_keys( $row ) ) { // two rows have same keys in a row? Close enough.
-						return true;
-					}
-				} else {
+
+//				if ( isset( $keys ) ) {
+//					if ( $keys === array_keys( $row ) ) { // two rows have same keys in a row? Close enough.
+//						return true;
+//					}
+//				} else {
 
 					foreach ( $row as $col ) {
 						if ( !is_scalar( $col ) && $col !== null ) {
@@ -125,7 +130,9 @@ abstract class kintParser extends kintVariableData
 					}
 
 					$keys = array_keys( $row );
-				}
+
+//				}
+
 			} else {
 				break;
 			}

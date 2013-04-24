@@ -392,7 +392,11 @@ class Kint
 	private static function _getPassedNames( $trace )
 	{
 		$previousCaller = array();
-		while ( $callee = array_pop( $trace ) ) {
+		while ( TRUE ) {
+
+			$callee = array_pop( $trace );
+			if( !$callee ) break;
+
 			if ( strtolower( $callee['function'] ) === 'd' ||
 				strtolower( $callee['function'] ) === 'dd' ||
 				( isset( $callee['class'] ) && strtolower( $callee['class'] ) === strtolower( __CLASS__ )
@@ -424,6 +428,9 @@ class Kint
 			? $callee['function']
 			: $callee['class'] . "\x07*" . $callee['type'] . "\x07*" . $callee['function'];
 		# get the position of the last call to the function
+
+		$matches = @$matches;
+
 		preg_match_all( "#[\x07{(](\\+|-|!|@)?{$codePattern}\x07*(\\()#i", $source, $matches, PREG_OFFSET_CAPTURE );
 		$match    = end( $matches[2] );
 		$modifier = end( $matches[1] );
@@ -660,6 +667,8 @@ function kintLite( &$var, $level = 0 )
 	} elseif ( is_array( $var ) ) {
 		$output = array();
 		$space  = str_repeat( $s = '    ', $level );
+
+		$marker = @$marker;
 
 		static $marker;
 

@@ -3,7 +3,6 @@
 // (c) (t) 2004-2013
 // Mattsoft.net PoiXson.com
 
-use \psm\Utils as Utils;
 global $ClassCount; $ClassCount++;
 // portal core
 class Portal {
@@ -17,12 +16,13 @@ class Portal {
 
 	// page
 	private static $pageObj = NULL;
-	private static $defaultPage = 'home';
+	private static $pageDefault = 'home';
 	// action
 	private static $action = NULL;
 
 
-	public static function auto($args=array()) {
+	// simple auto load
+	public static function SimpleLoad($args=array()) {
 		self::AutoLoad($args);
 	}
 	public static function AutoLoad($args=array()) {
@@ -52,10 +52,11 @@ class Portal {
 //echo '<br />'.($data == $orig);
 //exit();
 
+		// portal already loaded
 		if(self::$portal != NULL)
 			return self::$portal;
 		// no page caching
-		Utils\Utils::NoPageCache();
+		\psm\Utils\Utils::NoPageCache();
 		// set timezone
 		try {
 			//TODO: will make a config entry for this
@@ -234,7 +235,7 @@ class Portal {
 		// module file not found
 		if(!\file_exists($file)) {
 			//TODO:
-			echo '<p>Module file not found! '.$name.'</p>';
+			echo '<p>Module not found! '.$name.'</p>';
 			return;
 		}
 		include $file;
@@ -334,7 +335,7 @@ class Portal {
 		if(defined('psm\\MODULE')) return \psm\MODULE;
 		// get module from url
 		self::setModName(
-			Utils\Vars::getVar('mod', 'str')
+			\psm\Utils\Vars::getVar('mod', 'str')
 		);
 		if(defined('psm\\MODULE')) return \psm\MODULE;
 		// default module define
@@ -344,7 +345,7 @@ class Portal {
 		// first listed mod
 		if(count(self::$modules) > 0) {
 			$mod = reset(self::$modules);
-			Utils\FuncArgs::classValidate('psm\\Portal\\Module', $mod);
+			\psm\Utils\FuncArgs::classValidate('psm\\Portal\\Module', $mod);
 			self::setModName(
 				$mod->getModName()
 			);
@@ -357,7 +358,7 @@ class Portal {
 		if(defined('psm\MODULE')) return;
 		define(
 			'psm\\MODULE',
-			Utils\DirsFiles::SanFilename(
+			\psm\Utils\DirsFiles::SanFilename(
 				$modName
 			)
 		);
@@ -368,7 +369,7 @@ class Portal {
 //		if(defined('psm\DEFAULT_MODULE')) return;
 //		define(
 //			'psm\DEFAULT_MODULE',
-//			Utils\DirsFiles::SanFilename(
+//			\psm\Utils\DirsFiles::SanFilename(
 //				$modName
 //			)
 //		);
@@ -388,7 +389,7 @@ class Portal {
 		if(defined('psm\\PAGE')) return \psm\PAGE;
 		// get page from url
 		self::setPage(
-			Utils\Vars::getVar('page', 'str')
+			\psm\Utils\Vars::getVar('page', 'str')
 		);
 		if(defined('psm\\PAGE')) return \psm\PAGE;
 		// default page define
@@ -396,7 +397,7 @@ class Portal {
 			self::setPage(\psm\DEFAULT_PAGE);
 		if(defined('psm\\PAGE')) return \psm\PAGE;
 		// default page portal var
-		self::setPage(self::$defaultPage);
+		self::setPage(self::$pageDefault);
 		if(defined('psm\\PAGE')) return \psm\PAGE;
 		// unknown page
 		return '404';
@@ -406,16 +407,16 @@ class Portal {
 		if(defined('psm\\PAGE')) return;
 		define(
 			'psm\\PAGE',
-			Utils\DirsFiles::SanFilename(
+			\psm\Utils\DirsFiles::SanFilename(
 				$page
 			)
 		);
 	}
 	// default page
-	public static function setDefaultPage($defaultPage) {
-		self::$defaultPage =
-		Utils\DirsFiles::SanFilename(
-			$defaultPage
+	public static function setDefaultPage($pageDefault) {
+		self::$pageDefault =
+		\psm\Utils\DirsFiles::SanFilename(
+			$pageDefault
 		);
 	}
 
@@ -451,8 +452,8 @@ class Portal {
 			return self::$action;
 		// get action
 		self::$action =
-			Utils\DirsFiles::SanFilename(
-				Utils\Vars::getVar('action', 'str')
+			\psm\Utils\DirsFiles::SanFilename(
+				\psm\Utils\Vars::getVar('action', 'str')
 			);
 		return self::$action;
 	}

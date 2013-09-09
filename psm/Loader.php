@@ -2,7 +2,7 @@
 // PSM - Content Management Framework
 // (c) (t) 2004-2013
 // Mattsoft.net PoiXson.com
-define('psm\\VERSION', '3.0.5');
+define('psm\\VERSION', '3.0.11');
 
 // static defines
 if(defined('psm\\INDEX_FILE')) {
@@ -18,12 +18,12 @@ function __autoload($classname) {
 }
 
 // load debuggers
-ini_set('log_errors', 'On');
-ini_set('error_log', 'php_error.log');
+\ini_set('log_errors', 'On');
+\ini_set('error_log',  'php_error.log');
 if(defined('psm\\DEBUG') && \psm\DEBUG === TRUE) {
 	// log to display
-	ini_set('display_errors', 'On');
-	ini_set('html_errors',    'On');
+	\ini_set('display_errors', 'On');
+	\ini_set('html_errors',    'On');
 	error_reporting(E_ALL | E_STRICT);
 	// Kint backtracer
 	$kintPath = \psm\Paths::getLocal('portal').DIR_SEP.'debug'.DIR_SEP.'kint'.DIR_SEP.'Kint.class.php';
@@ -46,7 +46,7 @@ if(defined('psm\\DEBUG') && \psm\DEBUG === TRUE) {
 	}
 } else {
 	// log to display
-	ini_set('display_errors', 'Off');
+	\ini_set('display_errors', 'Off');
 }
 function dump($var) {
 	\var_dump($var);
@@ -63,8 +63,10 @@ function getClassCount() {
 	global $ClassCount;
 	return $ClassCount;
 }
+
+
 // class loader
-final class Loader {
+class Loader {
 	private function __construct() {}
 
 	// class paths array

@@ -27,8 +27,21 @@ if(defined('psm\\DEBUG') && \psm\DEBUG === TRUE) {
 	error_reporting(E_ALL | E_STRICT);
 	// Kint backtracer
 	$kintPath = \psm\Paths::getLocal('portal').DIR_SEP.'debug'.DIR_SEP.'kint'.DIR_SEP.'Kint.class.php';
-	if(file_exists($kintPath))
+	if(file_exists($kintPath)) {
+//global $GLOBALS;
+//if(!@is_array(@$GLOBALS)) $GLOBALS = array();
+//$_kintSettings = &$GLOBALS['_kint_settings'];
+//$_kintSettings['traceCleanupCallback'] = function($traceStep) {
+//echo '<pre>';print_r($traceStep);exit();
+//	if(isset($traceStep['class']) && $traceStep['class'] === 'Kint')
+//		return null;
+//	if(isset($traceStep['function']) && \strtolower($traceStep['function']) === '__tostring')
+//		$traceStep['function'] = '[object converted to string]';
+//	return $traceStep;
+//};
+//echo '<pre>';print_r($_kintSettings);exit();
 		include($kintPath);
+	}
 	// php_error
 	$phpErrorPath = \psm\Paths::getLocal('portal').DIR_SEP.'debug'.DIR_SEP.'php_error.php';
 	if(file_exists($phpErrorPath))
@@ -49,7 +62,18 @@ if(defined('psm\\DEBUG') && \psm\DEBUG === TRUE) {
 	\ini_set('display_errors', 'Off');
 }
 function dump($var) {
-	\var_dump($var);
+	d($var);
+}
+if(!function_exists('d')) {
+	function d($var) {
+		\var_dump($var);
+	}
+}
+if(!function_exists('dd')) {
+	function dd($var) {
+		d($var);
+		die();
+	}
 }
 
 

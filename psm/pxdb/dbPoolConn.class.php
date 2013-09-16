@@ -65,7 +65,7 @@ implements \psm\pxdb\interfaces\dbPoolConn {
 		if(empty($host))
 			$host = 'localhost';
 		// port
-		$port = \psm\Utils\Utils_Numbers::MinMax(1, 65535, (int) $port );
+		$port = \psm\Utils\Numbers::MinMax(1, 65535, (int) $port );
 		// force using tcp
 		if(\strtolower($host) == 'localhost' && $port != 3306)
 			$host = '127.0.0.1';

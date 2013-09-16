@@ -5,7 +5,7 @@ global $ClassCount; $ClassCount++;
 interface dbPool {
 
 	public static function getDB($dbName=NULL);
-	public static function LoadConfig($dbName='');
+//	public static function LoadConfig($dbName='');
 	public static function dbExists($dbName);
 	public static function isConnected($dbName);
 	public static function san($data);

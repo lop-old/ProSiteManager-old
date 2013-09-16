@@ -8,6 +8,7 @@ define('psm\\DEBUG', TRUE);
 
 // load the portal
 include(__DIR__.'/psm/Loader.php');
+include(__DIR__.'/config.php');
 \psm\Portal::SimpleLoad();
 //$portal = \psm\Portal::factory();
 

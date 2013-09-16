@@ -1,7 +1,7 @@
 <?php namespace testportal;
 use \psm\Portal as Portal;
 global $ClassCount; $ClassCount++;
-class module_builder extends Portal\Module {
+class module_testportal extends Portal\Module {
 
 	// build server
 	const module_name = 'testportal';

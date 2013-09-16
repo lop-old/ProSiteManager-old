@@ -41,27 +41,27 @@ implements \psm\pxdb\interfaces\dbPool {
 	}
 
 
-	// load db config file
-	public static function LoadConfig($dbName='') {
-		// build file path
-		$filePath =
-			\psm\Paths::getLocal('root').DIR_SEP.
-			'config'.
-			(empty($dbName) ?
-				'' :
-				'.'.\psm\Utils\Utils_Files::SanFilename($dbName)
-			).
-			'.php';
-		// config file not found
-		if(!file_exists($filePath)) {
-			\psm\Portal::Error('Database config not found! '.$filePath);
-			return FALSE;
-		}
-		// load db config.php or config.<mod>.php
-		require_once($filePath);
-	}
+//	// load db config file
+//	public static function LoadConfig($dbName='') {
+//		// build file path
+//		$filePath =
+//			\psm\Paths::getLocal('root').DIR_SEP.
+//			'config'.
+//			(empty($dbName) ?
+//				'' :
+//				'.'.\psm\Utils\Utils_Files::SanFilename($dbName)
+//			).
+//			'.php';
+//		// config file not found
+//		if(!file_exists($filePath)) {
+//			\psm\Portal::Error('Database config not found! '.$filePath);
+//			return FALSE;
+//		}
+//		// load db config.php or config.<mod>.php
+//		require_once($filePath);
+//	}
 	// add db to pool - call from config
-	protected static function add_MySQL($config=array()) {
+	public static function add_MySQL($config=array()) {
 		if(!is_array($config))
 			\psm\Portal::Error('Database config argument must be an array!');
 		foreach($config as $dbName => $array) {

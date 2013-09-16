@@ -355,7 +355,7 @@ class Portal {
 	}
 	private static function setModName($modName) {
 		if(empty($modName)) return;
-		if(defined('psm\MODULE')) return;
+		if(defined('psm\\MODULE')) return;
 		define(
 			'psm\\MODULE',
 			\psm\Utils\DirsFiles::SanFilename(

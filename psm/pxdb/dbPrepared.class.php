@@ -249,6 +249,24 @@ implements \psm\pxdb\interfaces\dbPrepared {
 //		}
 //		return NULL;
 	}
+	public function getDate($label, $format=NULL) {
+		if($this->row == NULL || !isset($this->row[$label]))
+			return FALSE;
+		if(empty($format))
+			$format = 'Y-m-d H:i:s';
+		$timestamp = $this->getInt($label);
+		if($timestamp == FALSE)
+			return FALSE;
+		return date($format, $timestamp);
+//		try {
+//			if($this->st != NULL)
+//				return rs.getBoolean(label);
+//		} catch (\SQLException $e) {
+//TODO:
+//			e.printStackTrace();
+//		}
+//		return NULL;
+	}	
 
 
 }

@@ -10,6 +10,7 @@ class Table extends \psm\Widgets\Widget {
 	private $tableName      = 'mainTable';
 	private $usingAjax      = FALSE;
 	private $saveState      = TRUE;
+	private $defaultSort    = -1;
 	private $paginate       = TRUE;
 	private $scrollInfinite = FALSE;
 
@@ -23,7 +24,7 @@ class Table extends \psm\Widgets\Widget {
 	public function __construct($headings, $queryClass, $usingAjax=FALSE) {
 		$this->headings = $headings;
 		// validate Query class type
-		\psm\Utils\Utils::Validate('psm\\Widgets\\DataTables\\Query', $queryClass);
+		\psm\Utils\FuncArgs::classEquals('psm\\Widgets\\DataTables\\Query', $queryClass);
 		$this->queryClass = $queryClass;
 		$this->usingAjax = $usingAjax;
 		\psm\html\tplFile_Main::addFileCSS(
@@ -79,23 +80,27 @@ $(document).ready(function() {
 		"bJQueryUI"         : true,
 		"bProcessing"       : false,
 ';
+if($this->defaultSort >= 0)
+	$data .= '
+		"aaSorting"         : [[ '.((int) $this->defaultSort).', "asc" ]],
+';
 if($this->paginate)
 	$data .= '
 		"bPaginate"         : true,
 		"iDisplayLength"    : 10,
 		"aLengthMenu"       : [[5, 10, 30, 100, -1], [5, 10, 30, 100, "All"]],
 		"sPaginationType"   : "full_numbers",
-//		"bStateSave"        : '.($this->saveState ? 'true' : 'false').',
 ';
+//		"bStateSave"        : '.($this->saveState ? 'true' : 'false').',
 if(!empty($this->scrollInfinite))
 	$data .= '
 		"bScrollInfinite"   : true,
 		"bScrollCollapse"   : true,
 		"sScrollY"          : "450px",
 ';
-$data .= '
-//		"bDeferRender" : true,
-';
+//$data .= '
+//		"bDeferRender"      : true,
+//';
 if($this->usingAjax)
 	$data .= '
 		"bServerSide"       : true,
@@ -157,7 +162,14 @@ $.extend( $.fn.dataTableExt.oStdClasses, {
 	}
 
 
-	// enables pagination
+	// enable default sort column (starting at 0)
+	public function setDefaultSort($col=-1) {
+		if($col === NULL) $col = -1;
+		$col = (int) $col;
+		if($col < -1) $col = -1;
+		$this->defaultSort = $col;
+	}
+	// enable pagination
 	public function setPagination($paginate=TRUE) {
 		$this->paginate = \psm\Utils\Vars::toBoolean($paginate);
 		// disable infinite scroll
